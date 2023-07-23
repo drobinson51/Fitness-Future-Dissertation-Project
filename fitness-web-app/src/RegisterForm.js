@@ -13,6 +13,7 @@ const RegisterForm = () => {
   const [username, setUsername] = useState('');
   const [firstname, setFirstName] = useState('');
   const [lastname, setLastName] = useState('');
+  const [emailpreference, setEmailPreference] = useState('');
 
 
   const handleSubmit = async (event) => {
@@ -24,13 +25,16 @@ const RegisterForm = () => {
   try {
     const response = await axios.post('http://localhost:4000/register', {
 
-    email,
+    email: email,
     password: hashedPassword,
     username: username,
-    firstname,
-    lastname,
+    firstname: firstname,
+    lastname: lastname,
+    emailpreference: emailpreference,
 
     });
+
+    
 
     console.log('Response:' , response.data);
   } catch (error) {
@@ -85,6 +89,16 @@ const RegisterForm = () => {
           value={lastname}
           onChange={(e) => setLastName(e.target.value)}
         />
+      </div>
+
+      <div>
+        <label htmlFor="emailpreference">Would you like email reminders?:</label>
+
+        <select value= {emailpreference} onChange={(e) => setEmailPreference(e.target.value)}>
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+          
       </div>
       <button type="submit">Login</button>
     </form>

@@ -144,17 +144,30 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { firstname, lastname, username, email, password } = req.body;
+  const { firstname, lastname, username, email, password, emailpreference } = req.body;
 
   let userreg =
-    "INSERT INTO users (user_first_name, user_last_name, username, user_email, user_password) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO users (user_first_name, user_last_name, username, user_email, user_password, emailpreference) VALUES (?, ?, ?, ?, ?, ?)";
 
-  db.query(
-    userreg,
-    [firstname, lastname, username, email, password],
+  db.query(userreg, [firstname, lastname, username, email, password, emailpreference],
     (err, data) => {
       if (err) throw err;
-      res.json({ data });
+
+      const userid = data.insertId
+
+      const baseScore = 0;
+
+      const leaderboardInitialisation = 'INSERT INTO leaderboard (userid, points) values (?, ?)';
+  
+
+      db.query(leaderboardInitialisation, [userid, baseScore],
+        (err, data) => {
+          if (err) throw err;
+
+
+          res.json({ userid: userid, data: data });
+        })
+     
     }
   );
 });

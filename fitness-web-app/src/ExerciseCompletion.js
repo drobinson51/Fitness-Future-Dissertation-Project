@@ -82,6 +82,8 @@ const Completedworkoutform = () => {
     userid: cookies.authUser,
     earnedat: formattedTimestamp,
     });
+
+    console.log('Response:' , secondResponse.data);
   } catch (error) {
     console.error('Error:' , error);
   }
