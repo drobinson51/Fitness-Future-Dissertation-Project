@@ -32,6 +32,7 @@ const Completedworkoutform = () => {
     fetchWorkoutInfo();
   }, [cookies.authUser]);
 
+  //function to deal with user selecting values from drop down and ensuring they match up with each other. 
   const infoOfWorkoutSelected = (e) => {
     const selectedRelevantWorkoutId = parseInt(e.target.value);
     setSelectedUserWorkoutID(selectedRelevantWorkoutId);

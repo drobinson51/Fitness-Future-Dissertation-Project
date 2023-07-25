@@ -10,6 +10,7 @@ import EditWorkouts from './EditWorkouts';
 import NewUserWorkoutRoutine from './CreateWorkoutRoutine';
 import NewWorkoutToRoutine from './AddWorkoutsToRoutine';
 import Completedworkoutform from './ExerciseCompletion';
+import UserTierList from './UserRanking';
 import { AuthProvider } from './AuthContext';
 
 
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/createroutine" element={<NewUserWorkoutRoutine />} />
         <Route path="/deleteworkouts" element={<DeleteUserWorkouts />} />
         <Route path="/exercisecompletion" element={<Completedworkoutform />} />
+        <Route path="/tierlist" element={<UserTierList />} />
         <Route path ="/addexercisestoroutine" element = {<NewWorkoutToRoutine />} />
         
       </Routes>
