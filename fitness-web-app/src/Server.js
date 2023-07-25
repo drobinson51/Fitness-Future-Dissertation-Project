@@ -8,16 +8,6 @@ const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 const schedule = require("node-schedule");
 
-//for use later in tierlist
-// SELECT t.title -- Retrieves the title column from the usertier table
-// FROM (
-//   SELECT COUNT(*) AS total_points
-//   FROM userpoints
-//   WHERE userid = 5 -- Replace with the actual user ID
-// ) AS up
-// JOIN usertier AS t ON up.total_points >= t.pointsrequired
-// ORDER BY t.pointsrequired DESC
-// LIMIT 1;
 
 let db = mysql.createConnection({
   host: "localhost",
@@ -57,7 +47,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-schedule.scheduleJob("41 * * * 2", () => {
+schedule.scheduleJob("30 * * * 7", () => {
   const emailcheck =
     "SELECT * FROM users INNER JOIN workoutroutine on users.userid = workoutroutine.userid INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid WHERE users.emailpreference = 1;";
 
@@ -349,3 +339,19 @@ app.get("/tierlist/:userid", async (req, res) => {
     res.json ({data});
   });
 }); 
+
+
+app.get("/leaderboard/", async (req, res) => {
+
+
+
+  let leaderboard = 'SELECT * FROM leaderboard INNER JOIN users ON leaderboard.userid = users.userid;'
+
+  db.query(leaderboard, (err, data) => {
+    if(err) throw err;
+
+    res.json ({data});
+  });
+}); 
+
+
