@@ -186,16 +186,17 @@ app.get("/workoutroutines/:userid", async (req, res) => {
 
 app.get("/workoutinfos/:userid", async (req, res) => {
   const { userid } = req.params;
-
+  
+  
   let getworkoutinfo = `SELECT *
   FROM userworkout
-  INNER JOIN routineexercises
-  ON userworkout.userworkoutid = routineexercises.userworkoutid
-  INNER JOIN workoutroutine
-  on userworkout.userid = workoutroutine.userid
   INNER JOIN workouts
   on userworkout.workoutid = workouts.workoutid
-  WHERE userworkout.userid = ?;`;
+  INNER JOIN routineexercises
+  ON routineexercises.userworkoutid = userworkout.userworkoutid
+  INNER JOIN workoutroutine 
+  on workoutroutine.workoutroutineid = routineexercises.workoutroutineid
+  WHERE userworkout.userid = ?;`
 
   db.query(getworkoutinfo, [userid], (err, data) => {
     if (err) throw err;
@@ -268,8 +269,20 @@ app.post("/userpoints", async (req, res) => {
 
   db.query(earnedpoints, [userid, earnedat], (err, data) => {
     if (err) throw err;
-    res.json({ data });
+   
+
+ 
   });
+
+     
+  let pointTracking = 'UPDATE leaderboard SET points = points + 1 WHERE userid = ?';
+
+
+  db.query(pointTracking, [userid], (err, data) => {
+    if(err) throw err;
+
+    res.json({ userid: userid, data: data });
+  })
 });
 
 app.post("/addworkoutroutine", async (req, res) => {
@@ -339,6 +352,29 @@ app.get("/tierlist/:userid", async (req, res) => {
     res.json ({data});
   });
 }); 
+
+
+app.get("/userbarchart/:userid", async (req, res) => {
+
+  const { userid } = req.params;
+
+  let tierlistentry =`SELECT *
+  FROM exerciseprogress
+  INNER JOIN userworkout
+  on exerciseprogress.userworkoutid = userworkout.userworkoutid
+  INNER JOIN workouts
+  ON userworkout.workoutid = workouts.workoutid
+  INNER JOIN routineexercises
+  on routineexercises.userworkoutid = userworkout.userworkoutid
+WHERE exerciseprogress.userid = 6`;
+
+  db.query(tierlistentry, [userid], (err, data) => {
+    if(err) throw err;
+
+    res.json ({data});
+  });
+}); 
+
 
 
 app.get("/leaderboard/", async (req, res) => {

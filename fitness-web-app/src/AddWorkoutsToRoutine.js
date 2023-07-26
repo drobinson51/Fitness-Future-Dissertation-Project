@@ -63,7 +63,7 @@ const NewWorkoutToRoutine = () => {
       const response = await axios.post(
         "http://localhost:4000/addroutineexercises",
         {
-          workoutroutineid: workoutroutineid,
+          workoutroutineid: selectedWorkoutRoutineId,
           userworkoutid: selectedUserWorkoutId,
           orderperformed: orderperformed,
         }

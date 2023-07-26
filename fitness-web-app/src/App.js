@@ -12,6 +12,7 @@ import NewWorkoutToRoutine from './AddWorkoutsToRoutine';
 import Completedworkoutform from './ExerciseCompletion';
 import UserTierList from './UserRanking';
 import LeaderBoardDisplay from './LeaderboardDisplay';
+import UserBarChart from './BarChart';
 import { AuthProvider } from './AuthContext';
 
 
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/exercisecompletion" element={<Completedworkoutform />} />
         <Route path="/tierlist" element={<UserTierList />} />
         <Route path="/leaderboard" element={<LeaderBoardDisplay />} />
+        <Route path="/barchart" element={<UserBarChart />} />
         <Route path ="/addexercisestoroutine" element = {<NewWorkoutToRoutine />} />
         
       </Routes>

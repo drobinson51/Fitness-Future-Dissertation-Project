@@ -4,13 +4,11 @@ import { useCookies } from "react-cookie";
 
 //use state to handle form setting variables
 const Completedworkoutform = () => {
-  const [userWorkoutId, setUserWorkoutId] = useState("");
   const [selectedUserWorkoutId, setSelectedUserWorkoutID] = useState("");
-  const [routineExerciseId, setRoutineExerciseId] = useState("");
+  const [routineExerciseId, setRoutineExerciseId] = useState(null);
   const [totalWeightLifted, setTotalWeightLifted] = useState("");
   const [repsCompleted, setRepsCompleted] = useState("");
   const [timestamp, setTimestamp] = useState("");
-  const [workoutNames, setWorkoutNames] = useState([]);
   const [workoutData, setWorkoutData] = useState([])
   const [cookies] = useCookies(["authUser"]);
 
@@ -24,6 +22,8 @@ const Completedworkoutform = () => {
 
         setWorkoutData(response.data.data);
 
+       
+
       } catch (error) {
         console.error("Error:", error);
       }
@@ -32,17 +32,28 @@ const Completedworkoutform = () => {
     fetchWorkoutInfo();
   }, [cookies.authUser]);
 
-  //function to deal with user selecting values from drop down and ensuring they match up with each other. 
+  console.log(workoutData);
+
+
+
+  // function to deal with user selecting values from drop down and ensuring they match up with each other. 
   const infoOfWorkoutSelected = (e) => {
     const selectedRelevantWorkoutId = parseInt(e.target.value);
     setSelectedUserWorkoutID(selectedRelevantWorkoutId);
-    const selectedRelevantRoutineExerciseID = workoutData.find(
+  
+    // Find the workout with the selected userworkoutid from workoutData
+    const selectedRelevantWorkout = workoutData.find(
       (workout) => workout.userworkoutid === selectedRelevantWorkoutId
-    ).routineexerciseid;
+    );
+  
 
-    
-    setRoutineExerciseId(selectedRelevantRoutineExerciseID);
-  }
+    //if found it is set, otherwise it is set to null which disables the input. 
+    if (selectedRelevantWorkout) {
+      setRoutineExerciseId(selectedRelevantWorkout.routineExerciseId)
+    } else {
+      setRoutineExerciseId(null);
+    }
+  };
 
 
   const formattedTimestamp = new Date().toLocaleString("en-UK", {
@@ -117,11 +128,12 @@ return (
     <div>
       <label htmlFor="routineexerciseid">Routine Exercise id:</label>
       <input
-        type="number"
-        id="routineexerciseid"
-        value={routineExerciseId}
-        onChange={(e) => setRoutineExerciseId(e.target.value)}
-      />
+      type="number"
+      id="routineexerciseid"
+      value={routineExerciseId || ""}
+      onChange={(e) => setRoutineExerciseId(e.target.value)}
+      disabled={!selectedUserWorkoutId}
+/>
     </div>
 
     <div>
