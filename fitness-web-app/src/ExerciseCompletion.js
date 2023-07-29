@@ -71,6 +71,12 @@ const Completedworkoutform = () => {
     event.preventDefault();
 
 
+    if (!selectedUserWorkoutId || routineExerciseId || totalWeightLifted || repsCompleted || formattedTimestamp) {
+      alert("You need to select a fill out all the relevant field to record your progress!")
+      return;
+    }
+
+    
   try {
     const response = await axios.post('http://localhost:4000/exerciseprogress', {
     userid: cookies.authUser,

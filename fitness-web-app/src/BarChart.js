@@ -8,7 +8,7 @@ import { useCookies } from "react-cookie";
 
 const UserBarChart = () => {
   const [userChartData, setUserBarChartData] = useState({});
-  const [cookies] = useCookies(["authUser"]);
+  const [cookies] = useCookies(["authUser"]); 
   const [isLoading, setIsLoading] = useState(true);
 
   

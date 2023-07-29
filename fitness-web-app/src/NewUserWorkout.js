@@ -45,6 +45,10 @@ const NewUserWorkout = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!workoutid || !customliftweight || !customliftreps) {
+      alert("You need to fill all the fields available before adding your workout!")
+      return;
+    }
     
   try {
     const response = await axios.post('http://localhost:4000/addnewuserworkout', {

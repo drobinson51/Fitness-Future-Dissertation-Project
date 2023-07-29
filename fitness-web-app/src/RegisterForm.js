@@ -19,6 +19,11 @@ const RegisterForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!email || !password || !username || !firstname) {
+      alert("Please fill out all fields available before registering!")
+      return;
+    }
+
     const hashedPassword = bcrypt.hashSync(password, 10);
 
 
@@ -100,7 +105,7 @@ const RegisterForm = () => {
       </select>
           
       </div>
-      <button type="submit">Login</button>
+      <button type="submit">Sign-Up</button>
     </form>
   );
 };

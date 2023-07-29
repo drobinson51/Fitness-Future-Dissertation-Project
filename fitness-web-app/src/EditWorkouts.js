@@ -40,6 +40,11 @@ const EditWorkouts = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!workoutid || customliftreps || customliftweight) {
+      alert("You need to fill out all fields to edit the workout!")
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:4000/editworkout", {
         userid: cookies.authUser,

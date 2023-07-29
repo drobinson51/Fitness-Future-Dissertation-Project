@@ -18,6 +18,11 @@ const NewUserWorkoutRoutine = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!day) {
+      alert("You need to select a day to create a workout!")
+      return;
+    }
+
     
   try {
     const response = await axios.post('http://localhost:4000/addworkoutroutine', {

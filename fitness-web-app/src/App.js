@@ -13,6 +13,8 @@ import Completedworkoutform from './ExerciseCompletion';
 import UserTierList from './UserRanking';
 import LeaderBoardDisplay from './LeaderboardDisplay';
 import UserBarChart from './BarChart';
+import RemoveRoutineExercise from './RemoveExerciseFromRoutine';
+import DeleteWorkoutRoutine from './DeleteWorkoutRoutine';
 import { AuthProvider } from './AuthContext';
 
 
@@ -34,6 +36,10 @@ const App = () => {
         <Route path="/leaderboard" element={<LeaderBoardDisplay />} />
         <Route path="/barchart" element={<UserBarChart />} />
         <Route path ="/addexercisestoroutine" element = {<NewWorkoutToRoutine />} />
+        <Route path ="/removeroutineexercise" element = {<RemoveRoutineExercise />} />
+        <Route path ="/deleteworkoutroutine" element = {<DeleteWorkoutRoutine />} />
+       
+       
         
       </Routes>
      

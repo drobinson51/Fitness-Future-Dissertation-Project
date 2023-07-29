@@ -54,6 +54,11 @@ const NewWorkoutToRoutine = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!orderperformed || workoutroutineid || selectedUserWorkoutId) {
+      alert("You need to select an option so that you can add a workout to a routine!")
+      return;
+    }
   
     console.log('orderPerformed:', orderperformed);
     console.log('workoutroutineid:', workoutroutineid);

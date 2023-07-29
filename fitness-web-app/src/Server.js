@@ -391,3 +391,40 @@ app.get("/leaderboard/", async (req, res) => {
 }); 
 
 
+app.post("/removeexercise", async (req, res) => {
+  const {routineexerciseid } = req.body;
+
+  let routineexercise = `DELETE FROM routineexercises WHERE routineexerciseid = ?`;
+
+  db.query(routineexercise, [routineexerciseid], (err, data) => {
+    if (err) throw err;
+    res.json({ data });
+  });
+});
+
+
+app.post("/deleteexerciseroutine", async (req, res) => {
+  const {userid, workoutroutineid } = req.body;
+
+  let workoutroutine = `DELETE FROM workoutroutine WHERE userid = ? AND workoutroutineid = ?`;
+
+  db.query(workoutroutine, [userid, workoutroutineid], (err, data) => {
+    if (err) throw err;
+    res.json({ data });
+  });
+});
+
+
+app.get("/exerciseroutines/:userid", async (req, res) => {
+
+  const { userid } = req.params;
+
+  let workoutroutinesavailable =`SELECT * FROM workoutroutine WHERE userid = ?`;
+
+  db.query(workoutroutinesavailable, [userid], (err, data) => {
+    if(err) throw err;
+
+    res.json ({data});
+  });
+}); 
+
