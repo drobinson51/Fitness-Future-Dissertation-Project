@@ -15,6 +15,7 @@ import LeaderBoardDisplay from './LeaderboardDisplay';
 import UserBarChart from './BarChart';
 import RemoveRoutineExercise from './RemoveExerciseFromRoutine';
 import DeleteWorkoutRoutine from './DeleteWorkoutRoutine';
+import ProgressDeletion from './ProgressDeletion';
 import { AuthProvider } from './AuthContext';
 
 
@@ -38,6 +39,7 @@ const App = () => {
         <Route path ="/addexercisestoroutine" element = {<NewWorkoutToRoutine />} />
         <Route path ="/removeroutineexercise" element = {<RemoveRoutineExercise />} />
         <Route path ="/deleteworkoutroutine" element = {<DeleteWorkoutRoutine />} />
+        <Route path ="/resetprogress" element = {<ProgressDeletion />} />
        
        
         

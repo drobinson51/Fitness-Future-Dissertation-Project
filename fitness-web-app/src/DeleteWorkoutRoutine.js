@@ -76,8 +76,7 @@ const DeleteWorkoutRoutine = () => {
           value={workoutRoutineId}
           onChange={(e) => setWorkoutRoutineID(e.target.value)}
         >
-          // iterates through workouts, maps id as value, but then also displays
-          name of workout for user friendliness
+          
           <option value="">Select Workout</option>
           {workoutRoutineIds.map((id, index) => (
             <option key={id} value={id}>

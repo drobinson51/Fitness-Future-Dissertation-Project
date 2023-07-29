@@ -428,3 +428,38 @@ app.get("/exerciseroutines/:userid", async (req, res) => {
   });
 }); 
 
+
+app.get("/progressinfos/:userid", async (req, res) => {
+  const { userid } = req.params;
+  
+  
+  let getprogressinfo = `SELECT *
+  FROM userworkout
+  INNER JOIN workouts
+  on userworkout.workoutid = workouts.workoutid
+  INNER JOIN routineexercises
+  ON routineexercises.userworkoutid = userworkout.userworkoutid
+  INNER JOIN workoutroutine 
+  on workoutroutine.workoutroutineid = routineexercises.workoutroutineid
+  INNER JOIN exerciseprogress
+  on exerciseprogress.userworkoutid = userworkout.userworkoutid
+  WHERE userworkout.userid = ?;`
+
+  db.query(getprogressinfo, [userid], (err, data) => {
+    if (err) throw err;
+    res.json({ data });
+  });
+});
+
+
+app.post("/removeprogress", async (req, res) => {
+  const {userid, userworkoutid } = req.body;
+
+  let workoutroutine = `DELETE FROM exerciseprogress WHERE userid = ? AND userworkoutid = ?`;
+
+  db.query(workoutroutine, [userid, userworkoutid], (err, data) => {
+    if (err) throw err;
+    res.json({ data });
+  });
+});
+
