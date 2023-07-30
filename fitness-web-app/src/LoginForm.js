@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from './AuthContext';
 
+
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,7 +38,7 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button type="submit">Login</button>
+      <button className="btn btn-primary">Login</button>
     </form>
   );
 };

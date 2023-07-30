@@ -172,7 +172,7 @@ return (
       />
     </div>
 
-    <button type="submit">Submit</button>
+    <button className="btn btn-primary">Submit Progress</button>
   </form>
 );
 };

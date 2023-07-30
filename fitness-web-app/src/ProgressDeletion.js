@@ -92,7 +92,7 @@ const RemoveRoutineExercise = () => {
         </select>
       </div>
 
-      <button type="submit">Delete</button>
+      <button className="btn btn-primary">Reset Progress</button>
     </form>
   );
 };

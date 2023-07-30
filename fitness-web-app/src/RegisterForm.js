@@ -105,7 +105,7 @@ const RegisterForm = () => {
       </select>
           
       </div>
-      <button type="submit">Sign-Up</button>
+      <button className="btn btn-primary">Sign-Up</button>
     </form>
   );
 };

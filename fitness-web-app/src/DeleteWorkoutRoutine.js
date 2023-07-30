@@ -85,7 +85,7 @@ const DeleteWorkoutRoutine = () => {
           ))}
         </select>
       </div>
-      <button type="submit">Delete</button>
+      <button className="btn btn-primary">Delete Workout Routine</button>
     </form>
   );
 };

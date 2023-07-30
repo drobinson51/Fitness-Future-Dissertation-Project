@@ -1,6 +1,9 @@
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
+import HomePage from './Home';
 import LoginForm from './LoginForm';
 import ApiStatus from './ApiStatus';
 import RegisterForm from './RegisterForm';
@@ -25,7 +28,8 @@ const App = () => {
     <AuthProvider>
     <Router>
       <Routes>
-        <Route path="/" element={<ApiStatus/>} />
+        <Route path="/api" element={<ApiStatus/>} />
+        <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<LoginForm/>} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/addworkouts" element={<NewUserWorkout />} />

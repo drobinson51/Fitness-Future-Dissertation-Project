@@ -105,7 +105,7 @@ const NewUserWorkout = () => {
           onChange={(e) => setCustomLiftReps(e.target.value)}
         />
       </div>
-      <button type="submit">Add</button>
+      <button className="btn btn-primary">Select New Exercise</button>
     </form>
   );
 };

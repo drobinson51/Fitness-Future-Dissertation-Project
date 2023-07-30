@@ -125,7 +125,7 @@ const RemoveRoutineExercise = () => {
         </div>
       )}
 
-      <button type="submit">Delete</button>
+<button className="btn btn-primary">Remove Exercise</button>
     </form>
   );
 };
