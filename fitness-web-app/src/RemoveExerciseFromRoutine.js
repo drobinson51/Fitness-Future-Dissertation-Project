@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Image from "react-bootstrap/Image";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { Button } from "react-bootstrap";
+
+
 
 const RemoveRoutineExercise = () => {
   const [selectedRoutineExerciseId, setSelectedRoutineExerciseId] = useState("");
@@ -83,52 +93,96 @@ const RemoveRoutineExercise = () => {
   };
 
   const exercisesAvailableForSelectedWorkoutRoutine = routineExercisesInfo.filter((exercise) => exercise.workoutroutineid === parseInt(selectedWorkoutRoutine));
+
+
   return (
-    <form onSubmit={handleDelete}>
-      <div>
-        <label htmlFor="userid">User:</label>
-        <input type="String" id="userid" value={cookies.authUser} disabled />
-      </div>
+    <div className="home">
+      <header>
+        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+          <Container>
+            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="/">Home</Nav.Link>
+                <Nav.Link href="/login">Login</Nav.Link>
+                <NavDropdown title="Fitness-Functions" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
+                  <NavDropdown.Item href="/addworkouts">
+                    Add workouts
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/addexercisestoroutine">
+                    Customise Routines
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/leaderboard">
+                    Leaderboard
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </header>
+      <main>
+        <Container>
+          <Row className="px-4 my-5">
+            <Col sm={7}>
+              <Image src="https://picsum.photos/900/400" fluid rounded />
+            </Col>
+            <Col sm={5}>
+              <h1 className="fw-bold">Remove Exercise from a routine</h1>
+              <p className="mt-3 fw-light">
+                Remove an exercise from the day it has been assigned to.
+              </p>
+              <form onSubmit={handleDelete}>
+                <div className="mb-4">
+                  <label htmlFor="routineexerciseinfo">Select Workout Routine:</label>
+                  <select
+                    type="String"
+                    id="workoutroutine"
+                    className="form-control"
+                    value={selectedDay}
+                    onChange= {handleWorkoutRoutineRoutineSelection}
+                  >
+                     <option value="">Select Workout Routine</option>
+                    {days.map((day) => (
+                    <option key={day} value={day}>
+                    {day}
+                    </option>
+                    ))}
+                    </select>
+                    </div>
 
+                    {selectedWorkoutRoutine && workoutRoutinesAvailable && (
+                <div className="mb-4">
+                  <label htmlFor="routineexercise">Select Exercise to remove:</label>
+                  <select
+                    type="String"
+                    id="routineexercise"
+                    className="form-control"
+                    value={selectedRoutineExerciseId}
+                    onChange= {handleRoutineExerciseChange}
+                    >
+                    <option value="">Select Exercise</option>
+                    {exercisesAvailableForSelectedWorkoutRoutine.map((exercise) => (
+                    <option key={exercise.routineexerciseid} value={exercise.routineexerciseid}>
+                    {exercise.workoutname}
+                    </option>
+                    ))}
+                    </select>
+                    </div>
 
-      <div>
-        <label htmlFor="routineexerciseinfo">Select Workout Routine:</label>
-        <select
-          id="workoutroutine"
-          onChange={handleWorkoutRoutineRoutineSelection}
-          value={selectedDay}
-        >
-          <option value="">Select Workout Routine</option>
-          {days.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
-      </div>
+                    )}
 
-      {selectedWorkoutRoutine && workoutRoutinesAvailable && (
-        <div>
-          <label htmlFor="routineexercise">Select Exercise:</label>
-          <select
-            id="routineexercise"
-            onChange={handleRoutineExerciseChange}
-            value={selectedRoutineExerciseId}
-          >
-            <option value="">Select Exercise</option>
-            {exercisesAvailableForSelectedWorkoutRoutine.map((exercise) => (
-              <option key={exercise.routineexerciseid} value={exercise.routineexerciseid}>
-                {exercise.workoutname}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-<button className="btn btn-primary">Remove Exercise</button>
-    </form>
+                <Button type="submit" className="btn btn-primary">Remove The Exercise</Button>
+              </form>
+            </Col>
+          </Row>
+        </Container>
+      </main>
+    </div>
   );
 };
-
 
 export default RemoveRoutineExercise;

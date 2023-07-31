@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { Link } from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Image from "react-bootstrap/Image";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { Button } from "react-bootstrap";
+
+
 
 const NewWorkoutToRoutine = () => {
   const [workoutroutineid, setWorkoutRoutineID] = useState([]);
@@ -55,7 +66,7 @@ const NewWorkoutToRoutine = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!orderperformed || workoutroutineid || selectedUserWorkoutId) {
+    if (!orderperformed || !workoutroutineid || !selectedUserWorkoutId) {
       alert("You need to select an option so that you can add a workout to a routine!")
       return;
     }
@@ -80,50 +91,98 @@ const NewWorkoutToRoutine = () => {
     }
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="userid">User:</label>
-        <input type="String" id="userid" value={cookies.authUser} disabled />
-      </div>
-
-      <select
-        id="userworkoutid"
-        value={selectedUserWorkoutId}
-        onChange={(e) => setSelectedUserWorkoutId(e.target.value)}
-      >
-        <option value="">Select Workout</option>
-        {userworkoutid.map((id, index) => (
-          <option key={id} value={id}>
-            {workoutname[index]}
-          </option>
-        ))}
-      </select>
-
-      <select
-        id="workoutroutineid"
-        value={selectedWorkoutRoutineId}
-        onChange={(e) => setSelectedWorkoutRoutineId(e.target.value)}
-      >
-        <option value="">Select Day</option>
-        {workoutroutineid.map((id, index) => (
-          <option key={id} value={id}>
-            {day[index]}
-          </option>
-        ))}
-      </select>
-
-      <div>
-        <label htmlFor="orderPerformed">Order of Performance:</label>
-        <input
-          type="text"
-          id="orderperformed"
-          value={orderperformed}
-          onChange={(e) => setOrderPerformed(e.target.value)}
-        />
-      </div>
-
-      <button type="submit">Add</button>
-    </form>
+    <div className="home">
+      <header>
+        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+          <Container>
+            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="/">Home</Nav.Link>
+                <Nav.Link href="/login">Login</Nav.Link>
+                <NavDropdown title="Fitness-Functions" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
+                  <NavDropdown.Item href="/addworkouts">
+                    Add workouts
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/addexercisestoroutine">
+                    Customise Routines
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/leaderboard">
+                    Leaderboard
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </header>
+      <main>
+        <Container>
+          <Row className="px-4 my-5">
+            <Col sm={7}>
+              <Image src="https://picsum.photos/900/400" fluid rounded />
+            </Col>
+            <Col sm={5}>
+              <h1 className="fw-bold">Create personal workout exercise</h1>
+              <p className="mt-3 fw-light">
+                Pick from a range of exercises and personalise it to your means.
+              </p>
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <label htmlFor="workoutid">Workout:</label>
+                  <select
+                    type="String"
+                    id="userworkoutid"
+                    className="form-control"
+                    value={selectedUserWorkoutId}
+                    onChange={(e) => setSelectedUserWorkoutId(e.target.value)}
+                  >
+                    <option value="">Select Workout</option>
+                    {userworkoutid.map((id, index) => (
+                    <option key={id} value={id}>
+                    {workoutname[index]}
+                     </option>
+                     ))}
+                    </select>
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="workoutroutineid">Select Routine Day:</label>
+                  <select
+                    type="String"
+                    id="selectedWorkoutRoutineId"
+                    className="form-control"
+                    value={selectedWorkoutRoutineId}
+                    onChange={(e) => setSelectedWorkoutRoutineId(e.target.value)}
+                    >
+                    <option value="">Select Day</option>
+                    {workoutroutineid.map((id, index) => (
+                    <option key={id} value={id}>
+                    {day[index]}
+                    </option>
+                    ))}
+                    </select>
+                  
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="orderPerformed">Set the order this should be performed in your routine:</label>
+                  <input
+                    type="String"
+                    id="orderperformed"
+                    className="form-control"
+                    value={orderperformed}
+                    onChange={(e) => setOrderPerformed(e.target.value)}
+                  />
+                </div>
+                <Button type="submit" className="btn btn-primary">Add workout to routine</Button>
+              </form>
+            </Col>
+          </Row>
+        </Container>
+      </main>
+    </div>
   );
 };
 
