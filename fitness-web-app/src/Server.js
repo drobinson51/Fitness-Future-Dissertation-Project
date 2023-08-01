@@ -47,7 +47,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-schedule.scheduleJob("55 * * * 2", () => {
+schedule.scheduleJob("1 15 * * 2", () => {
   const emailcheck =
     "SELECT * FROM users INNER JOIN workoutroutine on users.userid = workoutroutine.userid INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid WHERE users.emailpreference = 1;";
 
@@ -344,7 +344,7 @@ app.get("/tierlist/:userid", async (req, res) => {
 
   const { userid } = req.params;
 
-  let tierlistentry = 'SELECT t.title FROM (SELECT COUNT(*) AS total_points FROM userpoints WHERE userid = ? ) AS up JOIN usertier AS t ON up.total_points >= t.pointsrequired ORDER BY t.pointsrequired DESC LIMIT 1;'
+  let tierlistentry = 'SELECT t.title, t.description FROM (SELECT COUNT(*) AS total_points FROM userpoints WHERE userid = ? ) AS up JOIN usertier AS t ON up.total_points >= t.pointsrequired ORDER BY t.pointsrequired DESC LIMIT 1;'
 
   db.query(tierlistentry, [userid], (err, data) => {
     if(err) throw err;
@@ -381,7 +381,7 @@ app.get("/leaderboard/", async (req, res) => {
 
 
 
-  let leaderboard = 'SELECT * FROM leaderboard INNER JOIN users ON leaderboard.userid = users.userid;'
+  let leaderboard = 'SELECT * FROM leaderboard INNER JOIN users ON leaderboard.userid = users.userid ORDER by points DESC;'
 
   db.query(leaderboard, (err, data) => {
     if(err) throw err;
