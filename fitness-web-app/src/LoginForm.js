@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from './AuthContext';
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -16,16 +16,23 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
+  const redirect = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       await login(email, password);
+      redirect('/');
     } catch (error) {
       console.error('Error:', error);
     }
   };
+
+
+   
+  
+
 
 
   return (
@@ -89,7 +96,7 @@ const LoginForm = () => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button type="submit" className="btn btn-primary">Sign-Up</Button>
+                <Button type="submit" className="btn btn-primary">Login</Button>
               </form>
             </Col>
           </Row>
@@ -98,5 +105,6 @@ const LoginForm = () => {
     </div>
   );
 };
+
 
 export default LoginForm;

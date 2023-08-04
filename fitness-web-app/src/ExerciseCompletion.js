@@ -11,23 +11,14 @@ import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
+import Table from "react-bootstrap/Table";
 
-
-
-//use state to handle form setting variables
 const Completedworkoutform = () => {
-  const [selectedUserWorkoutId, setSelectedUserWorkoutID] = useState("");
-  const [routineExerciseId, setRoutineExerciseId] = useState(null);
-  const [totalWeightLifted, setTotalWeightLifted] = useState("");
-  const [repsCompleted, setRepsCompleted] = useState("");
-  const [filteredWorkoutData, setFilteredWorkoutData] = useState([]);
-  const [timestamp, setTimestamp] = useState("");
   const [day, setDay] = useState("");
   const [availableDays, setAvailableDays] = useState([]);
   const [workoutData, setWorkoutData] = useState([]);
   const [cookies] = useCookies(["authUser"]);
-  const [selectedDayWorkouts, setSelectedDayWorkouts] = useState([]);
-  
+  const [workoutProgress, setWorkoutProgress] = useState([]);
 
   useEffect(() => {
     const fetchWorkoutInfo = async () => {
@@ -36,13 +27,11 @@ const Completedworkoutform = () => {
           `http://localhost:4000/workoutinfos/${cookies.authUser}`
         );
 
-
         setWorkoutData(response.data.data);
 
+        //use set ensuring no duplicated days, tacit protection against user having multiple days
         const daysFound = [...new Set(response.data.data.map((workout) => workout.day))];
         setAvailableDays(daysFound);
-       
-
       } catch (error) {
         console.error("Error:", error);
       }
@@ -53,51 +42,54 @@ const Completedworkoutform = () => {
 
   console.log(workoutData);
 
-
-  //for use with setting routineexerciseid
-  useEffect(() => {
-    if (day) {
-      const dayFilteredWorkoutData = workoutData.filter((workout) => workout.day === day);
-      setFilteredWorkoutData(dayFilteredWorkoutData);
-
-      setSelectedUserWorkoutID("");
-      setRoutineExerciseId(null);
-    }
-  }, [day, workoutData]);
-
   const handleDayChange = (e) => {
-    const day = e.target.value;
-    setDay(day);
+    const selectedDay = e.target.value;
+    setDay(selectedDay);
+    setWorkoutProgress([]);
   }
 
-
-
-  // function to deal with user selecting values from drop down and ensuring they match up with each other. 
-  const infoOfWorkoutSelected = (e) => {
-    const selectedRelevantWorkoutId = parseInt(e.target.value);
-    setSelectedUserWorkoutID(selectedRelevantWorkoutId);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
   
-    // Find the workout with the selected userworkoutid from workoutData, which has been filtered by day
-    const selectedRelevantWorkout = filteredWorkoutData.find(
-      (workout) => workout.userworkoutid === selectedRelevantWorkoutId && workout.day === day
-    );
+    if (workoutProgress.some((workout) => !workout.totalweightlifted || !workout.repscompleted)) {
+      alert("You must fill in all fields in order to submit your progress!");
+      return;
+    }
+  
+    try {
+      const workoutsAvailableForSelectedDay = workoutData.filter((workout) => workout.day === day);
+  
+      //keeps a promise of all the results before they are submitted to axios allowing multiple values to go through at once
+      const responses = await Promise.all(workoutsAvailableForSelectedDay.map((workout, index) => axios.post('http://localhost:4000/exerciseprogress', {
+        userid: cookies.authUser,
+        userworkoutid: parseInt(workout.userworkoutid),
+        routineexerciseid: parseInt(workout.routineexerciseid),
+        totalweightlifted: parseInt(workoutProgress[index]?.totalweightlifted), 
+        repscompleted: parseInt(workoutProgress[index]?.repscompleted), 
+        timestamp: formattedTimestamp,
+      })));
+  
+      console.log("Response", responses.map((response) => response.data));
+    } catch (error) {
+      console.log("Error:", error);
+    }
+
+    //userpoints system
+    try {
+      const secondResponse = await axios.post('http://localhost:4000/userpoints', {
+      userid: cookies.authUser,
+      earnedat: formattedTimestamp,
+      });
+  
+      console.log('Response:' , secondResponse.data);
+    } catch (error) {
+      console.error('Error:' , error);
+    }
+    };
   
 
-    //if found it is set, otherwise it is set to null which disables the input. 
-    if (selectedRelevantWorkout) {
-      setRoutineExerciseId(selectedRelevantWorkout.routineexerciseid)
-    } else {
-      setRoutineExerciseId(null);
-    }
-  };
 
-  useEffect(() => {
-    if (day) {
-      const dayFilteredWorkoutData = workoutData.filter((workout) => workout.day === day);
-      setSelectedDayWorkouts(dayFilteredWorkoutData);
-    }
-  }, [day, workoutData]);
-
+    //formatting the timestamp which is then further formatted on the back-end serverside
   const formattedTimestamp = new Date().toLocaleString("en-UK", {
     year: "numeric",
     month: "2-digit",
@@ -106,49 +98,6 @@ const Completedworkoutform = () => {
     minute: "2-digit",
     second: "2-digit",
   });
-
-
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-
-    if (!selectedUserWorkoutId || !routineExerciseId || !totalWeightLifted || !repsCompleted || !formattedTimestamp) {
-      alert("You need to select a fill out all the relevant field to record your progress!")
-      return;
-    }
-
-    
-  try {
-    const response = await axios.post('http://localhost:4000/exerciseprogress', {
-    userid: cookies.authUser,
-    userworkoutid: parseInt(selectedUserWorkoutId),
-    routineexerciseid:  parseInt(routineExerciseId),
-    totalweightlifted:  parseInt(totalWeightLifted),
-    repscompleted:  parseInt(repsCompleted),
-    timestamp: formattedTimestamp,
-
-    });
-
-    
-     console.log('Response:' , response.data);
-  } catch (error) {
-    console.error('Error:' , error);
-  }
-
-  
-  try {
-    const secondResponse = await axios.post('http://localhost:4000/userpoints', {
-    userid: cookies.authUser,
-    earnedat: formattedTimestamp,
-    });
-
-    console.log('Response:' , secondResponse.data);
-  } catch (error) {
-    console.error('Error:' , error);
-  }
-  };
-
 
 
   return (
@@ -187,13 +136,12 @@ const Completedworkoutform = () => {
               <Image src="https://picsum.photos/900/400" fluid rounded />
             </Col>
             <Col sm={5}>
-              <h1 className="fw-bold">Remove Exercise from a routine</h1>
+              <h1 className="fw-bold">Select a Workout Routine for the Day</h1>
               <p className="mt-3 fw-light">
-                Remove an exercise from the day it has been assigned to.
+                Once you select a routine every exercise you have selected will be available for your completion.
               </p>
               <form onSubmit={handleSubmit}>
-
-              <div className="mb-4">
+                <div className="mb-4">
                   <label htmlFor="day">Select Day:</label>
                   <select
                     type="String"
@@ -202,6 +150,7 @@ const Completedworkoutform = () => {
                     value={day}
                     onChange={handleDayChange} 
                   >
+                  {/* Maps through days and brings up the results in dropdown */}
                   <option value="">Select Day</option>
                   {availableDays.map((day) => (
                   <option key={day} value={day}>
@@ -211,71 +160,66 @@ const Completedworkoutform = () => {
                 </select>
                 </div>
 
-                <div className="mb-4">
-                  <label htmlFor="userworkoutid">Select Workout Routine:</label>
-                  <select
-                    type="String"
-                    id="workoutroutine"
-                    className="form-control"
-                    value={selectedUserWorkoutId}
-                    onChange= {infoOfWorkoutSelected}
-                  >
-                      <option value="">Select Workout</option>
-                      {selectedDayWorkouts.map((workout) => (
-                      <option key={workout.userworkoutid} value={workout.userworkoutid}>
-                      {workout.workoutname}
-                      </option>
-                       ))} 
-                      </select>
-                      </div>
+                {day && (
+                  <Table responsive>
+                    <thead>
+                      <tr>
+                        <th>Exercise Name</th>
+                        <th>Working Weight</th>
+                        <th>Working Set Reps</th>
+                        <th>Total Weight Lifted</th>
+                        <th>Total Reps Completed</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* filters workout data and then maps through the filtered data indexing the results Sets the key as the index */}
+                      {workoutData
+                        .filter((workout) => workout.day === day)
+                        .map((workout, index) => (
+                          <tr key={index}>
+                            <td>{workout.workoutname}</td>
+                            <td>{workout.customliftweight}</td>
+                            <td>{workout.customliftreps}</td>
+                            <td>
+                              <input
+                                type="int"
+                                className="form-control"
+                                // Optional chaining deals with null values, sets the workoutProgress value to whatever is inputted, similar operation below
+                                value={workoutProgress[index]?.totalweightlifted || ""}
+                                onChange={(e) => {
+                                  const updatedWorkoutProgress = [...workoutProgress];
+                                  updatedWorkoutProgress[index] = {
+                                    ...updatedWorkoutProgress[index],
+                                    totalweightlifted: e.target.value,
+                                  };
+                                  setWorkoutProgress(updatedWorkoutProgress);
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="int"
+                                className="form-control"
+                                value={workoutProgress[index]?.repscompleted || ""}
+                                onChange={(e) => {
+                                  const updatedWorkoutProgress = [...workoutProgress];
+                                  updatedWorkoutProgress[index] = {
+                                    ...updatedWorkoutProgress[index],
+                                    repscompleted: e.target.value,
+                                  };
+                                  setWorkoutProgress(updatedWorkoutProgress);
+                                }}
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
+                )}
 
-
-                    
-                <div className="mb-4">
-                  <label htmlFor="routineexerciseid">Routine Exercise id:</label>
-                  <input
-                    type="int"
-                    id="routineexerciseid"
-                    className="form-control"
-                    value={routineExerciseId || ""}
-                    onChange={(e) => setRoutineExerciseId(e.target.value)}
-                    disabled={!selectedUserWorkoutId}
-                    />
-                      </div>
-                      <div>
-                      <label htmlFor="Total Weight lifted">Total Weight Lifted</label>
-                    <input
-                    type="int"
-                    id="totalweightlifted"
-                    className="form-control"
-                    value={totalWeightLifted}
-                    onChange={(e) => setTotalWeightLifted(e.target.value)}
-                    />
-                    </div>
-
-                    <div>
-                      <label htmlFor="repscompleted">Total Reps Completed:</label>
-                    <input
-                    type="int"
-                    id="repscompleted"
-                    className="form-control"
-                    value={repsCompleted}
-                    onChange={(e) => setRepsCompleted(e.target.value)}
-                    />
-                    </div>
-
-                    <div>
-                      <label htmlFor="timestamp">Time of completion:</label>
-                    <input
-                    type="String"
-                    id="timestamp"
-                    className="form-control"
-                    value={formattedTimestamp}
-                    onChange={(e) => setTimestamp(e.target.value)}
-                    />
-                    </div>
-
-                <Button type="submit" className="btn btn-primary">Submit Progress</Button>
+                <Button type="submit" className="btn btn-primary">
+                  Submit Progress
+                </Button>
               </form>
             </Col>
           </Row>

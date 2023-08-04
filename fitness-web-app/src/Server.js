@@ -47,7 +47,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-schedule.scheduleJob("1 15 * * 2", () => {
+schedule.scheduleJob("17 10 * * 5", () => {
   const emailcheck =
     "SELECT * FROM users INNER JOIN workoutroutine on users.userid = workoutroutine.userid INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid WHERE users.emailpreference = 1;";
 

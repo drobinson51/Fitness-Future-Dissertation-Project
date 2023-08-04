@@ -41,7 +41,7 @@ export function AuthProvider(props) {
     setAuthUser(null);
     setIsLoggedIn(false);
 
-    // Cookie area if wanted
+
 
     removeCookie('authUser');
   };
