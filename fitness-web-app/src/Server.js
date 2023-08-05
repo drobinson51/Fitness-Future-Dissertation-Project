@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 const schedule = require("node-schedule");
+const emailsender = "dylan.robinson99@gmail.com"
 
 
 let db = mysql.createConnection({
@@ -46,56 +47,92 @@ const transporter = nodemailer.createTransport({
 });
 
 
+schedule.scheduleJob("29 16 * * 6", () => {
+  const emailCheckQuery =
+    // SQL query to get the data needed to send the emails
+    "SELECT * FROM users INNER JOIN workoutroutine ON users.userid = workoutroutine.userid INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid INNER JOIN userworkout ON routineexercises.userworkoutid = userworkout.userworkoutid INNER JOIN workouts ON userworkout.workoutid = workouts.workoutid WHERE users.emailpreference = 1";
 
-schedule.scheduleJob("17 10 * * 5", () => {
-  const emailcheck =
-    "SELECT * FROM users INNER JOIN workoutroutine on users.userid = workoutroutine.userid INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid WHERE users.emailpreference = 1;";
-
-  db.query(emailcheck, async (err, rows) => {
+  db.query(emailCheckQuery, async (err, rows) => {
     if (err) throw err;
 
-  //creates a map which is the basis of the storing data for the query
-    const userEmailsMap = new Map();
+    // map of the user data, the key is the userEmail
+    const userEmailsData = new Map();
 
-    //iterates through the results
+    // Iterates through the results, which is stored as rows
     rows.forEach((row) => { 
       const userEmail = row.user_email;
-      const workoutday = row.day;
+      const workoutDay = row.day;
       const userName = row.user_first_name;
+      const workoutName = row.workoutname;
+      const weight = row.customliftweight;
+      const reps = row.customliftreps;
 
+      //checks for the key and starts the process of populating the map
+      if (userEmailsData.has(userEmail)) {
 
-      //simple if else, if the map has the value it pushes the days into the array contained in the map
+        //gets the info of the line on that day that shares that userEmail
+        const userData = userEmailsData.get(userEmail);
 
-      if (userEmailsMap.has(userEmail)) {
-        userData.workoutdays.add(workoutday);
-
-        // if it does not have the userEmail it creates a new entity in the map that stores the userEmail, name and days they are going
+        if (userData[workoutDay]) {
+          // If the workout day is already stored, adds the workout data to the array
+          userData[workoutDay].push({
+            workoutname: workoutName, 
+            weight: weight,
+            reps: reps,
+          });
+        } else {
+          // If the workout day is not stored, the array is created and the info added.
+          userData[workoutDay] = [{
+            workoutname: workoutName, 
+            weight: weight,
+            reps: reps,
+          }];
+        }
       } else {
-        // Create a new entry for the user in the map
-        userEmailsMap.set(userEmail, userData = {
-          userName: userName,  
-          workoutdays: new Set([workoutday])
+        // If the userEmail is not in the map, created a key for it and create the structure for the array that will be in said map
+        userEmailsData.set(userEmail, { 
+          userName: userName,
+          workoutdays: [], //creates a workout days array
+          [workoutDay]: [{ // Adds workout values to the day that is found
+            workoutname: workoutName, 
+            weight: weight,
+            reps: reps,
+          }],
         });
       }
     });
 
+    // For loop through the emails, and userData of the userEmailsData allowing access to all the variables needed to send the text
+    for (const [userEmail, userData] of userEmailsData) {
+
+      //gets the username from the userData
+      
+      let text = `Hello ${userData.userName}, I hope this finds you well. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
+
+      // For loop through the userData which creates variables to be sent to the user's email
+      for (const workoutDay in userData) {
+        if (workoutDay !== "userName" && workoutDay !== "workoutdays") {
+          //new line for some spacing and asethetic look
+          text += `\n\n${workoutDay} workouts:\n`;
+          userData[workoutDay].forEach((workout) => {
+            text += ` - ${workout.workoutname}: ${workout.weight} kg, ${workout.reps} reps\n`;
+          });
+        }
+      }
 
 
-    //for loop through the useremail map, with a key of userEmail and a value of userData, which contains the username and the userworkoutdays as a set
-    for (const [userEmail, userData] of userEmailsMap) {
 
-      const option = {
-        from: "dylan.robinson99@gmail.com",
+      //how the mail is sent, the emailsender is defined at the top of the document, and the userEmail is derived from its key in the map. You then sent it the text which has been defined in the above function
+      const mailOptions = {
+        from: emailsender,
         to: userEmail,
-        subject: "Test",
-        text:
-          "Hello " +
-          userData.userName +
-          " I hope this finds you well. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week on " +
-          Array.from(userData.workoutdays).join(", ") + " best of luck and hope you kill it!"
+        subject: "Fitness Future: Your Workout Schedule for the Week",
+        text: text,
       };
 
-      transporter.sendMail(option, (error, info) => {
+      //the email is sent, it gives either an error or sends back info proving it was sent fine.
+
+      transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error("Error sending email:", error);
         } else {
