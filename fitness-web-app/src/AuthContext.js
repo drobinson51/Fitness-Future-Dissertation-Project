@@ -20,6 +20,8 @@ export function AuthProvider(props) {
         password,
       });
 
+   
+
       if (response.data.message === 'Login successful') {
         console.log(response.data)
         const userid = response.data.userid
@@ -29,11 +31,13 @@ export function AuthProvider(props) {
         setCookie('authUser', userid); 
         setCookie('isLoggedIn', true);
       } else {
-        throw new Error('Login unsuccessful');
+        throw new Error(response.data.message);
       }
     } catch (error) {
-      throw new Error('Login unsuccessful');
+      throw new Error('Login unsuccessful. Please check your email and password are correct.');
     }
+
+  
   };
 
   const logout = () => {
@@ -66,4 +70,3 @@ export function AuthProvider(props) {
 export function useAuth() {
     return useContext(AuthContext);
   }
-  

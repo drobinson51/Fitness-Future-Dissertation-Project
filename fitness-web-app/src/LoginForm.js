@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from './AuthContext';
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -16,16 +16,23 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
+  const [loginError, setLoginError] = useState('');
   const redirect = useNavigate();
+  const location = useLocation();
+  const regMessage = location.state && location.state.regMessage;
+
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    //if the login is successful you are allowed in and it redirects you to the home page. Otherwise you are sent an error
     try {
       await login(email, password);
       redirect('/');
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error.message);
+      setLoginError(error.message)
     }
   };
 
@@ -75,6 +82,12 @@ const LoginForm = () => {
               <p className="mt-3 fw-light">
                 Hello again friend.
               </p>
+                  {regMessage && (
+             <div className="mt-3 alert alert-success">
+                {regMessage}
+              </div>
+                )}
+  
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label htmlFor="email">Email:</label>
@@ -97,6 +110,7 @@ const LoginForm = () => {
                   />
                 </div>
                 <Button type="submit" className="btn btn-primary">Login</Button>
+                 {loginError && <div className="error text-danger">{loginError}</div>}
               </form>
             </Col>
           </Row>

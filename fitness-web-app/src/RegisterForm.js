@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import bcrypt from 'bcryptjs';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -12,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
 
 
-//10 rounds of hashing, considered a good compromise between speed and security
+
 
 
 //use state to handle form setting variables
@@ -23,38 +23,58 @@ const RegisterForm = () => {
   const [firstname, setFirstName] = useState('');
   const [lastname, setLastName] = useState('');
   const [emailpreference, setEmailPreference] = useState('');
+  
 
+  
+  const navigate = useNavigate();
+ 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    //typical alert that doesn't let you submit without all fields being filled
+  
     if (!email || !password || !username || !firstname) {
-      alert("Please fill out all fields available before registering!")
+      alert("Please fill out all fields available before registering!");
       return;
     }
-
+  
+    //10 rounds of hashing, considered a good compromise between speed and security
     const hashedPassword = bcrypt.hashSync(password, 10);
+  
+    try {
+      const response = await axios.post('http://localhost:4000/register', {
+        email: email,
+        password: hashedPassword,
+        username: username,
+        firstname: firstname,
+        lastname: lastname,
+        emailpreference: emailpreference,
+      });
+  
+      console.log('Response:', response); //Shown for debug uses
+  
+      // if response is got, and the response data and the message are defined, purely for debugging purposes. 
+      if (response && response.data && response.data.successMessage) {
+        console.log('Success Message:', response.data.successMessage); // Print the the successmessage for debug purposes
+        
+      } else {
+        console.log('No Success Message found in the response.');
+      }
+  
 
 
-  try {
-    const response = await axios.post('http://localhost:4000/register', {
-
-    email: email,
-    password: hashedPassword,
-    username: username,
-    firstname: firstname,
-    lastname: lastname,
-    emailpreference: emailpreference,
-
-    });
-
-    
-
-    console.log('Response:' , response.data);
-  } catch (error) {
-    console.error('Error:' , error);
-  }
+      //sends you to the loginpage with the regMessage set, allowing a 
+      navigate('/login', { state: { regMessage: response.data.successMessage } });
+  
+      console.log('Response:', response.data);
+  
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+ 
+ 
 
   return (
     <div className="home">

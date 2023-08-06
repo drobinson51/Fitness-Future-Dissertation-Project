@@ -149,7 +149,11 @@ app.post("/login", async (req, res) => {
   let checkuser = "SELECT * FROM users WHERE user_email = ?";
 
   db.query(checkuser, [email], async (err, rows) => {
-    if (err) throw err;
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "An error occurred during login." });
+    }
+
     let numRows = rows.length;
 
     if (numRows > 0) {
@@ -159,16 +163,17 @@ app.post("/login", async (req, res) => {
       if (validPass) {
         console.log("login successful");
         const userid = rows[0].userid;
-        res.status(200).json({ message: "Login successful", userid });
+        return res.status(200).json({ message: "Login successful", userid });
       } else {
         console.log("login unsuccessful");
-        res.status(200).json({ message: "Login unsuccessful" });
+        return res.status(401).json({ message: "Login unsuccessful. Please check your email and password." });
       }
     } else {
-      res.status(200).json({ message: "Login unsuccessful due to error" });
+      return res.status(401).json({ message: "Login unsuccessful. User not found." });
     }
   });
 });
+
 
 app.post("/register", async (req, res) => {
   const { firstname, lastname, username, email, password, emailpreference } = req.body;
@@ -192,7 +197,8 @@ app.post("/register", async (req, res) => {
           if (err) throw err;
 
 
-          res.json({ userid: userid, data: data });
+          const successMessage = "Registration has been successful, please login to access the functions of the site!";
+          res.json({ userid: userid, successMessage: successMessage });
         })
      
     }
