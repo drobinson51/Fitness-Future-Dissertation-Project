@@ -4,15 +4,13 @@ import { useCookies } from 'react-cookie';
 
 const AuthContext = React.createContext();
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
 
 export function AuthProvider(props) {
-  const [authUser, setAuthUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  
   const [cookies, setCookie, removeCookie] = useCookies('authUser');
+
+  const [authUser, setAuthUser] = useState(cookies.authUser || null);
+  const [isLoggedIn, setIsLoggedIn] = useState(cookies.isLoggedIn || false);
 
 
   const login = async (email, password) => {
@@ -29,6 +27,7 @@ export function AuthProvider(props) {
         setAuthUser(userid);
         setIsLoggedIn(true);
         setCookie('authUser', userid); 
+        setCookie('isLoggedIn', true);
       } else {
         throw new Error('Login unsuccessful');
       }
@@ -44,6 +43,7 @@ export function AuthProvider(props) {
 
 
     removeCookie('authUser');
+    removeCookie ('isLoggedIn');
   };
 
   console.log('authUser value:', authUser); 
@@ -53,12 +53,17 @@ export function AuthProvider(props) {
     authUser,
     isLoggedIn,
     login,
-    logout,
-  };
+    };
 
   return (
     <AuthContext.Provider value={value}>
       {props.children}
     </AuthContext.Provider>
   );
+
+  
 }
+export function useAuth() {
+    return useContext(AuthContext);
+  }
+  
