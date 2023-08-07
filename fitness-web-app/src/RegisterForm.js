@@ -79,7 +79,8 @@ const RegisterForm = () => {
   return (
     <div className="home">
       <header>
-        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+      <Navbar expand="lg"  Navbar bg="primary" 
+          data-bs-theme="dark">
           <Container>
             <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -87,19 +88,6 @@ const RegisterForm = () => {
               <Nav className="me-auto">
                 <Nav.Link href="/">Home</Nav.Link>
                 <Nav.Link href="/login">Login</Nav.Link>
-                <NavDropdown title="Fitness-Functions" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
-                  <NavDropdown.Item href="/addworkouts">
-                    Add workouts
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/addexercisestoroutine">
-                    Customise Routines
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="/leaderboard">
-                    Leaderboard
-                  </NavDropdown.Item>
-                </NavDropdown>
               </Nav>
             </Navbar.Collapse>
           </Container>
