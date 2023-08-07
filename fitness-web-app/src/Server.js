@@ -163,7 +163,8 @@ app.post("/login", async (req, res) => {
       if (validPass) {
         console.log("login successful");
         const userid = rows[0].userid;
-        return res.status(200).json({ message: "Login successful", userid });
+        const usersName = rows[0].user_first_name;
+        return res.status(200).json({ message: "Login successful", userid, usersName });
       } else {
         console.log("login unsuccessful");
         return res.status(401).json({ message: "Login unsuccessful. Please check your email and password." });
@@ -409,7 +410,7 @@ app.get("/userbarchart/:userid", async (req, res) => {
   ON userworkout.workoutid = workouts.workoutid
   INNER JOIN routineexercises
   on routineexercises.userworkoutid = userworkout.userworkoutid
-WHERE exerciseprogress.userid = 6`;
+WHERE exerciseprogress.userid = ?`;
 
   db.query(tierlistentry, [userid], (err, data) => {
     if(err) throw err;

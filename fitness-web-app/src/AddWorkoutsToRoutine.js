@@ -93,27 +93,43 @@ const NewWorkoutToRoutine = () => {
   return (
     <div className="home">
       <header>
-        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+      <Navbar
+          expand="lg"
+          Navbar bg="primary" 
+          data-bs-theme="dark"
+        >
           <Container>
             <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
-                <NavDropdown title="Fitness-Functions" id="basic-nav-dropdown">
+                <Nav.Link href="/userhome">Home</Nav.Link>
+                <Nav.Link href="/logout">Logout</Nav.Link>
+                <NavDropdown title="Workout Management" id="basic-nav-dropdown">
                   <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
                   <NavDropdown.Item href="/addworkouts">
-                    Add workouts
+                    Add user exercises
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/editworkouts">
+                    Edit user exercises
                   </NavDropdown.Item>
                   <NavDropdown.Item href="/addexercisestoroutine">
                     Customise Routines
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/leaderboard">
-                    Leaderboard
+                  <NavDropdown.Item href="/resetprogress">Reset exercise progress</NavDropdown.Item>
+                  <NavDropdown.Item href="/removeroutineexercise">
+                    Delete exercise from routine
                   </NavDropdown.Item>
+                  <NavDropdown.Item href="/deleteworkoutroutine">
+                    Delete routine
+                  </NavDropdown.Item>
+                  
+
                 </NavDropdown>
+                <Nav.Link href="/leaderboard">The Leaderboard</Nav.Link>
+                <Nav.Link href="/exercisecompletion">Workout Record</Nav.Link>
+
               </Nav>
             </Navbar.Collapse>
           </Container>

@@ -29,7 +29,7 @@ const LoginForm = () => {
     //if the login is successful you are allowed in and it redirects you to the home page. Otherwise you are sent an error
     try {
       await login(email, password);
-      redirect('/');
+      redirect('/userhome');
     } catch (error) {
       console.error('Error:', error.message);
       setLoginError(error.message)

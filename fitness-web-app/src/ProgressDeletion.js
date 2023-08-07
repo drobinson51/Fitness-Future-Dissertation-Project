@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
+import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Image from "react-bootstrap/Image";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { Button } from "react-bootstrap";
 
-const RemoveRoutineExercise = () => {
+const ProgressDeletion = () => {
   const [selectedUserWorkoutId, setSelectedUserWorkoutId] = useState("");
   const [routineExercisesInfo, setRoutineExercisesInfo] = useState([]);
   const [cookies] = useCookies(["authUser"]);
+  
 
   useEffect(() => {
     const fetchRoutineExercises = async () => {
@@ -74,27 +83,82 @@ const RemoveRoutineExercise = () => {
   });
 
   return (
-    <form onSubmit={handleDelete}>
-      <div>
-        <label htmlFor="userid">User:</label>
-        <input type="String" id="userid" value={cookies.authUser} disabled />
-      </div>
-
-      <div>
-        <label htmlFor="routineexerciseinfo">Select Exercise:</label>
-        <select
-          id="routineexercise"
-          onChange={handleUserWorkoutChange}
-          value={selectedUserWorkoutId}
+    <div className="home">
+      <header>
+      <Navbar
+          expand="lg"
+          Navbar bg="primary" 
+          data-bs-theme="dark"
         >
-          <option value="">Select Exercise</option>
-          {userWorkoutOptions}
-        </select>
-      </div>
+          <Container>
+            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto">
+                <Nav.Link href="/userhome">Home</Nav.Link>
+                <Nav.Link href="/logout">Logout</Nav.Link>
+                <NavDropdown title="Workout Management" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
+                  <NavDropdown.Item href="/addworkouts">
+                    Add user exercises
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/editworkouts">
+                    Edit user exercises
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/addexercisestoroutine">
+                    Customise Routines
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/resetprogress">Reset exercise progress</NavDropdown.Item>
+                  <NavDropdown.Item href="/removeroutineexercise">
+                    Delete exercise from routine
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/deleteworkoutroutine">
+                    Delete routine
+                  </NavDropdown.Item>
+                  
 
-      <button className="btn btn-primary">Reset Progress</button>
-    </form>
+                </NavDropdown>
+                <Nav.Link href="/leaderboard">The Leaderboard</Nav.Link>
+                <Nav.Link href="/exercisecompletion">Workout Record</Nav.Link>
+
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </header>
+      <main>
+        <Container>
+          <Row className="px-4 my-5">
+            <Col sm={7}>
+              <Image src="https://picsum.photos/900/400" fluid rounded />
+            </Col>
+            <Col sm={5}>
+              <h1 className="fw-bold">Exercise Progression</h1>
+              <p className="mt-3 fw-light">Pick an exercise from the list, and then see your progress in it over time</p>
+           <form onSubmit={handleDelete}> 
+                <div className="mb-4">
+                  <label htmlFor="exercise">Select Exercise:</label>
+                  <select
+                    id="routineexerciseId"
+                    className="form-control"
+                    value={selectedUserWorkoutId}
+                    onChange={handleUserWorkoutChange}
+                  >
+                    <option value="">Select an exercise</option>
+                    {userWorkoutOptions}
+                    </select>
+                    
+                </div>
+               
+                <Button type="submit" className="btn btn-primary">Delete workout progress</Button>
+                </form>
+            </Col>
+          </Row>
+        </Container>
+      </main>
+    </div>
   );
 };
 
-export default RemoveRoutineExercise;
+export default ProgressDeletion;

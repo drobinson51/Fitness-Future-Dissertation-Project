@@ -21,6 +21,7 @@ import DeleteWorkoutRoutine from './DeleteWorkoutRoutine';
 import ProgressDeletion from './ProgressDeletion';
 import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
+import UserPage from './User';
 
 
 
@@ -58,6 +59,7 @@ const App = () => {
 
           <Route path="/api" element={<ProtectedRoute element={<ApiStatus />} />} />
           <Route path="/addworkouts" element={<ProtectedRoute element={<NewUserWorkout />} />} />
+          <Route path="/userhome" element={<ProtectedRoute element={<UserPage />} />} />
           <Route path="/editworkouts" element={<ProtectedRoute element={<EditWorkouts />} />} />
           <Route path="/createroutine" element={<ProtectedRoute element={<NewUserWorkoutRoutine />} />} />
           <Route path="/deleteworkouts" element={<ProtectedRoute element={<DeleteUserWorkouts />} />} />

@@ -11,7 +11,7 @@ export function AuthProvider(props) {
 
   const [authUser, setAuthUser] = useState(cookies.authUser || null);
   const [isLoggedIn, setIsLoggedIn] = useState(cookies.isLoggedIn || false);
-
+  const [userName, setUserName] = useState(cookies.userName || null);
 
   const login = async (email, password) => {
     try {
@@ -25,11 +25,16 @@ export function AuthProvider(props) {
       if (response.data.message === 'Login successful') {
         console.log(response.data)
         const userid = response.data.userid
+        const usersname = response.data.usersName;
         console.log(userid);
         setAuthUser(userid);
         setIsLoggedIn(true);
+        setUserName(usersname);
         setCookie('authUser', userid); 
         setCookie('isLoggedIn', true);
+        setCookie('userName', usersname);
+        console.log("Here is the userName" + userName);
+        console.log("Here is the username in the cookie" + cookies.userName);
       } else {
         throw new Error(response.data.message);
       }
@@ -39,7 +44,7 @@ export function AuthProvider(props) {
 
   
   };
-
+ 
   const logout = () => {
     setAuthUser(null);
     setIsLoggedIn(false);
