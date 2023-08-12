@@ -1,7 +1,9 @@
+
+//use state to handle form setting variables
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -11,40 +13,34 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
 
-
-
-
-//use state to handle form setting variables
 const NewUserWorkoutRoutine = () => {
-
   const [day, setDay] = useState("");
-
   const [cookies] = useCookies(["authUser"]);
-
-  useEffect(() => {
-  }, [cookies.authUser]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const message = location.state && location.state.message;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!day) {
-      alert("You need to select a day to create a workout!")
+      alert("You need to select a day to create a workout!");
       return;
     }
 
+    try {
+      const response = await axios.post('http://localhost:4000/addworkoutroutine', {
+        userid: cookies.authUser,
+        day: day,
+      });
     
-  try {
-    const response = await axios.post('http://localhost:4000/addworkoutroutine', {
-
-    userid: cookies.authUser,
-    day: day,
-
-    });
-
-    console.log('Response:' , response.data);
-  } catch (error) {
-    console.error('Error:' , error);
-  }
+      console.log('Response:', response.data);
+    
+      // Set the message and trigger navigation
+      navigate('/createroutine', { state: { message: response.data.successMessage } });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
 
@@ -122,6 +118,12 @@ const NewUserWorkoutRoutine = () => {
                   </select>
                 </div>
                 <Button type="submit" className="btn btn-primary">Create routine</Button>
+
+                {message && (
+             <div className="mt-3 alert alert-success">
+                {message}
+              </div>
+                )}
               </form>
             </Col>
           </Row>

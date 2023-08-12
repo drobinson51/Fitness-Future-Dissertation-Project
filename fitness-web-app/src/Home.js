@@ -12,6 +12,7 @@ import { Button } from "react-bootstrap";
 import { useCookies } from "react-cookie";
 
 
+
 //Home page, or rather lander page
 
 const HomePage = () => {

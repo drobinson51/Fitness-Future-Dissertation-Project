@@ -270,7 +270,7 @@ app.post("/deleteuserworkouts", async (req, res) => {
 
   db.query(userworkouts, [userid, workoutid], (err, data) => {
     if (err) throw err;
-    res.json({ data });
+    res.json({ data, message: "Workout has been successfully deleted."});
   });
 });
 
@@ -299,7 +299,7 @@ app.post("/exerciseprogress", async (req, res) => {
     ],
     (err, data) => {
       if (err) throw err;
-      res.json({ data });
+      res.json({ data, successMessage: "Nice workout you killed it! Keep it up." });
     }
   );
 });
@@ -336,7 +336,7 @@ app.post("/addworkoutroutine", async (req, res) => {
 
   db.query(workoutroutine, [userid, day], (err, data) => {
     if (err) throw err;
-    res.json({ data });
+    res.json({ data, successMessage: "Congratulations, you've created a routine. Would you like to make another?"});
   });
 });
 
@@ -350,7 +350,7 @@ app.post("/addroutineexercises", async (req, res) => {
     [workoutroutineid, userworkoutid, orderperformed],
     (err, data) => {
       if (err) throw err;
-      res.json({ data });
+      res.json({ data, successMessage: "You've added the workout to the routine, would you like to add another?" });
     }
   );
 });
@@ -366,7 +366,7 @@ app.post("/addnewuserworkout", async (req, res) => {
     [userid, workoutid, customliftweight, customliftreps],
     (err, data) => {
       if (err) throw err;
-      res.json({ data });
+      res.json({ data,  successMessage: "You've created a personal exercise for use and tracking, would you like to add more?" });
     }
   );
 });
@@ -379,7 +379,7 @@ app.post("/editworkout", async (req, res) => {
   db.query(updateWorkout, [customliftweight, customliftreps, userid, workoutid],
     (err, data) => {
       if (err) throw err;
-      res.json({ data });
+      res.json({ data, successMessage: "The selected message has been edited to match your revised values." });
     }
   );
 });
@@ -442,7 +442,7 @@ app.post("/removeexercise", async (req, res) => {
 
   db.query(routineexercise, [routineexerciseid], (err, data) => {
     if (err) throw err;
-    res.json({ data });
+    res.json({ data, deletionMessage: "The exercise has been removed from your routine."});
   });
 });
 
@@ -454,7 +454,7 @@ app.post("/deleteexerciseroutine", async (req, res) => {
 
   db.query(workoutroutine, [userid, workoutroutineid], (err, data) => {
     if (err) throw err;
-    res.json({ data });
+    res.json({ data, deletionMessage: "You've removed this routine from your plans." });
   });
 });
 
@@ -503,7 +503,7 @@ app.post("/removeprogress", async (req, res) => {
 
   db.query(workoutroutine, [userid, userworkoutid], (err, data) => {
     if (err) throw err;
-    res.json({ data });
+    res.json({ data, deletionMessage: "You've reset your progress in this exercise." });
   });
 });
 

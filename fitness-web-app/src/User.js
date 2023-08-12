@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import { Chart, registerables } from 'chart.js';
@@ -30,6 +30,9 @@ const [availableExercises, setAvailableExercises] = useState([]);
 const [userPosition, setUserPosition] = useState("");
 const [description, setDescription] = useState("");
 const [cookies] = useCookies(["authUser"]);
+const redirect = useNavigate();
+const location = useLocation();
+const successMessage = location.state && location.state.successMessage;
 
 
 
@@ -227,6 +230,11 @@ useEffect(() => {
         <Image src="https://picsum.photos/900/400" fluid rounded className = ""/>
         </Col>
      
+        {successMessage && (
+             <div className="mt-3 alert alert-success">
+                {successMessage}
+              </div>
+                )}
         <Col sm={6}>  
         <h1 className = "fw-bold">Hello {cookiesName.userName}</h1>
         <p className = "mt-3 fw-light">

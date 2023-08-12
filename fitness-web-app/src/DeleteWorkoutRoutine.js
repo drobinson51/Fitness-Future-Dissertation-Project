@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -14,63 +14,68 @@ import { Button } from "react-bootstrap";
 //use state to handle form setting variables
 const DeleteWorkoutRoutine = () => {
   const [workoutRoutineId, setWorkoutRoutineID] = useState("");
-  const [day, setDay] = useState([]);
-  const [UserWorkoutRoutines, setUserWorkoutRoutines] = useState([]);
   const [workoutRoutineIds, setWorkoutRoutineIds] = useState([]);
   const [days, setDays] = useState([]);
-
   const [cookies] = useCookies(["authUser"]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const deleteMessage = location.state && location.state.deletionMessage;
+
+  const fetchWorkoutRoutines = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/exerciseroutines/${cookies.authUser}`
+      );
+
+      const workoutRoutineIds = response.data.data.map(
+        (workoutroutinesavailable) => workoutroutinesavailable.workoutroutineid
+      );
+  
+      const days = response.data.data.map(
+        (workoutroutinedaysavailable) => workoutroutinedaysavailable.day
+      );
+
+      setWorkoutRoutineIds(workoutRoutineIds);
+      setDays(days);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchWorkoutRoutines = async () => {
-      try {
-        const response = await axios.get(
-            `http://localhost:4000/exerciseroutines/${cookies.authUser}`
-        );
-        console.log("Response:", response.data); // Log the response data
-
-
-        const workoutRoutineIds = response.data.data.map(
-            (workoutroutinesavailable) => workoutroutinesavailable.workoutroutineid
-          );
-  
-          const days = response.data.data.map(
-            (workoutroutinedaysavailable) => workoutroutinedaysavailable.day
-          );
-
-          setWorkoutRoutineIds(workoutRoutineIds);
-
-          setDays(days);
-
-
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
     fetchWorkoutRoutines();
   }, [cookies.authUser]);
 
   const handleDelete = async (event) => {
     event.preventDefault();
 
-
     if (!workoutRoutineId) {
       alert("You need to select a workout to delete!")
       return;
     }
 
+    try {
+      const response = await axios.post('http://localhost:4000/deleteexerciseroutine', {
+        userid: cookies.authUser,
+        workoutroutineid: parseInt(workoutRoutineId),
+      });
+      console.log('Response:', response.data);
 
-  try {
-    const response = await axios.post('http://localhost:4000/deleteexerciseroutine', {
-    userid: cookies.authUser,
-    workoutroutineid: parseInt(workoutRoutineId),
-    });
-     console.log('Response:' , response.data);
-  } catch (error) {
-    console.error('Error:' , error);
-  }
+      // Call fetchWorkoutRoutines again after successful deletion
+      fetchWorkoutRoutines();
+
+      // Use navigate to change the location state
+      navigate('/deleteworkoutroutine', { state: { deletionMessage: response.data.deletionMessage } });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+
+  
+ 
+
+
 
   return (
     <div className="home">
@@ -145,6 +150,12 @@ const DeleteWorkoutRoutine = () => {
                     </select>
                     </div>
                 <Button type="submit" className="btn btn-primary">Delete Routine</Button>
+
+                {deleteMessage && (
+             <div className="mt-3 alert alert-success">
+                {deleteMessage}
+              </div>
+                )}
               </form>
             </Col>
           </Row>

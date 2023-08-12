@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -19,6 +19,11 @@ const Completedworkoutform = () => {
   const [workoutData, setWorkoutData] = useState([]);
   const [cookies] = useCookies(["authUser"]);
   const [workoutProgress, setWorkoutProgress] = useState([]);
+  
+
+  const navigate = useNavigate();
+
+  let successMessage = useState("");
 
   useEffect(() => {
     const fetchWorkoutInfo = async () => {
@@ -50,11 +55,22 @@ const Completedworkoutform = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    
   
     if (workoutProgress.some((workout) => !workout.totalweightlifted || !workout.repscompleted)) {
       alert("You must fill in all fields in order to submit your progress!");
       return;
     }
+    
+
+
+    //function for setting total weight lifted, and total reps. It works by multiplying the reps and sets. Then the reps by the sets by the totalweightlifted, which is actually the weight on the bar the user sets.
+    const workoutProgressWithCalculatedData = workoutProgress.map((exercise) => ({
+      ...exercise,
+      totalreps: exercise.repscompleted * exercise.setscompleted,
+      totalweightlifted: (exercise.totalweightlifted || 0) * exercise.repscompleted * exercise.setscompleted,
+    }));
   
     try {
       const workoutsAvailableForSelectedDay = workoutData.filter((workout) => workout.day === day);
@@ -64,12 +80,14 @@ const Completedworkoutform = () => {
         userid: cookies.authUser,
         userworkoutid: parseInt(workout.userworkoutid),
         routineexerciseid: parseInt(workout.routineexerciseid),
-        totalweightlifted: parseInt(workoutProgress[index]?.totalweightlifted), 
-        repscompleted: parseInt(workoutProgress[index]?.repscompleted), 
+        totalweightlifted: workoutProgressWithCalculatedData[index]?.totalweightlifted,
+        repscompleted: workoutProgressWithCalculatedData[index]?.totalreps,
         timestamp: formattedTimestamp,
       })));
   
       console.log("Response", responses.map((response) => response.data));
+
+      successMessage = "Congratulations, you killed it. Your progress was recorded. Keep up the good work!";
     } catch (error) {
       console.log("Error:", error);
     }
@@ -85,6 +103,9 @@ const Completedworkoutform = () => {
     } catch (error) {
       console.error('Error:' , error);
     }
+
+
+    navigate('/userhome', { state: { successMessage: successMessage } })
     };
   
 
@@ -183,8 +204,9 @@ const Completedworkoutform = () => {
                         <th>Exercise Name</th>
                         <th>Working Weight</th>
                         <th>Working Set Reps</th>
-                        <th>Total Weight Lifted</th>
-                        <th>Total Reps Completed</th>
+                        <th>Weight Lifted</th>
+                        <th>Reps completed</th>
+                        <th>Sets Completed</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -227,6 +249,21 @@ const Completedworkoutform = () => {
                                 }}
                               />
                             </td>
+                            <td> 
+                            <input
+                              type="int"
+                                className="form-control"
+                                value={workoutProgress[index]?.setscompleted || ""}
+                              onChange={(e) => {
+                              const updatedWorkoutProgress = [...workoutProgress];
+                              updatedWorkoutProgress[index] = {
+                                ...updatedWorkoutProgress[index],
+                              setscompleted: e.target.value,
+                                };
+                          setWorkoutProgress(updatedWorkoutProgress);
+                        }}
+                           />
+                        </td>
                           </tr>
                         ))}
                     </tbody>
