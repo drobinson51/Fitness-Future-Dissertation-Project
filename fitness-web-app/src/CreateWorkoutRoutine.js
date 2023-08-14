@@ -19,10 +19,12 @@ const NewUserWorkoutRoutine = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const message = location.state && location.state.message;
+  const [showCreateWorkoutsButton, setShowCreateWorkoutsButton] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    //typical alert to prevent user submitting without selecting from dropdown
     if (!day) {
       alert("You need to select a day to create a workout!");
       return;
@@ -36,11 +38,14 @@ const NewUserWorkoutRoutine = () => {
     
       console.log('Response:', response.data);
     
+      
+      setShowCreateWorkoutsButton(true);
       // Set the message and trigger navigation
       navigate('/createroutine', { state: { message: response.data.successMessage } });
     } catch (error) {
       console.error('Error:', error);
     }
+
   };
 
 
@@ -124,6 +129,14 @@ const NewUserWorkoutRoutine = () => {
                 {message}
               </div>
                 )}
+
+              {showCreateWorkoutsButton && (
+              <Button variant="outline-primary" classname = "mt-3"
+              onClick={() => navigate('/addworkouts')}
+              >
+            Add some exercises to your routines? 
+            </Button>
+              )}
               </form>
             </Col>
           </Row>

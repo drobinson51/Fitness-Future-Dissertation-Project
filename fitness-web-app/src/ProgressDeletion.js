@@ -14,6 +14,7 @@ const ProgressDeletion = () => {
   const [selectedUserWorkoutId, setSelectedUserWorkoutId] = useState("");
   const [routineExercisesInfo, setRoutineExercisesInfo] = useState([]);
   const [cookies] = useCookies(["authUser"]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   
 
   useEffect(() => {
@@ -81,6 +82,25 @@ const ProgressDeletion = () => {
       </option>
     );
   });
+
+  const confirmModal = (
+    <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm Deletion</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to reset this progress? This cannot be undone.
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleDelete}>
+          Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 
   return (
     <div className="home">
@@ -151,12 +171,13 @@ const ProgressDeletion = () => {
                     
                 </div>
                
-                <Button type="submit" className="btn btn-primary">Delete workout progress</Button>
+                <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete Progress</Button>
                 </form>
             </Col>
           </Row>
         </Container>
       </main>
+      {confirmModal}
     </div>
   );
 };

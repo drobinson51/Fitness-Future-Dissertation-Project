@@ -9,14 +9,16 @@ import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { Button } from "react-bootstrap";
-
+import Button  from "react-bootstrap/Button";
+import Modal from 'react-bootstrap/Modal';
+ 
 //use state to handle form setting variables
 const DeleteWorkoutRoutine = () => {
   const [workoutRoutineId, setWorkoutRoutineID] = useState("");
   const [workoutRoutineIds, setWorkoutRoutineIds] = useState([]);
   const [days, setDays] = useState([]);
   const [cookies] = useCookies(["authUser"]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const deleteMessage = location.state && location.state.deletionMessage;
@@ -64,6 +66,7 @@ const DeleteWorkoutRoutine = () => {
 
       // Call fetchWorkoutRoutines again after successful deletion
       fetchWorkoutRoutines();
+      setShowConfirmModal(false);
 
       // Use navigate to change the location state
       navigate('/deleteworkoutroutine', { state: { deletionMessage: response.data.deletionMessage } });
@@ -73,7 +76,25 @@ const DeleteWorkoutRoutine = () => {
   };
 
   
- 
+  const confirmModal = (
+    <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm Deletion</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to delete this workout routine?
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleDelete}>
+          Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+  
 
 
 
@@ -149,7 +170,7 @@ const DeleteWorkoutRoutine = () => {
                     ))}
                     </select>
                     </div>
-                <Button type="submit" className="btn btn-primary">Delete Routine</Button>
+                    <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete Routine</Button>
 
                 {deleteMessage && (
              <div className="mt-3 alert alert-success">
@@ -161,6 +182,7 @@ const DeleteWorkoutRoutine = () => {
           </Row>
         </Container>
       </main>
+      {confirmModal}
     </div>
   );
 };

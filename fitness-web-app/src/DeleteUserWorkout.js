@@ -19,7 +19,7 @@ const DeleteUserWorkouts = () => {
   const [customliftreps, setCustomLiftReps] = useState("");
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
-  
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const [cookies] = useCookies(["authUser"]);
 
@@ -69,6 +69,28 @@ const DeleteUserWorkouts = () => {
     console.error('Error:' , error);
   }
   };
+
+
+  const confirmModal = (
+    <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirm Deletion</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        Are you sure you want to delete this user workout? This will completely reset progress in this exercise.
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleDelete}>
+          Delete
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+  
+
 
   return (
     <div className="home">
@@ -144,12 +166,13 @@ const DeleteUserWorkouts = () => {
                     ))}
                 </select>
                 </div>
-                <Button type="submit" className="btn btn-primary">Delete personal workout </Button>
+                <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete User Workout</Button>
               </form>
             </Col>
           </Row>
         </Container>
       </main>
+      {confirmModal}
     </div>
   );
 };
