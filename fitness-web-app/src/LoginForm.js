@@ -9,6 +9,8 @@ import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
+import './styles.css';
+
 
 
 
@@ -63,7 +65,9 @@ const LoginForm = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="https://picsum.photos/900/400" fluid rounded />
+            
+              <Image src="/image/loginpage.jpg"  className = "image-size" fluid rounded />
+            
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Login</h1>
@@ -72,7 +76,7 @@ const LoginForm = () => {
               </p>
                   {regMessage && (
              <div className="mt-3 alert alert-success">
-                {regMessage}
+                  {regMessage}
               </div>
                 )}
   

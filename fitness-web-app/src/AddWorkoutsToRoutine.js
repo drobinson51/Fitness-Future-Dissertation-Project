@@ -139,7 +139,7 @@ const NewWorkoutToRoutine = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="https://picsum.photos/900/400" fluid rounded />
+            <Image src="/image/AddWorkoutToRoutine.jpeg" className="image-size" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Create personal workout exercise</h1>

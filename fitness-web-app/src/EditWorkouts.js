@@ -27,7 +27,7 @@ const EditWorkouts = () => {
     const fetchWorkoutIds = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/userworkouts/${cookies.authUser}`
+          `http://localhost:4000/workoutinfos/${cookies.authUser}`
         );
         console.log("Response:", response.data); // Log the response data
 
@@ -122,7 +122,7 @@ const EditWorkouts = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="https://picsum.photos/900/400" fluid rounded />
+              <Image src="/image/EditWorkout.jpeg" className="image-size" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Edit a workout</h1>

@@ -9,6 +9,7 @@ import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
+import Modal from 'react-bootstrap/Modal';
 
 
 
@@ -164,7 +165,7 @@ const RemoveRoutineExercise = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="https://picsum.photos/900/400" fluid rounded />
+            <Image src="/image/RemoveExerciseFromRoutine.jpeg" className="image-size" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Remove Exercise from a routine</h1>
@@ -217,7 +218,7 @@ const RemoveRoutineExercise = () => {
           </Row>
         </Container>
       </main>
-      {ConfirmModal}
+      {confirmModal}
     </div>
   );
 };

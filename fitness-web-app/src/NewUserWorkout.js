@@ -23,6 +23,7 @@ const NewUserWorkout = () => {
   const [customliftreps, setCustomLiftReps] = useState("");
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
+  const [userWorkouts, setUserWorkouts] = useState([]);
 
   const [cookies] = useCookies(["authUser"]);
 
@@ -50,6 +51,22 @@ const NewUserWorkout = () => {
     };
     
     fetchworkoutids();
+  }, [cookies.authUser]);
+
+  useEffect(() => {
+    const fetchUserWorkouts = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/userworkouts/${cookies.authUser}`
+        );
+        
+        setUserWorkouts(response.data.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchUserWorkouts();
   }, [cookies.authUser]);
 
   const handleSubmit = async (event) => {
@@ -125,7 +142,7 @@ const NewUserWorkout = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="https://picsum.photos/900/400" fluid rounded />
+              <Image src="image/NewUserWorkout.jpeg" className="image-size" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Create personal workout exercise</h1>
@@ -135,6 +152,11 @@ const NewUserWorkout = () => {
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label htmlFor="workoutid">Workout:</label>
+
+                  {/* Little message to inform the user if they've got every exercise already tracked using ternary operators */}
+                  {workoutIds.length === userWorkouts.length  ? (
+            <p>All available workouts are already being tracked.</p>
+          ) : (
                   <select
                     type="String"
                     id="workoutid"
@@ -142,13 +164,21 @@ const NewUserWorkout = () => {
                     value={workoutid}
                     onChange={(e) => setWorkoutID(e.target.value)}
                   >
-                   <option value="">Select Workout</option>
-                  {workoutIds.map((id, index) => (
+                     
+                  <option value="">Select Workout</option>
+                    {workoutIds.map((id, index) => {
+              // Prevents display of workouts user already has
+              if (!userWorkouts.some(workout => workout.workoutid === id)) {
+                return (
                   <option key={id} value={id}>
-                  {workoutNames[index]}
+                    {workoutNames[index]}
                   </option>
-                  ))}
-                  </select>
+                );
+              }
+              return null;
+            })}
+          </select>
+          )}
                 </div>
                 <div className="mb-4">
                   <label htmlFor="customliftweight">How much weight will this lift be?:</label>

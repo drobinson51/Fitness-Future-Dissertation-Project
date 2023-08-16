@@ -227,7 +227,7 @@ useEffect(() => {
       <Container>
       <Row className = "px-4 my-5">
         <Col sm={6}>
-        <Image src="https://picsum.photos/900/400" fluid rounded className = ""/>
+        <Image src="image/userhomepage.jpg"  className = "image-size" fluid rounded/>
         </Col>
      
         {successMessage && (

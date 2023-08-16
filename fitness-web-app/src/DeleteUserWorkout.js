@@ -10,6 +10,7 @@ import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
+import Modal from 'react-bootstrap/Modal';
 
 
 //use state to handle form setting variables
