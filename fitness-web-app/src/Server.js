@@ -248,6 +248,20 @@ app.get("/workoutinfos/:userid", async (req, res) => {
   });
 });
 
+app.get("/workoutdays/:userid", async (req, res) => {
+  const { userid } = req.params;
+  
+  
+  let getworkoutdaysinfo = `SELECT *
+  FROM workoutroutine  WHERE workoutroutine.userid = ?;`
+
+  db.query(getworkoutdaysinfo, [userid], (err, data) => {
+    if (err) throw err;
+    res.json({ data });
+  });
+});
+
+
 app.get("/userworkouts/:userid", async (req, res) => {
   const { userid } = req.params;
 

@@ -19,8 +19,41 @@ const NewUserWorkoutRoutine = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const message = location.state && location.state.message;
+  const [userWorkoutDays, setUserWorkoutDays] = useState([]);
   const [showCreateWorkoutsButton, setShowCreateWorkoutsButton] = useState(false);
+  const [availableDays, setAvailableDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
 
+
+  useEffect(() => {
+    
+    fetchUserWorkouts();
+  
+  }, [cookies.authUser]);
+
+
+  const fetchUserWorkouts = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/workoutdays/${cookies.authUser}`
+      );
+      
+      setUserWorkoutDays(response.data.data);
+
+      const daysTaken = response.data.data.map(workoutDay => workoutDay.day);
+
+      const daysNotTaken = availableDays.filter(day => !daysTaken.includes(day));
+
+      console.log(daysTaken)
+      console.log(daysNotTaken);
+
+      setAvailableDays(daysNotTaken);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -41,6 +74,12 @@ const NewUserWorkoutRoutine = () => {
       
       setShowCreateWorkoutsButton(true);
       // Set the message and trigger navigation
+
+      fetchUserWorkouts();
+
+      setDay(""); 
+
+
       navigate('/createroutine', { state: { message: response.data.successMessage } });
     } catch (error) {
       console.error('Error:', error);
@@ -113,14 +152,16 @@ const NewUserWorkoutRoutine = () => {
                     value={day}
                     onChange={(e) => setDay(e.target.value)}
                   >
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                  </select>
+                   
+              {/* Creates an array then filters and maps through it with an key of dayOption which is compared to workoutinfos this dynamically removes day when the user has added them  */}
+            
+
+               {availableDays.map(dayOption => (
+                <option key={dayOption} value={dayOption}>
+                {dayOption}
+                </option>
+                ))}
+                </select>
                 </div>
                 <Button type="submit" className="btn btn-primary">Create routine</Button>
 
@@ -131,7 +172,7 @@ const NewUserWorkoutRoutine = () => {
                 )}
 
               {showCreateWorkoutsButton && (
-              <Button variant="outline-primary" classname = "mt-3"
+              <Button variant="outline-primary" className = "mt-3"
               onClick={() => navigate('/addworkouts')}
               >
             Add some exercises to your routines? 

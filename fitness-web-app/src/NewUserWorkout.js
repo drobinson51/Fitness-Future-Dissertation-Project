@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -24,50 +24,56 @@ const NewUserWorkout = () => {
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
   const [userWorkouts, setUserWorkouts] = useState([]);
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  const successMessage = location.state && location.state.successMessage;
   const [cookies] = useCookies(["authUser"]);
 
   useEffect(() => {
-    const fetchworkoutids = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/workouts`
-        );
-        console.log("Response:", response.data); // Log the response data
-  
-        const workoutIds = response.data.data.map(
-          (workoutsavaiable) => workoutsavaiable.workoutid
-        );
-  
-        const workoutNames = response.data.data.map(
-          (workoutnamesavailable) => workoutnamesavailable.workoutname
-        );
-        console.log("Here are the workout ids:", workoutIds);
-        setWorkoutIds(workoutIds);
-        setWorkoutNames(workoutNames);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+ 
     
     fetchworkoutids();
   }, [cookies.authUser]);
 
   useEffect(() => {
-    const fetchUserWorkouts = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/userworkouts/${cookies.authUser}`
-        );
-        
-        setUserWorkouts(response.data.data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
+  
     fetchUserWorkouts();
   }, [cookies.authUser]);
+
+  const fetchworkoutids = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/workouts`
+      );
+      console.log("Response:", response.data); // Log the response data
+
+      const workoutIds = response.data.data.map(
+        (workoutsavaiable) => workoutsavaiable.workoutid
+      );
+
+      const workoutNames = response.data.data.map(
+        (workoutnamesavailable) => workoutnamesavailable.workoutname
+      );
+      console.log("Here are the workout ids:", workoutIds);
+      setWorkoutIds(workoutIds);
+      setWorkoutNames(workoutNames);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchUserWorkouts = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/userworkouts/${cookies.authUser}`
+      );
+      
+      setUserWorkouts(response.data.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -86,6 +92,13 @@ const NewUserWorkout = () => {
     customliftreps: customliftreps,
 
     });
+
+    //Call them after a workout is successfully submitted allowing reset of workout menu and avoiding issue of double tracking exercise. 
+
+    fetchworkoutids();
+    fetchUserWorkouts();
+
+    navigate('/addworkouts', { state: { successMessage: response.data.successMessage } });
 
     console.log('Response:' , response.data);
   } catch (error) {
@@ -154,9 +167,9 @@ const NewUserWorkout = () => {
                   <label htmlFor="workoutid">Workout:</label>
 
                   {/* Little message to inform the user if they've got every exercise already tracked using ternary operators */}
-                  {workoutIds.length === userWorkouts.length  ? (
-            <p>All available workouts are already being tracked.</p>
-          ) : (
+                  {workoutIds.length === userWorkouts.length + 1  ? (
+                <p>All available workouts are already being tracked.</p>
+                ) : (
                   <select
                     type="String"
                     id="workoutid"
@@ -201,8 +214,18 @@ const NewUserWorkout = () => {
                   />
                 </div>
                 <Button type="submit" className="btn btn-primary">Create personal exercise </Button>
+                
               </form>
+              
+              {successMessage && (
+             <div className="mt-3 alert alert-success">
+                  {successMessage}
+                  
+              </div>
+              )}
+
             </Col>
+            
           </Row>
         </Container>
       </main>
