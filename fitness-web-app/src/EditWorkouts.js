@@ -27,7 +27,7 @@ const EditWorkouts = () => {
     const fetchWorkoutIds = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/workoutinfos/${cookies.authUser}`
+          `http://localhost:4000/workouti nfos/${cookies.authUser}`
         );
         console.log("Response:", response.data); // Log the response data
 

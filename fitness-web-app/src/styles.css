@@ -1,3 +1,24 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 1000px;
+}
+
+.App {
+  color: #228b22;
+  text-align: center;
+}
+
+.footer {
+  background-color: #1D1D1D;
+  border-top: 2px solid grey ;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  color: white;
+  font-size: 20px;
+}
+
 .image-size {
   width: 900px;
   height: 400px;

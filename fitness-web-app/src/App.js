@@ -22,7 +22,8 @@ import ProgressDeletion from './ProgressDeletion';
 import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import UserPage from './User';
-
+import Footer from './Footer';
+import './styles.css';
 
 
 
@@ -30,8 +31,11 @@ const App = () => {
   return (
     <AuthProvider>
     <Router>
-      <Routes>
+      
+      
 
+      <main>
+      <Routes>
       <Route path="/" element={<HomePage/>} />
         <Route path="/login" element={<LoginForm/>} />
         <Route path="/register" element={<RegisterForm />} />
@@ -72,9 +76,16 @@ const App = () => {
           <Route path="/deleteworkoutroutine" element={<ProtectedRoute element={<DeleteWorkoutRoutine />} />} />
           <Route path="/resetprogress" element={<ProtectedRoute element={<ProgressDeletion />} />} />
         
-      </Routes>
+
+        
+          </Routes>
+          </main>
+          <Footer/>
+  
      
+  
     </Router>
+
     </AuthProvider>
   );
 };

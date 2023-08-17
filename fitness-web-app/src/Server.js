@@ -7,8 +7,8 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 const schedule = require("node-schedule");
-const emailsender = "dylan.robinson99@gmail.com"
-
+const emailSender = "fitnessfuturecsc7057@gmail.com";
+const emailPassword = "kienpsctlbziezkn";
 
 let db = mysql.createConnection({
   host: "localhost",
@@ -33,33 +33,42 @@ app.get("/", (req, res) => {
 
 app.listen(8000);
 
+
+// nodecron test
 cron.schedule("* * * * *", () => {
   console.log("running a task every minute");
 });
 
+
+//declaration of transporter to be use by nodecron to send email, provides the details required to the API. 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "dylan.robinson99@gmail.com",
-    //gmail pass
-    pass: "vsljiwadktcikjne",
+    user: emailSender,
+
+    pass: emailPassword,
   },
 });
 
 
-schedule.scheduleJob("29 16 * * 6", () => {
+// Email function through nodecron 
+schedule.scheduleJob("04 17 * * 4", () => {
   const emailCheckQuery =
     // SQL query to get the data needed to send the emails
-    "SELECT * FROM users INNER JOIN workoutroutine ON users.userid = workoutroutine.userid INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid INNER JOIN userworkout ON routineexercises.userworkoutid = userworkout.userworkoutid INNER JOIN workouts ON userworkout.workoutid = workouts.workoutid WHERE users.emailpreference = 1";
+    `SELECT * FROM users 
+    INNER JOIN workoutroutine ON users.userid = workoutroutine.userid 
+    INNER JOIN routineexercises ON workoutroutine.workoutroutineid = routineexercises.workoutroutineid 
+    INNER JOIN userworkout ON routineexercises.userworkoutid = userworkout.userworkoutid 
+    INNER JOIN workouts ON userworkout.workoutid = workouts.workoutid WHERE users.emailpreference = 1`
 
   db.query(emailCheckQuery, async (err, rows) => {
     if (err) throw err;
 
-    // map of the user data, the key is the userEmail
+    // map of the user data, the key is the userEmail,
     const userEmailsData = new Map();
 
     // Iterates through the results, which is stored as rows
-    rows.forEach((row) => { 
+    rows.forEach((row) => {
       const userEmail = row.user_email;
       const workoutDay = row.day;
       const userName = row.user_first_name;
@@ -69,45 +78,47 @@ schedule.scheduleJob("29 16 * * 6", () => {
 
       //checks for the key and starts the process of populating the map
       if (userEmailsData.has(userEmail)) {
-
         //gets the info of the line on that day that shares that userEmail
         const userData = userEmailsData.get(userEmail);
 
         if (userData[workoutDay]) {
           // If the workout day is already stored, adds the workout data to the array
           userData[workoutDay].push({
-            workoutname: workoutName, 
+            workoutname: workoutName,
             weight: weight,
             reps: reps,
           });
         } else {
           // If the workout day is not stored, the array is created and the info added.
-          userData[workoutDay] = [{
-            workoutname: workoutName, 
-            weight: weight,
-            reps: reps,
-          }];
+          userData[workoutDay] = [
+            {
+              workoutname: workoutName,
+              weight: weight,
+              reps: reps,
+            },
+          ];
         }
       } else {
         // If the userEmail is not in the map, created a key for it and create the structure for the array that will be in said map
-        userEmailsData.set(userEmail, { 
+        userEmailsData.set(userEmail, userData = {
           userName: userName,
-          workoutdays: [], //creates a workout days array
-          [workoutDay]: [{ // Adds workout values to the day that is found
-            workoutname: workoutName, 
-            weight: weight,
-            reps: reps,
-          }],
+          [workoutDay]: [
+            {
+              // Adds workout values to the day that is found
+              workoutname: workoutName,
+              weight: weight,
+              reps: reps,
+            },
+          ],
         });
       }
     });
 
     // For loop through the emails, and userData of the userEmailsData allowing access to all the variables needed to send the text
     for (const [userEmail, userData] of userEmailsData) {
-
       //gets the username from the userData
-      
-      let text = `Hello ${userData.userName}, I hope this finds you well. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
+
+      let text = `Hello ${userData.userName}, I hope this finds you in fitness and health. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
 
       // For loop through the userData which creates variables to be sent to the user's email
       for (const workoutDay in userData) {
@@ -120,7 +131,7 @@ schedule.scheduleJob("29 16 * * 6", () => {
         }
       }
 
-
+      text += `\n Regards from Fitness Future, you've got this!`
 
       //how the mail is sent, the emailsender is defined at the top of the document, and the userEmail is derived from its key in the map. You then sent it the text which has been defined in the above function
       const mailOptions = {
@@ -151,7 +162,9 @@ app.post("/login", async (req, res) => {
   db.query(checkuser, [email], async (err, rows) => {
     if (err) {
       console.error("Database error:", err);
-      return res.status(500).json({ message: "An error occurred during login." });
+      return res
+        .status(500)
+        .json({ message: "An error occurred during login." });
     }
 
     let numRows = rows.length;
@@ -164,44 +177,53 @@ app.post("/login", async (req, res) => {
         console.log("login successful");
         const userid = rows[0].userid;
         const usersName = rows[0].user_first_name;
-        return res.status(200).json({ message: "Login successful", userid, usersName });
+        return res
+          .status(200)
+          .json({ message: "Login successful", userid, usersName });
       } else {
         console.log("login unsuccessful");
-        return res.status(401).json({ message: "Login unsuccessful. Please check your email and password." });
+        return res
+          .status(401)
+          .json({
+            message:
+              "Login unsuccessful. Please check your email and password.",
+          });
       }
     } else {
-      return res.status(401).json({ message: "Login unsuccessful. User not found." });
+      return res
+        .status(401)
+        .json({ message: "Login unsuccessful. User not found." });
     }
   });
 });
 
-
 app.post("/register", async (req, res) => {
-  const { firstname, lastname, username, email, password, emailpreference } = req.body;
+  const { firstname, lastname, username, email, password, emailpreference } =
+    req.body;
 
   let userreg =
     "INSERT INTO users (user_first_name, user_last_name, username, user_email, user_password, emailpreference) VALUES (?, ?, ?, ?, ?, ?)";
 
-  db.query(userreg, [firstname, lastname, username, email, password, emailpreference],
+  db.query(
+    userreg,
+    [firstname, lastname, username, email, password, emailpreference],
     (err, data) => {
       if (err) throw err;
 
-      const userid = data.insertId
+      const userid = data.insertId;
 
       const baseScore = 0;
 
-      const leaderboardInitialisation = 'INSERT INTO leaderboard (userid, points) values (?, ?)';
-  
+      const leaderboardInitialisation =
+        "INSERT INTO leaderboard (userid, points) values (?, ?)";
 
-      db.query(leaderboardInitialisation, [userid, baseScore],
-        (err, data) => {
-          if (err) throw err;
+      db.query(leaderboardInitialisation, [userid, baseScore], (err, data) => {
+        if (err) throw err;
 
-
-          const successMessage = "Registration has been successful, please login to access the functions of the site!";
-          res.json({ userid: userid, successMessage: successMessage });
-        })
-     
+        const successMessage =
+          "Registration has been successful, please login to access the functions of the site!";
+        res.json({ userid: userid, successMessage: successMessage });
+      });
     }
   );
 });
@@ -230,8 +252,7 @@ app.get("/workoutroutines/:userid", async (req, res) => {
 
 app.get("/workoutinfos/:userid", async (req, res) => {
   const { userid } = req.params;
-  
-  
+
   let getworkoutinfo = `SELECT *
   FROM userworkout
   INNER JOIN workouts
@@ -240,7 +261,7 @@ app.get("/workoutinfos/:userid", async (req, res) => {
   ON routineexercises.userworkoutid = userworkout.userworkoutid
   INNER JOIN workoutroutine 
   on workoutroutine.workoutroutineid = routineexercises.workoutroutineid
-  WHERE userworkout.userid = ?;`
+  WHERE userworkout.userid = ?;`;
 
   db.query(getworkoutinfo, [userid], (err, data) => {
     if (err) throw err;
@@ -250,17 +271,15 @@ app.get("/workoutinfos/:userid", async (req, res) => {
 
 app.get("/workoutdays/:userid", async (req, res) => {
   const { userid } = req.params;
-  
-  
+
   let getworkoutdaysinfo = `SELECT *
-  FROM workoutroutine  WHERE workoutroutine.userid = ?;`
+  FROM workoutroutine  WHERE workoutroutine.userid = ?;`;
 
   db.query(getworkoutdaysinfo, [userid], (err, data) => {
     if (err) throw err;
     res.json({ data });
   });
 });
-
 
 app.get("/userworkouts/:userid", async (req, res) => {
   const { userid } = req.params;
@@ -284,7 +303,7 @@ app.post("/deleteuserworkouts", async (req, res) => {
 
   db.query(userworkouts, [userid, workoutid], (err, data) => {
     if (err) throw err;
-    res.json({ data, message: "Workout has been successfully deleted."});
+    res.json({ data, message: "Workout has been successfully deleted." });
   });
 });
 
@@ -313,7 +332,10 @@ app.post("/exerciseprogress", async (req, res) => {
     ],
     (err, data) => {
       if (err) throw err;
-      res.json({ data, successMessage: "Nice workout you killed it! Keep it up." });
+      res.json({
+        data,
+        successMessage: "Nice workout you killed it! Keep it up.",
+      });
     }
   );
 });
@@ -327,20 +349,16 @@ app.post("/userpoints", async (req, res) => {
 
   db.query(earnedpoints, [userid, earnedat], (err, data) => {
     if (err) throw err;
-   
-
- 
   });
 
-     
-  let pointTracking = 'UPDATE leaderboard SET points = points + 1 WHERE userid = ?';
-
+  let pointTracking =
+    "UPDATE leaderboard SET points = points + 1 WHERE userid = ?";
 
   db.query(pointTracking, [userid], (err, data) => {
-    if(err) throw err;
+    if (err) throw err;
 
     res.json({ userid: userid, data: data });
-  })
+  });
 });
 
 app.post("/addworkoutroutine", async (req, res) => {
@@ -350,7 +368,11 @@ app.post("/addworkoutroutine", async (req, res) => {
 
   db.query(workoutroutine, [userid, day], (err, data) => {
     if (err) throw err;
-    res.json({ data, successMessage: "Congratulations, you've created a routine. Would you like to make another?"});
+    res.json({
+      data,
+      successMessage:
+        "Congratulations, you've created a routine. Would you like to make another?",
+    });
   });
 });
 
@@ -364,7 +386,11 @@ app.post("/addroutineexercises", async (req, res) => {
     [workoutroutineid, userworkoutid, orderperformed],
     (err, data) => {
       if (err) throw err;
-      res.json({ data, successMessage: "You've added the workout to the routine, would you like to add another?" });
+      res.json({
+        data,
+        successMessage:
+          "You've added the workout to the routine, would you like to add another?",
+      });
     }
   );
 });
@@ -380,7 +406,11 @@ app.post("/addnewuserworkout", async (req, res) => {
     [userid, workoutid, customliftweight, customliftreps],
     (err, data) => {
       if (err) throw err;
-      res.json({ data,  successMessage: "You've created a personal exercise for use and tracking, would you like to add more?" });
+      res.json({
+        data,
+        successMessage:
+          "You've created a personal exercise for use and tracking, would you like to add more?",
+      });
     }
   );
 });
@@ -390,33 +420,37 @@ app.post("/editworkout", async (req, res) => {
 
   let updateWorkout = `UPDATE userworkout SET customliftweight = ?, customliftreps = ? WHERE userid = ? AND workoutid = ?`;
 
-  db.query(updateWorkout, [customliftweight, customliftreps, userid, workoutid],
+  db.query(
+    updateWorkout,
+    [customliftweight, customliftreps, userid, workoutid],
     (err, data) => {
       if (err) throw err;
-      res.json({ data, successMessage: "The selected message has been edited to match your revised values." });
+      res.json({
+        data,
+        successMessage:
+          "The selected message has been edited to match your revised values.",
+      });
     }
   );
 });
 
 app.get("/tierlist/:userid", async (req, res) => {
-
   const { userid } = req.params;
 
-  let tierlistentry = 'SELECT t.title, t.description FROM (SELECT COUNT(*) AS total_points FROM userpoints WHERE userid = ? ) AS up JOIN usertier AS t ON up.total_points >= t.pointsrequired ORDER BY t.pointsrequired DESC LIMIT 1;'
+  let tierlistentry =
+    "SELECT t.title, t.description FROM (SELECT COUNT(*) AS total_points FROM userpoints WHERE userid = ? ) AS up JOIN usertier AS t ON up.total_points >= t.pointsrequired ORDER BY t.pointsrequired DESC LIMIT 1;";
 
   db.query(tierlistentry, [userid], (err, data) => {
-    if(err) throw err;
+    if (err) throw err;
 
-    res.json ({data});
+    res.json({ data });
   });
-}); 
-
+});
 
 app.get("/userbarchart/:userid", async (req, res) => {
-
   const { userid } = req.params;
 
-  let tierlistentry =`SELECT *
+  let tierlistentry = `SELECT *
   FROM exerciseprogress
   INNER JOIN userworkout
   on exerciseprogress.userworkoutid = userworkout.userworkoutid
@@ -427,70 +461,66 @@ app.get("/userbarchart/:userid", async (req, res) => {
 WHERE exerciseprogress.userid = ?`;
 
   db.query(tierlistentry, [userid], (err, data) => {
-    if(err) throw err;
+    if (err) throw err;
 
-    res.json ({data});
+    res.json({ data });
   });
-}); 
-
-
+});
 
 app.get("/leaderboard/", async (req, res) => {
-
-
-
-  let leaderboard = 'SELECT * FROM leaderboard INNER JOIN users ON leaderboard.userid = users.userid ORDER by points DESC;'
+  let leaderboard =
+    "SELECT * FROM leaderboard INNER JOIN users ON leaderboard.userid = users.userid ORDER by points DESC;";
 
   db.query(leaderboard, (err, data) => {
-    if(err) throw err;
+    if (err) throw err;
 
-    res.json ({data});
+    res.json({ data });
   });
-}); 
-
+});
 
 app.post("/removeexercise", async (req, res) => {
-  const {routineexerciseid } = req.body;
+  const { routineexerciseid } = req.body;
 
   let routineexercise = `DELETE FROM routineexercises WHERE routineexerciseid = ?`;
 
   db.query(routineexercise, [routineexerciseid], (err, data) => {
     if (err) throw err;
-    res.json({ data, deletionMessage: "The exercise has been removed from your routine."});
+    res.json({
+      data,
+      deletionMessage: "The exercise has been removed from your routine.",
+    });
   });
 });
 
-
 app.post("/deleteexerciseroutine", async (req, res) => {
-  const {userid, workoutroutineid } = req.body;
+  const { userid, workoutroutineid } = req.body;
 
   let workoutroutine = `DELETE FROM workoutroutine WHERE userid = ? AND workoutroutineid = ?`;
 
   db.query(workoutroutine, [userid, workoutroutineid], (err, data) => {
     if (err) throw err;
-    res.json({ data, deletionMessage: "You've removed this routine from your plans." });
+    res.json({
+      data,
+      deletionMessage: "You've removed this routine from your plans.",
+    });
   });
 });
 
-
 app.get("/exerciseroutines/:userid", async (req, res) => {
-
   const { userid } = req.params;
 
-  let workoutroutinesavailable =`SELECT * FROM workoutroutine WHERE userid = ?`;
+  let workoutroutinesavailable = `SELECT * FROM workoutroutine WHERE userid = ?`;
 
   db.query(workoutroutinesavailable, [userid], (err, data) => {
-    if(err) throw err;
+    if (err) throw err;
 
-    res.json ({data});
+    res.json({ data });
   });
-}); 
-
+});
 
 app.get("/progressinfos/:userid", async (req, res) => {
   const { userid } = req.params;
-  
-  
+
   let getprogressinfo = `SELECT *
   FROM userworkout
   INNER JOIN workouts
@@ -501,7 +531,7 @@ app.get("/progressinfos/:userid", async (req, res) => {
   on workoutroutine.workoutroutineid = routineexercises.workoutroutineid
   INNER JOIN exerciseprogress
   on exerciseprogress.userworkoutid = userworkout.userworkoutid
-  WHERE userworkout.userid = ?;`
+  WHERE userworkout.userid = ?;`;
 
   db.query(getprogressinfo, [userid], (err, data) => {
     if (err) throw err;
@@ -509,15 +539,16 @@ app.get("/progressinfos/:userid", async (req, res) => {
   });
 });
 
-
 app.post("/removeprogress", async (req, res) => {
-  const {userid, userworkoutid } = req.body;
+  const { userid, userworkoutid } = req.body;
 
   let workoutroutine = `DELETE FROM exerciseprogress WHERE userid = ? AND userworkoutid = ?`;
 
   db.query(workoutroutine, [userid, userworkoutid], (err, data) => {
     if (err) throw err;
-    res.json({ data, deletionMessage: "You've reset your progress in this exercise." });
+    res.json({
+      data,
+      deletionMessage: "You've reset your progress in this exercise.",
+    });
   });
 });
-

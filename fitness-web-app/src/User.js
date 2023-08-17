@@ -38,6 +38,7 @@ const successMessage = location.state && location.state.successMessage;
 
 Chart.register(...registerables);
 
+// Use effect that handles getting barchart info for rendering. 
 useEffect(() => {
   const fetchData = async () => {
     try {
