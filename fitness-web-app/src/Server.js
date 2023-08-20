@@ -8,8 +8,9 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 const schedule = require("node-schedule");
-const emailSender = "fitnessfuturecsc7057@gmail.com";
-const emailPassword = "kienpsctlbziezkn";
+
+require("dotenv").config();
+
 
 let db = mysql.createConnection({
   host: "localhost",
@@ -32,7 +33,7 @@ app.get("/", (req, res) => {
   res.send({ message: "Connection established!" });
 });
 
-// app.listen(4000);
+
 
 
 // nodecron test
@@ -45,15 +46,15 @@ cron.schedule("* * * * *", () => {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: emailSender,
+    user: process.env.EMAILSENDER,
 
-    pass: emailPassword,
+    pass: process.env.PASSWORD,
   },
 });
 
 
 // Email function through nodecron 
-schedule.scheduleJob("04 17 * * 4", () => {
+schedule.scheduleJob("21 22 * * 7", () => {
   const emailCheckQuery =
     // SQL query to get the data needed to send the emails
     `SELECT * FROM users 
@@ -136,7 +137,7 @@ schedule.scheduleJob("04 17 * * 4", () => {
 
       //how the mail is sent, the emailsender is defined at the top of the document, and the userEmail is derived from its key in the map. You then sent it the text which has been defined in the above function
       const mailOptions = {
-        from: emailsender,
+        from: process.env.EMAILSENDER,
         to: userEmail,
         subject: "Fitness Future: Your Workout Schedule for the Week",
         text: text,
