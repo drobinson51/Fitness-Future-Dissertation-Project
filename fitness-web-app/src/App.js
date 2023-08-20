@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, useLocation} from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
@@ -23,43 +23,35 @@ import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import UserPage from './User';
 import Footer from './Footer';
+import RegisterdNavbar from './RegisterdNavbar'
+import UnregisteredNavbar from './UnregisteredNavbar';
+
 import './styles.css';
 
 
 
+
 const App = () => {
+
+
   return (
     <AuthProvider>
     <Router>
       
-      
 
       <main>
+
+  
+
       <Routes>
-      <Route path="/" element={<HomePage/>} />
+
+     
+      <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
         <Route path="/login" element={<LoginForm/>} />
         <Route path="/register" element={<RegisterForm />} />
 
        
     
-
-        {/* <ProtectedRoute path="/api" element={<ApiStatus/>} />
-        <ProtectedRoute path="/" element={<HomePage/>} />
-        <ProtectedRoute path="/addworkouts" element={<NewUserWorkout />} />
-        <ProtectedRoute path="/editworkouts" element={<EditWorkouts />} />
-        <ProtectedRoute path="/createroutine" element={<NewUserWorkoutRoutine />} />
-        <ProtectedRoute path="/deleteworkouts" element={<DeleteUserWorkouts />} />
-        <ProtectedRoute path="/exercisecompletion" element={<Completedworkoutform />} />
-        <ProtectedRoute path="/tierlist" element={<UserTierList />} />
-        <ProtectedRoute path="/leaderboard" element={<LeaderBoardDisplay />} />
-        <ProtectedRoute path="/barchart" element={<UserBarChart />} />
-        <ProtectedRoute path ="/addexercisestoroutine" element = {<NewWorkoutToRoutine />} />
-        <ProtectedRoute path ="/removeroutineexercise" element = {<RemoveRoutineExercise />} />
-        <ProtectedRoute path ="/deleteworkoutroutine" element = {<DeleteWorkoutRoutine />} />
-        <ProtectedRoute path ="/resetprogress" element = {<ProgressDeletion />} />
-       
-        
-        */}
 
           <Route path="/api" element={<ProtectedRoute element={<ApiStatus />} />} />
           <Route path="/addworkouts" element={<ProtectedRoute element={<NewUserWorkout />} />} />

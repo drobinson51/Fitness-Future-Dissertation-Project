@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from './AuthContext';
+import axios from "axios";
 import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -30,11 +31,23 @@ const LoginForm = () => {
 
     //if the login is successful you are allowed in and it redirects you to the home page. Otherwise you are sent an error
     try {
-      await login(email, password);
-      redirect('/userhome');
+
+      const response = await axios.post(`http://localhost:4000/login`, {
+        email, 
+        password,
+      });
+
+      if (response.status === 200) {
+        await login(email, password);
+        redirect('/userhome');
+      } else {
+        setLoginError("Your password or email was incorrect, please try again");
+      }
+    
     } catch (error) {
       console.error('Error:', error.message);
-      setLoginError(error.message)
+      setLoginError("An error has occured during login, please try again later.")
+      
     }
   };
 
@@ -46,21 +59,6 @@ const LoginForm = () => {
 
   return (
     <div className="home">
-      <header>
-        <Navbar expand="lg"  Navbar bg="primary" 
-          data-bs-theme="dark">
-          <Container>
-            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </header>
       <main>
         <Container>
           <Row className="px-4 my-5">

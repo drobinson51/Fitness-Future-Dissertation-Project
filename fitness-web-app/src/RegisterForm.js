@@ -78,21 +78,6 @@ const RegisterForm = () => {
 
   return (
     <div className="home">
-      <header>
-      <Navbar expand="lg"  Navbar bg="primary" 
-          data-bs-theme="dark">
-          <Container>
-            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </header>
       <main>
         <Container>
           <Row className="px-4 my-5">

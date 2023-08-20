@@ -18,26 +18,11 @@ import { useCookies } from "react-cookie";
 const HomePage = () => {
   return (
     <div className="home">
-      <header>
-      <Navbar expand="lg"  Navbar bg="primary" 
-          data-bs-theme="dark">
-          <Container>
-            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </header>
       <main>
       <Container>
       <Row className = "px-4 my-5">
         <Col sm={7}>
-        <Image src="https://picsum.photos/900/400" fluid rounded className = ""/>
+        <Image src="/image/LandingPage.jpeg" className="image-size" fluid rounded />
         </Col>
      
         <Col sm={5}>  

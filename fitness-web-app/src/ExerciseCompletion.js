@@ -34,7 +34,7 @@ const Completedworkoutform = () => {
 
         setWorkoutData(response.data.data);
 
-        //use set ensuring no duplicated days, tacit protection against user having multiple days
+        //use set ensuring no duplicated days, tacit protection against user having multiple days, mostly redundant with new constraint feature. 
         const daysFound = [...new Set(response.data.data.map((workout) => workout.day))];
         setAvailableDays(daysFound);
       } catch (error) {
@@ -122,50 +122,8 @@ const Completedworkoutform = () => {
 
 
   return (
-    <div className="home">
-      <header>
-      <Navbar
-          expand="lg"
-          Navbar bg="primary" 
-          data-bs-theme="dark"
-        >
-          <Container>
-            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/userhome">Home</Nav.Link>
-                <Nav.Link href="/logout">Logout</Nav.Link>
-                <NavDropdown title="Workout Management" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
-                  <NavDropdown.Item href="/addworkouts">
-                    Add user exercises
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/editworkouts">
-                    Edit user exercises
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/addexercisestoroutine">
-                    Customise Routines
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="/resetprogress">Reset exercise progress</NavDropdown.Item>
-                  <NavDropdown.Item href="/removeroutineexercise">
-                    Delete exercise from routine
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/deleteworkoutroutine">
-                    Delete routine
-                  </NavDropdown.Item>
-                  
-
-                </NavDropdown>
-                <Nav.Link href="/leaderboard">The Leaderboard</Nav.Link>
-                <Nav.Link href="/exercisecompletion">Workout Record</Nav.Link>
-
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </header>
+    <div className="exercisecompletion">
+      
       <main>
         <Container>
           <Row className="px-4 my-5">

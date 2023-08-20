@@ -32,13 +32,16 @@ const RemoveRoutineExercise = () => {
         );
         console.log("Response:", response.data); // Log the response data
 
+        // For use my various sets
         setRoutineExercisesInfo(response.data.data);
 
      
+        // Days are kept in sets, mostly as constraints are now placed to ensure a user will never have more than one routine on a day anyways but serves as an additional check. 
         const daysAvailable = [...new Set(response.data.data.map((exercise) => exercise.day))];
         setDays(daysAvailable);
 
-       
+
+      //  Creates as et of workout routines available 
         const workoutRoutinesAvailable = [...new Set(response.data.data.map((exercise) => exercise.workoutroutineid))];
         setWorkoutRoutinesAvailable(workoutRoutinesAvailable);
       } catch (error) {
@@ -94,6 +97,7 @@ const RemoveRoutineExercise = () => {
     }
   };
 
+  // filters through the exercises that can be added to the routine to match them up to the relevant routine
   const exercisesAvailableForSelectedWorkoutRoutine = routineExercisesInfo.filter((exercise) => exercise.workoutroutineid === parseInt(selectedWorkoutRoutine));
 
   const confirmModal = (
@@ -117,50 +121,8 @@ const RemoveRoutineExercise = () => {
 
 
   return (
-    <div className="home">
-      <header>
-      <Navbar
-          expand="lg"
-          Navbar bg="primary" 
-          data-bs-theme="dark"
-        >
-          <Container>
-            <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/userhome">Home</Nav.Link>
-                <Nav.Link href="/logout">Logout</Nav.Link>
-                <NavDropdown title="Workout Management" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
-                  <NavDropdown.Item href="/addworkouts">
-                    Add user exercises
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/editworkouts">
-                    Edit user exercises
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/addexercisestoroutine">
-                    Customise Routines
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href="/resetprogress">Reset exercise progress</NavDropdown.Item>
-                  <NavDropdown.Item href="/removeroutineexercise">
-                    Delete exercise from routine
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/deleteworkoutroutine">
-                    Delete routine
-                  </NavDropdown.Item>
-                  
-
-                </NavDropdown>
-                <Nav.Link href="/leaderboard">The Leaderboard</Nav.Link>
-                <Nav.Link href="/exercisecompletion">Workout Record</Nav.Link>
-
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </header>
+    <div className="removesworkoutsfromroutine">
+  
       <main>
         <Container>
           <Row className="px-4 my-5">

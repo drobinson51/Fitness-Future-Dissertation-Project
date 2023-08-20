@@ -1,7 +1,8 @@
 const express = require("express"),
   app = express(),
-  PORT = process.env.PORT || 4000,
+  PORT = 4000,
   cors = require("cors");
+
 const mysql = require("mysql");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
@@ -177,25 +178,22 @@ app.post("/login", async (req, res) => {
         console.log("login successful");
         const userid = rows[0].userid;
         const usersName = rows[0].user_first_name;
-        return res
-          .status(200)
-          .json({ message: "Login successful", userid, usersName });
+        return res.status(200).json({ message: "Login successful", userid, usersName });
       } else {
         console.log("login unsuccessful");
-        return res
-          .status(401)
-          .json({
+        return res.status(401).json({
             message:
               "Login unsuccessful. Please check your email and password.",
           });
       }
     } else {
-      return res
-        .status(401)
-        .json({ message: "Login unsuccessful. User not found." });
+      return res.status(401).json({ message: "Login unsuccessful. User not found." });
     }
   });
 });
+
+
+
 
 app.post("/register", async (req, res) => {
   const { firstname, lastname, username, email, password, emailpreference } =
@@ -437,8 +435,22 @@ app.post("/editworkout", async (req, res) => {
 app.get("/tierlist/:userid", async (req, res) => {
   const { userid } = req.params;
 
+  // Query logic for comparison of user points against table. Two structures are created and populated from the two tables selected
+  // The count takes every users point assigned, and then stores it to be compared against the TiersAvailable which will assign a tier based on the points
+  // This information is then displayed at the end. 
   let tierlistentry =
-    "SELECT t.title, t.description FROM (SELECT COUNT(*) AS total_points FROM userpoints WHERE userid = ? ) AS up JOIN usertier AS t ON up.total_points >= t.pointsrequired ORDER BY t.pointsrequired DESC LIMIT 1;";
+    `WITH UserPointsCount as (
+      SELECT COUNT(*) AS total_points
+      FROM userpoints
+      WHERE userid = ?
+   ),
+   
+   TiersAvailable AS (
+       SELECT usertier.title, usertier.description, usertier.pointsrequired
+       FROM UserPointsCount INNER JOIN usertier on UserPointsCount.total_points >= usertier.pointsrequired
+   )
+   
+   SELECT title, description FROM TiersAvailable ORDER BY pointsrequired DESC LIMIT 1;`
 
   db.query(tierlistentry, [userid], (err, data) => {
     if (err) throw err;
@@ -446,6 +458,7 @@ app.get("/tierlist/:userid", async (req, res) => {
     res.json({ data });
   });
 });
+
 
 app.get("/userbarchart/:userid", async (req, res) => {
   const { userid } = req.params;
