@@ -30,6 +30,8 @@ export function AuthProvider(props) {
         setAuthUser(userid);
         setIsLoggedIn(true);
         setUserName(usersname);
+
+        // uses cookies as 'keys' to site, one is set to user id, the isloggedIn is used in the RouteProtection and the username is used as part of a greeting in the userpage
         setCookie('authUser', userid); 
         setCookie('isLoggedIn', true);
         setCookie('userName', usersname);
@@ -72,6 +74,9 @@ export function AuthProvider(props) {
 
   
 }
+
+
+// This is the hook that is received by various functions that need this info such as the login, with it the values of authUser, isLoggedIn and login will be returned.
 export function useAuth() {
     return useContext(AuthContext);
   }
