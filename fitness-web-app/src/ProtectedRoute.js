@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import RegisterdNavbar from './RegisterdNavbar';
+import RegisteredNavbar from './RegisteredNavbar';
 import UnregisteredNavbar from './UnregisteredNavbar';
 
 const ProtectedRoute = ({element }) => {
@@ -33,7 +33,7 @@ const ProtectedRoute = ({element }) => {
 
     <div>
    {/* Conditional logic or rendering which navbar based on whether or not user is logged in */}
-      {isLoggedIn ? <RegisterdNavbar/> : <UnregisteredNavbar/>}
+      {isLoggedIn ? <RegisteredNavbar/> : <UnregisteredNavbar/>}
       {/* Ensures that the page is displayed even if not logged in */}
       {isLoggedIn || isUnprotectedRoute ? element : null}
     </div>

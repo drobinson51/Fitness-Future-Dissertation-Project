@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation} from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -21,6 +21,9 @@ const DeleteUserWorkouts = () => {
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const deleteMessage = location.state && location.state.deletionMessage;
 
   const [cookies] = useCookies(["authUser"]);
 
@@ -66,6 +69,8 @@ const DeleteUserWorkouts = () => {
     workoutid: parseInt(workoutid),
     });
      console.log('Response:' , response.data);
+
+     navigate('/deleteworkouts', { state: { deletionMessage: response.data.deletionMessage } });
   } catch (error) {
     console.error('Error:' , error);
   }
@@ -127,6 +132,12 @@ const DeleteUserWorkouts = () => {
                 </div>
                 <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete User Workout</Button>
               </form>
+
+              {deleteMessage && (
+             <div className="mt-3 alert alert-success">
+                {deleteMessage}
+              </div>
+                )}
             </Col>
           </Row>
         </Container>

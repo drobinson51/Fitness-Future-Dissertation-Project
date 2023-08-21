@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -22,8 +22,16 @@ const NewWorkoutToRoutine = () => {
   const [selectedUserWorkoutId, setSelectedUserWorkoutId] = useState("");
   const [orderperformed, setOrderPerformed] = useState("");
 
+  const [showExerciseCompletionButton, setShowExerciseCompletionButton] = useState(false);
+
 
   const [cookies] = useCookies(["authUser"]);
+
+  const location = useLocation();
+
+  const navigate = useNavigate();
+
+  const successMessage = location.state && location.state.successMessage;
 
   useEffect(() => {
     const fetchWorkoutIds = async () => {
@@ -87,8 +95,13 @@ const NewWorkoutToRoutine = () => {
           userworkoutid: selectedUserWorkoutId,
           orderperformed: orderperformed,
         }
+
+      
       );
   
+      setShowExerciseCompletionButton(true);
+
+      navigate('/addexercisestoroutine', { state: { successMessage: response.data.successMessage } });
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
@@ -104,9 +117,9 @@ const NewWorkoutToRoutine = () => {
             <Image src="/image/AddWorkoutToRoutine.jpeg" className="image-size" fluid rounded />
             </Col>
             <Col sm={5}>
-              <h1 className="fw-bold">Create personal workout exercise</h1>
+              <h1 className="fw-bold">Add exercises to your routine</h1>
               <p className="mt-3 fw-light">
-                Pick from a range of exercises and personalise it to your means.
+                Pick from your range of tracked exercises, and add them to a personal routine of your choosing. 
               </p>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
@@ -157,6 +170,22 @@ const NewWorkoutToRoutine = () => {
                 </div>
                 <Button type="submit" className="btn btn-primary">Add workout to routine</Button>
               </form>
+
+
+              {successMessage && (
+              <div className="mt-3 alert alert-success">
+              {successMessage}
+              </div>
+              )}
+
+              {showExerciseCompletionButton && (
+              <Button variant="outline-primary" className = "mt-3"
+              onClick={() => navigate('/exercisecompletion')}
+              >
+              Want to have a look at what your routines look like? Or maybe you want to get about recording your progress right now?
+              </Button>
+              )}
+              
             </Col>
           </Row>
         </Container>

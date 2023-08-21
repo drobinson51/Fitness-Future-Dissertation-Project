@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
 import Modal from 'react-bootstrap/Modal';
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 
@@ -22,6 +23,9 @@ const RemoveRoutineExercise = () => {
   const [selectedDay, setSelectedDay] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const deleteMessage = location.state && location.state.deletionMessage;
   const [cookies] = useCookies(["authUser"]);
 
   useEffect(() => {
@@ -92,6 +96,10 @@ const RemoveRoutineExercise = () => {
         routineexerciseid: parseInt(selectedRoutineExerciseId),
       });
       console.log('Response:', response.data);
+
+      
+
+      navigate('/removeroutineexercise', { state: { deletionMessage: response.data.deletionMessage } });
     } catch (error) {
       console.error('Error:', error);
     }
@@ -176,6 +184,13 @@ const RemoveRoutineExercise = () => {
 
               <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete Routine</Button>
               </form>
+
+              
+              {deleteMessage && (
+             <div className="mt-3 alert alert-success">
+                {deleteMessage}
+              </div>
+                )}
             </Col>
           </Row>
         </Container>

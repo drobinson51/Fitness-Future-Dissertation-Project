@@ -131,9 +131,9 @@ const NewUserWorkoutRoutine = () => {
 
               {showCreateWorkoutsButton && (
               <Button variant="outline-primary" className = "mt-3"
-              onClick={() => navigate('/addworkouts')}
+              onClick={() => navigate('/addexercisestoroutine')}
               >
-            Add some exercises to your routines? 
+            Want to add some of your tracked workouts to a routine?
             </Button>
               )}
               </form>

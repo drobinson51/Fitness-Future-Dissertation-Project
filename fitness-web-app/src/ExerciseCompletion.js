@@ -79,7 +79,6 @@ const Completedworkoutform = () => {
       const responses = await Promise.all(workoutsAvailableForSelectedDay.map((workout, index) => axios.post('http://localhost:4000/exerciseprogress', {
         userid: cookies.authUser,
         userworkoutid: parseInt(workout.userworkoutid),
-        routineexerciseid: parseInt(workout.routineexerciseid),
         totalweightlifted: workoutProgressWithCalculatedData[index]?.totalweightlifted,
         repscompleted: workoutProgressWithCalculatedData[index]?.totalreps,
         timestamp: formattedTimestamp,

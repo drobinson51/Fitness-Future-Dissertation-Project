@@ -29,6 +29,9 @@ const NewUserWorkout = () => {
   const successMessage = location.state && location.state.successMessage;
   const [cookies] = useCookies(["authUser"]);
 
+  const [showCreateRoutineButton, setShowCreateRoutineButton] = useState(false);
+
+  // Called up top to allow them to be called again on navigate and not lose information
   useEffect(() => {
  
     
@@ -98,6 +101,7 @@ const NewUserWorkout = () => {
     fetchworkoutids();
     fetchUserWorkouts();
 
+    setShowCreateRoutineButton(true);
     navigate('/addworkouts', { state: { successMessage: response.data.successMessage } });
 
     console.log('Response:' , response.data);
@@ -180,6 +184,14 @@ const NewUserWorkout = () => {
                   {successMessage}
                   
               </div>
+              )}
+
+            {showCreateRoutineButton && (
+              <Button variant="outline-primary" className = "mt-3"
+              onClick={() => navigate('/createroutine')}
+              >
+           Now that you're tracking an exercise, fancy creating a routine for yourself?
+            </Button>
               )}
 
             </Col>

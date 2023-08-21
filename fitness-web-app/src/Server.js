@@ -317,14 +317,13 @@ app.post("/exerciseprogress", async (req, res) => {
 
   const timestamp = new Date().toISOString();
 
-  let exerciseprogress = `INSERT INTO exerciseprogress (userid, userworkoutid, routineexerciseid, totalweightlifted, repscompleted, timestamp) VALUES (?, ?, ?, ?, ?, ?)`;
+  let exerciseprogress = `INSERT INTO exerciseprogress (userid, userworkoutid, totalweightlifted, repscompleted, timestamp) VALUES (?, ?, ?, ?, ?)`;
 
   db.query(
     exerciseprogress,
     [
       userid,
       userworkoutid,
-      routineexerciseid,
       totalweightlifted,
       repscompleted,
       timestamp,
@@ -470,8 +469,6 @@ app.get("/userbarchart/:userid", async (req, res) => {
   on exerciseprogress.userworkoutid = userworkout.userworkoutid
   INNER JOIN workouts
   ON userworkout.workoutid = workouts.workoutid
-  INNER JOIN routineexercises
-  on routineexercises.userworkoutid = userworkout.userworkoutid
 WHERE exerciseprogress.userid = ?`;
 
   db.query(tierlistentry, [userid], (err, data) => {
@@ -539,13 +536,9 @@ app.get("/progressinfos/:userid", async (req, res) => {
   FROM userworkout
   INNER JOIN workouts
   on userworkout.workoutid = workouts.workoutid
-  INNER JOIN routineexercises
-  ON routineexercises.userworkoutid = userworkout.userworkoutid
-  INNER JOIN workoutroutine 
-  on workoutroutine.workoutroutineid = routineexercises.workoutroutineid
   INNER JOIN exerciseprogress
   on exerciseprogress.userworkoutid = userworkout.userworkoutid
-  WHERE userworkout.userid = ?;`;
+  WHERE userworkout.userid = ?`;
 
   db.query(getprogressinfo, [userid], (err, data) => {
     if (err) throw err;

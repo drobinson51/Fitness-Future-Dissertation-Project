@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
@@ -19,6 +19,12 @@ const EditWorkouts = () => {
   const [customliftreps, setCustomLiftReps] = useState("");
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const message = location.state && location.state.message;
+
+  const [showHomeButton, setShowHomeButton] = useState(false);
   
 
   const [cookies] = useCookies(["authUser"]);
@@ -27,7 +33,7 @@ const EditWorkouts = () => {
     const fetchWorkoutIds = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/workouti nfos/${cookies.authUser}`
+          `http://localhost:4000/workoutinfos/${cookies.authUser}`
         );
         console.log("Response:", response.data); // Log the response data
 
@@ -65,7 +71,11 @@ const EditWorkouts = () => {
         customliftreps: customliftreps,
       });
 
+
       console.log("Response:", response.data);
+
+      setShowHomeButton(true);
+      navigate('/editworkouts', { state: { message: response.data.successMessage } });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -127,6 +137,21 @@ const EditWorkouts = () => {
                 </div>
                 <Button type="submit" className="btn btn-primary">Ammend exercise </Button>
               </form>
+
+              
+              {message && (
+             <div className="mt-3 alert alert-success">
+                {message}
+              </div>
+                )}
+
+              {showHomeButton && (
+              <Button variant="outline-primary" className = "mt-3"
+              onClick={() => navigate('/userhome')}
+              >
+         Want to head back home?
+            </Button>
+              )}
             </Col>
           </Row>
         </Container>

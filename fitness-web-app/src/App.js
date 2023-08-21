@@ -23,8 +23,7 @@ import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import UserPage from './User';
 import Footer from './Footer';
-import RegisterdNavbar from './RegisterdNavbar'
-import UnregisteredNavbar from './UnregisteredNavbar';
+
 
 import './styles.css';
 

@@ -82,7 +82,7 @@ const DeleteWorkoutRoutine = () => {
         <Modal.Title>Confirm Deletion</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Are you sure you want to delete this workout routine?
+        Are you sure you want to delete this workout routine? Your tracked exercises will be kept for assignment to another routine, but this routine will layout will be lost.
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>

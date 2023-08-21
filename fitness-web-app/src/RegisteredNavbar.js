@@ -7,7 +7,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
 
  
-const RegisterdNavbar = () => (
+const RegisteredNavbar = () => (
  
         
 <Navbar
@@ -23,23 +23,25 @@ const RegisterdNavbar = () => (
          <Nav.Link href="/userhome">Home</Nav.Link>
          <Nav.Link href="/logout">Logout</Nav.Link>
          <NavDropdown title="Workout Management" id="basic-nav-dropdown">
-           <NavDropdown.Item href="/createroutine">Create Routine</NavDropdown.Item>
+           <NavDropdown.Item href="/createroutine">
+            Create Routine
+            </NavDropdown.Item>
            <NavDropdown.Item href="/addworkouts">
-             Add user exercises
+             Exercise Tracker
            </NavDropdown.Item>
            <NavDropdown.Item href="/editworkouts">
-             Edit user exercises
+             Edit Tracked Exercises
            </NavDropdown.Item>
            <NavDropdown.Item href="/addexercisestoroutine">
-             Customise Routines
+             Customise Routine 
            </NavDropdown.Item>
            <NavDropdown.Divider />
            <NavDropdown.Item href="/resetprogress">Reset exercise progress</NavDropdown.Item>
            <NavDropdown.Item href="/removeroutineexercise">
-             Delete exercise from routine
+             Drop Exercise From Routine
            </NavDropdown.Item>
            <NavDropdown.Item href="/deleteworkoutroutine">
-             Delete routine
+             Delete Routine
            </NavDropdown.Item>
            
 
@@ -54,7 +56,7 @@ const RegisterdNavbar = () => (
 
 );
  
-export default RegisterdNavbar;
+export default RegisteredNavbar;
 
 
 
