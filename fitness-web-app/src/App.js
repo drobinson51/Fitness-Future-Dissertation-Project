@@ -46,8 +46,9 @@ const App = () => {
 
      
       <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
-        <Route path="/login" element={<LoginForm/>} />
-        <Route path="/register" element={<RegisterForm />} />
+         <Route path="/login" element={<ProtectedRoute element={<LoginForm />} />} />
+         <Route path="/register" element={<ProtectedRoute element={<RegisterForm />} />} />
+
 
        
     

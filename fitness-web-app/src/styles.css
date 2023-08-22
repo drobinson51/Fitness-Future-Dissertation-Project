@@ -23,3 +23,14 @@ body {
   width: 900px;
   height: 400px;
 }
+
+/* Brings back the caret for select options */
+select {
+  -webkit-appearance: listbox !important;
+  }
+
+  .custom-input {
+    width: 60px; 
+    padding: 4px;
+    font-size: 14px; 
+  }

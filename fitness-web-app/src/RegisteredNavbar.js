@@ -16,11 +16,10 @@ const RegisteredNavbar = () => (
    data-bs-theme="dark"
  >
    <Container>
-     <Navbar.Brand href="#home">Fitness-Future</Navbar.Brand>
+     <Navbar.Brand href="/userhome">Fitness-Future</Navbar.Brand>
      <Navbar.Toggle aria-controls="basic-navbar-nav" />
      <Navbar.Collapse id="basic-navbar-nav">
        <Nav className="me-auto">
-         <Nav.Link href="/userhome">Home</Nav.Link>
          <Nav.Link href="/logout">Logout</Nav.Link>
          <NavDropdown title="Workout Management" id="basic-nav-dropdown">
            <NavDropdown.Item href="/createroutine">

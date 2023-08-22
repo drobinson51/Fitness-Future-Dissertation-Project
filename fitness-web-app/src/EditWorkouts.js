@@ -19,8 +19,12 @@ const EditWorkouts = () => {
   const [customliftreps, setCustomLiftReps] = useState("");
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
+  const [oldWeight, setOldWeight] = useState("");
+  const [oldReps, setOldReps] = useState("");
+  const [workoutData, setWorkoutData] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const workoutinfos = null;
 
   const message = location.state && location.state.message;
 
@@ -37,6 +41,9 @@ const EditWorkouts = () => {
         );
         console.log("Response:", response.data); // Log the response data
 
+      
+        setWorkoutData(response.data.data);
+
         const workoutIds = response.data.data.map(
           (workoutsavaiable) => workoutsavaiable.workoutid
         );
@@ -47,6 +54,7 @@ const EditWorkouts = () => {
         console.log("Here are the workout ids:", workoutIds);
         setWorkoutIds(workoutIds);
         setWorkoutNames(workoutNames);
+
       } catch (error) {
         console.error("Error:", error);
       }
@@ -72,6 +80,7 @@ const EditWorkouts = () => {
       });
 
 
+    
       console.log("Response:", response.data);
 
       setShowHomeButton(true);
@@ -80,6 +89,32 @@ const EditWorkouts = () => {
       console.error("Error:", error);
     }
   };
+
+
+  const handleWorkoutChange = (e) => {
+    setWorkoutID(e.target.value);
+  
+    if (e.target.value === "") {
+      // Clear the old values if nothing is selected
+      setOldWeight("");
+      setOldReps("");
+    } else {
+      // Finds the selected workout in the object
+      const selectedWorkout = workoutData.find(
+        (workout) => workout.workoutid === parseInt(e.target.value)
+      );
+  
+      console.log("Selected Workout:", selectedWorkout);
+  
+      // Sets old values based on corresponding values in object.
+      setCustomLiftWeight(selectedWorkout.customliftweight);
+      setCustomLiftReps(selectedWorkout.customliftreps);
+  
+      console.log("This is the old Weight", selectedWorkout.customliftweight);
+      console.log("This is the old reps", selectedWorkout.customliftreps);
+    }
+  };
+
 
   console.log("Workout IDs:", workoutIds);
 
@@ -105,7 +140,8 @@ const EditWorkouts = () => {
                     id="workoutid"
                     className="form-control"
                     value={workoutid}
-                    onChange={(e) => setWorkoutID(e.target.value)}
+                    onChange= {handleWorkoutChange}
+                     
                   >
                    <option value="">Select Workout</option>
                   {workoutIds.map((id, index) => (
@@ -118,22 +154,29 @@ const EditWorkouts = () => {
                 <div className="mb-4">
                   <label htmlFor="customliftweight">How much weight will this lift be?:</label>
                   <input
-                    type="String"
+                    type="number"
                     id="customliftweight"
                     className="form-control"
                     value={customliftweight}
                     onChange={(e) => setCustomLiftWeight(e.target.value)}
                   />
+                   {oldWeight && (
+                    <p className="text-muted">Old Weight: {oldWeight}KG</p>
+                    )}
                 </div>
                 <div className="mb-4">
                   <label htmlFor="customliftreps">How many reps a set?</label>
                   <input
-                    type="String"
+                    type="number"
                     id="customliftreps"
                     className="form-control"
                     value={customliftreps}
                     onChange={(e) => setCustomLiftReps(e.target.value)}
                   />
+
+                      {oldReps && (
+                      <p className="text-muted">Old Reps: {oldReps}</p>
+                      )}
                 </div>
                 <Button type="submit" className="btn btn-primary">Ammend exercise </Button>
               </form>

@@ -149,7 +149,7 @@ const ProgressDeletion = () => {
           </Row>
         </Container>
       </main>
-      {confirmModal}
+      {showConfirmModal}
     </div>
   );
 };

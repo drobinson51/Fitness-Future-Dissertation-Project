@@ -113,7 +113,7 @@ const NewUserWorkoutRoutine = () => {
                    
               {/* Creates an array then filters and maps through it with an key of dayOption which is compared to workoutinfos this dynamically removes day when the user has added them  */}
             
-
+              <option value="">Select Day</option>
                {availableDays.map(dayOption => (
                 <option key={dayOption} value={dayOption}>
                 {dayOption}

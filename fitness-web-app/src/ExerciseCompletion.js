@@ -140,7 +140,7 @@ const Completedworkoutform = () => {
                   <select
                     type="String"
                     id="day"
-                    className="form-control"
+                    className="select-menu"
                     value={day}
                     onChange={handleDayChange} 
                   >
@@ -161,7 +161,7 @@ const Completedworkoutform = () => {
                         <th>Exercise Name</th>
                         <th>Working Weight</th>
                         <th>Working Set Reps</th>
-                        <th>Weight Lifted</th>
+                        <th>Rep Weight</th>
                         <th>Reps completed</th>
                         <th>Sets Completed</th>
                       </tr>
@@ -177,8 +177,8 @@ const Completedworkoutform = () => {
                             <td>{workout.customliftreps}</td>
                             <td>
                               <input
-                                type="int"
-                                className="form-control"
+                                type="number"
+                                className="form-control custom-input"
                                 // Optional chaining deals with null values, sets the workoutProgress value to whatever is inputted, similar operation below
                                 value={workoutProgress[index]?.totalweightlifted || ""}
                                 onChange={(e) => {
@@ -193,8 +193,8 @@ const Completedworkoutform = () => {
                             </td>
                             <td>
                               <input
-                                type="int"
-                                className="form-control"
+                                type="number"
+                                className="form-control custom-input"
                                 value={workoutProgress[index]?.repscompleted || ""}
                                 onChange={(e) => {
                                   const updatedWorkoutProgress = [...workoutProgress];
@@ -208,8 +208,8 @@ const Completedworkoutform = () => {
                             </td>
                             <td> 
                             <input
-                              type="int"
-                                className="form-control"
+                              type="number"
+                                className="form-control custom-input"
                                 value={workoutProgress[index]?.setscompleted || ""}
                               onChange={(e) => {
                               const updatedWorkoutProgress = [...workoutProgress];

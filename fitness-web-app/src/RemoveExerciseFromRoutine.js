@@ -22,7 +22,6 @@ const RemoveRoutineExercise = () => {
   const [selectedWorkoutRoutine, setSelectedWorkoutRoutine] = useState("");
   const [selectedDay, setSelectedDay] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
   const location = useLocation();
   const navigate = useNavigate();
   const deleteMessage = location.state && location.state.deletionMessage;
@@ -195,7 +194,7 @@ const RemoveRoutineExercise = () => {
           </Row>
         </Container>
       </main>
-      {confirmModal}
+      {showConfirmModal}
     </div>
   );
 };
