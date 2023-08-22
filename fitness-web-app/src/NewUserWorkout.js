@@ -158,7 +158,7 @@ const NewUserWorkout = () => {
                 <div className="mb-4">
                   <label htmlFor="customliftweight">How much weight will this lift be?:</label>
                   <input
-                    type="String"
+                    type="number"
                     id="customliftweight"
                     className="form-control"
                     value={customliftweight}
@@ -168,7 +168,7 @@ const NewUserWorkout = () => {
                 <div className="mb-4">
                   <label htmlFor="customliftreps">How many reps a set?</label>
                   <input
-                    type="String"
+                    type="number"
                     id="customliftreps"
                     className="form-control"
                     value={customliftreps}

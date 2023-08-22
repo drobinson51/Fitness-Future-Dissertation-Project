@@ -22,12 +22,12 @@ const RegisteredNavbar = () => (
        <Nav className="me-auto">
          <Nav.Link href="/logout">Logout</Nav.Link>
          <NavDropdown title="Workout Management" id="basic-nav-dropdown">
+         <NavDropdown.Item href="/addworkouts">
+             Exercise Tracker
+             </NavDropdown.Item>
            <NavDropdown.Item href="/createroutine">
             Create Routine
             </NavDropdown.Item>
-           <NavDropdown.Item href="/addworkouts">
-             Exercise Tracker
-           </NavDropdown.Item>
            <NavDropdown.Item href="/editworkouts">
              Edit Tracked Exercises
            </NavDropdown.Item>

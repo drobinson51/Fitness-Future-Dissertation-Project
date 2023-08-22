@@ -20,10 +20,17 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const [loginError, setLoginError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const redirect = useNavigate();
   const location = useLocation();
   const regMessage = location.state && location.state.regMessage;
 
+
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible)
+  };
+  
   
 
   const handleSubmit = async (event) => {
@@ -92,12 +99,14 @@ const LoginForm = () => {
                 <div className="mb-4">
                   <label htmlFor="password">Password:</label>
                   <input
-                    type="password"
+                    type={passwordVisible ? "text" : "password"}
                     id="password"
                     className="form-control"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                  />
+                    />
+                    <button type = "button" onClick = {togglePasswordVisibility}>Show Password</button>
+                 
                 </div>
                 <Button type="submit" className="btn btn-primary">Login</Button>
                  {loginError && <div className="error text-danger">{loginError}</div>}
