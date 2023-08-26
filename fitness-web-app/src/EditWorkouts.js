@@ -19,12 +19,10 @@ const EditWorkouts = () => {
   const [customliftreps, setCustomLiftReps] = useState("");
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
-  const [oldWeight, setOldWeight] = useState("");
-  const [oldReps, setOldReps] = useState("");
   const [workoutData, setWorkoutData] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const workoutinfos = null;
+
 
   const message = location.state && location.state.message;
 
@@ -96,8 +94,7 @@ const EditWorkouts = () => {
   
     if (e.target.value === "") {
       // Clear the old values if nothing is selected
-      setOldWeight("");
-      setOldReps("");
+    
     } else {
       // Finds the selected workout in the object
       const selectedWorkout = workoutData.find(
@@ -160,9 +157,7 @@ const EditWorkouts = () => {
                     value={customliftweight}
                     onChange={(e) => setCustomLiftWeight(e.target.value)}
                   />
-                   {oldWeight && (
-                    <p className="text-muted">Old Weight: {oldWeight}KG</p>
-                    )}
+                 
                 </div>
                 <div className="mb-4">
                   <label htmlFor="customliftreps">How many reps a set?</label>
@@ -173,10 +168,6 @@ const EditWorkouts = () => {
                     value={customliftreps}
                     onChange={(e) => setCustomLiftReps(e.target.value)}
                   />
-
-                      {oldReps && (
-                      <p className="text-muted">Old Reps: {oldReps}</p>
-                      )}
                 </div>
                 <Button type="submit" className="btn btn-primary">Ammend exercise </Button>
               </form>
