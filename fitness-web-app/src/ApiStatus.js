@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import axios from "axios";
 
 const ApiStatus = () => {
     const [connectionStatus, setConnectionStatus] = useState("");
@@ -6,9 +7,8 @@ const ApiStatus = () => {
     useEffect(() => {
       const fetchConnectionStatus = async () => {
         try {
-          const response = await fetch("http://localhost:4000/");
-          const data = await response.json();
-          setConnectionStatus(data.message);
+          const response = await axios.get("http://localhost:4000/");
+          setConnectionStatus(response.data.message);
         } catch (error) {
           console.error("Error fetching connection status:", error);
           setConnectionStatus("Error connecting to the server");
@@ -18,7 +18,7 @@ const ApiStatus = () => {
       fetchConnectionStatus();
     }, []);
   
-    return <h1>Connection Status: {connectionStatus}</h1>;
+    return <h1 data-testid = "api-test1">Connection Status: {connectionStatus}</h1>;
 
           
   };

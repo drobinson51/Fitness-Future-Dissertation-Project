@@ -12,7 +12,7 @@ const RegisteredNavbar = () => (
         
 <Navbar
    expand="lg"
-   Navbar bg="primary" 
+   bg="primary" 
    data-bs-theme="dark"
  >
    <Container>

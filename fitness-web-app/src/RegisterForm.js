@@ -23,7 +23,7 @@ const RegisterForm = () => {
   const [firstname, setFirstName] = useState('');
   const [lastname, setLastName] = useState('');
   const [emailpreference, setEmailPreference] = useState('');
-  
+  const [errorMessage, setErrorMessage] = useState("");
 
   
   const navigate = useNavigate();
@@ -71,6 +71,12 @@ const RegisterForm = () => {
   
     } catch (error) {
       console.error('Error:', error);
+     
+      const serverErrorMessage = error.response && error.response.data && error.response.data.err
+     ? error.response.data.err
+     : 'An error occurred during registration. Please try again later.';
+
+     setErrorMessage(serverErrorMessage);
     }
   };
  
@@ -143,6 +149,7 @@ const RegisterForm = () => {
                 <div className="mb-4">
                   <label htmlFor="emailpreference">Would you like email reminders?:</label>
                   <select
+                    data-testid="emailPreferenceDropdown"
                     className="form-control"
                     value={emailpreference}
                     onChange={(e) => setEmailPreference(e.target.value)}
@@ -153,6 +160,8 @@ const RegisterForm = () => {
                 </div>
                 <Button type="submit" className="btn btn-primary">Sign-Up</Button>
               </form>
+
+              {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
             </Col>
           </Row>
         </Container>

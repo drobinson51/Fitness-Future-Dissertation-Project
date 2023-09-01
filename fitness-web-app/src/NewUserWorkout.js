@@ -21,14 +21,13 @@ const NewUserWorkout = () => {
   const [userid, setUserID] = useState("");
   const [customliftweight, setCustomLiftWeight] = useState("");
   const [customliftreps, setCustomLiftReps] = useState("");
-  const [workoutIds, setWorkoutIds] = useState([]);
-  const [workoutNames, setWorkoutNames] = useState([]);
   const [userWorkouts, setUserWorkouts] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
+  const [workouts, setWorkouts] = useState([])
   const successMessage = location.state && location.state.successMessage;
   const [cookies] = useCookies(["authUser"]);
-
+  const [apiError, setApiError] = useState(null);
   const [showCreateRoutineButton, setShowCreateRoutineButton] = useState(false);
 
   // Called up top to allow them to be called again on navigate and not lose information
@@ -48,20 +47,21 @@ const NewUserWorkout = () => {
       const response = await axios.get(
         `http://localhost:4000/workouts`
       );
+
+      if (response.data.status === "success") {
+        setWorkouts(response.data.data);
+      } else if (response.data.status === "error") {
+        setApiError(response.data.message);
+      }
+
+
+
       console.log("Response:", response.data); // Log the response data
 
-      const workoutIds = response.data.data.map(
-        (workoutsavaiable) => workoutsavaiable.workoutid
-      );
 
-      const workoutNames = response.data.data.map(
-        (workoutnamesavailable) => workoutnamesavailable.workoutname
-      );
-      console.log("Here are the workout ids:", workoutIds);
-      setWorkoutIds(workoutIds);
-      setWorkoutNames(workoutNames);
     } catch (error) {
       console.error("Error:", error);
+      setApiError("Failed to fetch workouts. Please try again later.")
     }
   };
 
@@ -126,34 +126,36 @@ const NewUserWorkout = () => {
               </p>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label htmlFor="workoutid">Workout:</label>
+                <label htmlFor="workoutid">Workout:</label>
 
-                  {/* Little message to inform the user if they've got every exercise already tracked using ternary operators */}
-                  {workoutIds.length === userWorkouts.length + 1  ? (
-                <p>All available workouts are already being tracked.</p>
-                ) : (
-                  <select
-                    type="String"
-                    id="workoutid"
-                    className="form-control"
-                    value={workoutid}
-                    onChange={(e) => setWorkoutID(e.target.value)}
-                  >
-                     
-                  <option value="">Select Workout</option>
-                    {workoutIds.map((id, index) => {
-              // Prevents display of workouts user already has
-              if (!userWorkouts.some(workout => workout.workoutid === id)) {
-                return (
-                  <option key={id} value={id}>
-                    {workoutNames[index]}
-                  </option>
-                );
-              }
-              return null;
-            })}
-          </select>
-          )}
+                  {workouts.length === userWorkouts.length + 1 ? (
+              <p>All available workouts are already being tracked.</p>
+            ) : (
+              <select
+                type="String"
+                id="workoutid"
+                className="form-control"
+                value={workoutid}
+                onChange={(e) => setWorkoutID(e.target.value)}
+              >
+                {workouts.map((workout) => {
+                  const isTracked = userWorkouts.some(
+                    (userWorkout) => userWorkout.workoutid === workout.workoutid
+                  );
+
+                  if (!isTracked) {
+                    return (
+                      <option key={workout.workoutid} value={workout.workoutid}>
+                        {workout.workoutname}
+                      </option>
+                    );
+                  }
+
+                  return null;
+                })}
+              </select>
+            )}
+
                 </div>
                 <div className="mb-4">
                   <label htmlFor="customliftweight">How much weight will this lift be?:</label>
@@ -182,6 +184,14 @@ const NewUserWorkout = () => {
               {successMessage && (
              <div className="mt-3 alert alert-success">
                   {successMessage}
+                  
+              </div>
+              )}
+
+
+                  {apiError && (
+             <div className="mt-3 alert alert-danger">
+                  {apiError}
                   
               </div>
               )}

@@ -21,6 +21,7 @@ const DeleteWorkoutRoutine = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [apiError, setApiError] = useState("");
   const deleteMessage = location.state && location.state.deletionMessage;
 
   const fetchWorkoutRoutines = async () => {
@@ -29,7 +30,9 @@ const DeleteWorkoutRoutine = () => {
         `http://localhost:4000/exerciseroutines/${cookies.authUser}`
       );
 
-      const workoutRoutineIds = response.data.data.map(
+      if (response.data.status === "success") {
+
+           const workoutRoutineIds = response.data.data.map(
         (workoutroutinesavailable) => workoutroutinesavailable.workoutroutineid
       );
   
@@ -40,8 +43,15 @@ const DeleteWorkoutRoutine = () => {
       setWorkoutRoutineIds(workoutRoutineIds);
       setDays(days);
 
+
+      } else {
+        setApiError(response.data.message)
+        console.log(response.data.data)
+      }
+   
     } catch (error) {
       console.error("Error:", error);
+      setApiError("An error has occurred.")
     }
   };
 
@@ -50,7 +60,6 @@ const DeleteWorkoutRoutine = () => {
   }, [cookies.authUser]);
 
   const handleDelete = async (event) => {
-    event.preventDefault();
 
     if (!workoutRoutineId) {
       alert("You need to select a workout to delete!")
@@ -64,14 +73,21 @@ const DeleteWorkoutRoutine = () => {
       });
       console.log('Response:', response.data);
 
-      // Call fetchWorkoutRoutines again after successful deletion
-      fetchWorkoutRoutines();
-      setShowConfirmModal(false);
+    if (response.data.status === "success") {
+    // Call fetchWorkoutRoutines again after successful deletion
+    fetchWorkoutRoutines();
+    setShowConfirmModal(false);
 
-      // Use navigate to change the location state
-      navigate('/deleteworkoutroutine', { state: { deletionMessage: response.data.deletionMessage } });
+    // Use navigate to change the location state
+    navigate('/deleteworkoutroutine', { state: { deletionMessage: response.data.deletionMessage } });
+    } else {
+      setApiError(response.data.message)
+    }
+
+  
     } catch (error) {
       console.error('Error:', error);
+      setApiError("An error has occurred")
     }
   };
 
@@ -88,7 +104,7 @@ const DeleteWorkoutRoutine = () => {
         <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={handleDelete}>
+        <Button variant="danger" data-testid = "actualDelete" onClick={handleDelete}>
           Delete
         </Button>
       </Modal.Footer>
@@ -116,6 +132,7 @@ const DeleteWorkoutRoutine = () => {
                 <div className="mb-4">
                   <label htmlFor="workoutroutineid">Select Workout day:</label>
                   <select
+                    data-testid = "daySelection"
                     className="form-control"
                     value={workoutRoutineId}
                     onChange={(e) => setWorkoutRoutineID(e.target.value)}
@@ -137,6 +154,13 @@ const DeleteWorkoutRoutine = () => {
                 )}
               </form>
             </Col>
+
+            
+            {apiError && (
+             <div className="mt-3 alert alert-danger">
+                {apiError}
+              </div>
+                )}
           </Row>
         </Container>
       </main>

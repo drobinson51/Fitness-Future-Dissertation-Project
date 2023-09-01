@@ -1,4 +1,3 @@
-// const { GET_WORKOUT_INFO } = require('./queries.js');
 
 const queries = require ("./queries.js")
 const express = require("express"),
@@ -9,7 +8,6 @@ const express = require("express"),
 const mysql = require("mysql");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-const cron = require("node-cron");
 const schedule = require("node-schedule");
 
 
@@ -25,11 +23,25 @@ let db = mysql.createConnection({
   port: "3306",
 });
 
-db.connect((err) => {
-  console.log("Connected to DB");
-  if (err) throw err;
-});
 
+// This Helps with creating separation of test environment to real server environment allowing mocking to work properly due to how Jest hoists
+
+let isConnected = false;
+
+const connectToDb = () => {
+  if (isConnected) return;
+
+  db.connect((err) => {
+    console.log("Connected to DB");
+    if (err) throw err;
+  });
+
+  isConnected = true;
+};
+
+if (require.main === module) {
+  connectToDb();
+}
 
 app.use(cors());
 app.use(express.json());
@@ -42,10 +54,7 @@ app.get("/", (req, res) => {
 
 
 
-// nodecron test
-// cron.schedule("* * * * *", () => {
-//   console.log("running a task every minute");
-// });
+
 
 
 //declaration of transporter to be use by nodecron to send email, provides the details required to the API. 
@@ -58,6 +67,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+
+// The logic of how the mail shall be sent  it gathers the two below functions and runs them to create the email that shall be sent
 const sendWeeklyMail = (err, rows) => {
   if (err) throw err;
 
@@ -76,6 +87,9 @@ const sendWeeklyMail = (err, rows) => {
   }
 };
 
+
+
+// Extraction of data from received info.
 const getUserEmailsData = (rows) => {
   const userEmailsData = new Map();
 
@@ -117,6 +131,7 @@ const getUserEmailsData = (rows) => {
   return userEmailsData;
 };
 
+// Email construction, how it is layed out 
 const emailLayoutOptions = (userEmail, userData) => {
   let text = `Hello ${userData.userName}, I hope this finds you in fitness and health. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
 
@@ -149,6 +164,7 @@ schedule.scheduleJob("28 16 * * 6", () => {
       INNER JOIN workouts ON userworkout.workoutid = workouts.workoutid WHERE users.emailpreference = 1
   `;
 
+  // Calling the job, running these two together creates the email 
   db.query(emailCheckQuery, sendWeeklyMail);
 });
 
@@ -670,10 +686,12 @@ app.post("/addnewuserworkout", async (req, res) => {
     });
 
 app.post("/editworkout", async (req, res) => {
-      const { userid, workoutid, customliftweight, customliftreps } = req.body;
+
+
+  const { userid, workoutid, customliftweight, customliftreps } = req.body;
       let editworkout = queries.EDITWORKOUT;
     
-      db.query(editworkout, [userid, workoutid, customliftweight, customliftreps], (err, data) => {
+      db.query(editworkout, [customliftweight, customliftreps, userid, workoutid], (err, data) => {
         if (err) {
           console.error("Error fetching workouts:", err);
           return res.status(500).json({
@@ -933,6 +951,7 @@ app.post("/removeprogress", async (req, res) => {
 module.exports = {
   app, 
   db,
+  connectToDb,
   sendWeeklyMail,
   getUserEmailsData,
   emailLayoutOptions

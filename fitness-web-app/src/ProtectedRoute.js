@@ -1,3 +1,4 @@
+import React from 'react';
 import {useEffect} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
@@ -18,10 +19,14 @@ const ProtectedRoute = ({element }) => {
 
   useEffect(() => {
 
+    console.log('Effect running. isLoggedIn:', isLoggedIn, 'Current path:', location.pathname);
+
+  
     //reads the array and checks for the isLoggedIn status from the useAuth. 
     //if you aren't logged in and you're on a page that isn't whitelisted you'll be redirected
     if (!isLoggedIn && !unprotectedRoutes.includes(location.pathname)) {
 
+      console.log('About to call navigate to login');
       navigate('/login');
     }
   }, [isLoggedIn, navigate, location]);

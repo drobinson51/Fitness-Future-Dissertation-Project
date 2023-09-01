@@ -19,46 +19,75 @@ const Completedworkoutform = () => {
   const [workoutData, setWorkoutData] = useState([]);
   const [cookies] = useCookies(["authUser"]);
   const [workoutProgress, setWorkoutProgress] = useState([]);
-  
+
+  const [apiError, setApiError] = useState("")
 
   const navigate = useNavigate();
 
-  let successMessage = useState("");
 
   useEffect(() => {
+
+  fetchWorkoutInfo();
+}, [cookies.authUser]);
+
+ 
     const fetchWorkoutInfo = async () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/workoutinfos/${cookies.authUser}`
         );
 
-        setWorkoutData(response.data.data);
 
-        //use set ensuring no duplicated days, tacit protection against user having multiple days, mostly redundant with new constraint feature. 
-        const daysFound = [...new Set(response.data.data.map((workout) => workout.day))];
-        setAvailableDays(daysFound);
+        if (response.data.status === "success") {
+          setWorkoutData(response.data.data);
+
+          //use set ensuring no duplicated days, tacit protection against user having multiple days, mostly redundant with new constraint feature. 
+          const daysFound = [...new Set(response.data.data.map((workout) => workout.day))];
+          setAvailableDays(daysFound);
+
+        } else {
+
+          setApiError(response.data.status)
+          console.log(response.data)
+        }
+
+    
       } catch (error) {
         console.error("Error:", error);
+        setApiError("An error has occured");
       }
     };
 
-    fetchWorkoutInfo();
-  }, [cookies.authUser]);
+
 
   console.log(workoutData);
 
   const handleDayChange = (e) => {
     const selectedDay = e.target.value;
     setDay(selectedDay);
-    setWorkoutProgress([]);
+    const workoutsForSelectedDay = workoutData.filter(workout => workout.day === selectedDay);
+    const initializedWorkoutProgress = workoutsForSelectedDay.map(() => ({
+      totalweightlifted: "",
+      repscompleted: "",
+      setscompleted: ""
+    }));
+
+    setWorkoutProgress(initializedWorkoutProgress);
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    
+
+    const isInvalid = workoutProgress.some(workout => {
+      return (
+        !workout.totalweightlifted || 
+        !workout.repscompleted || 
+        !workout.setscompleted
+      );
+    });
   
-    if (workoutProgress.some((workout) => !workout.totalweightlifted || !workout.repscompleted)) {
+    if (isInvalid) {
       alert("You must fill in all fields in order to submit your progress!");
       return;
     }
@@ -86,9 +115,11 @@ const Completedworkoutform = () => {
   
       console.log("Response", responses.map((response) => response.data));
 
-      successMessage = "Congratulations, you killed it. Your progress was recorded. Keep up the good work!";
+     
+
     } catch (error) {
       console.log("Error:", error);
+      setApiError("An error has occured")
     }
 
     //userpoints system
@@ -99,12 +130,11 @@ const Completedworkoutform = () => {
       });
   
       console.log('Response:' , secondResponse.data);
+      navigate('/userhome', { state: { successMessage: "Congratulations you killed it!" } })
     } catch (error) {
       console.error('Error:' , error);
+      setApiError("An error has occured")
     }
-
-
-    navigate('/userhome', { state: { successMessage: successMessage } })
     };
   
 
@@ -138,6 +168,7 @@ const Completedworkoutform = () => {
                 <div className="mb-4">
                   <label htmlFor="day">Select Day:</label>
                   <select
+                    data-testid = "daySelection"
                     type="String"
                     id="day"
                     className="select-menu"
@@ -231,6 +262,13 @@ const Completedworkoutform = () => {
                   Submit Progress
                 </Button>
               </form>
+
+  
+              {apiError && (
+             <div className="mt-3 alert alert-danger">
+                {apiError}
+              </div>
+                )}
             </Col>
           </Row>
         </Container>

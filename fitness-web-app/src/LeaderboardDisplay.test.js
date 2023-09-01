@@ -1,0 +1,42 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import LeaderBoardDisplay from './LeaderboardDisplay'; // adjust path if necessary
+import mockAxios from './__mocks__/axios';
+
+describe('LeaderBoardDisplay', () => {
+  
+  afterEach(() => {
+    mockAxios.reset();
+  });
+
+  it('should display leaderboard data when fetched successfully', async () => {
+    const mockData = {
+      data: [
+        { userid: '1', username: 'JohnDoe', points: 100 },
+        { userid: '2', username: 'JaneSmith', points: 90 }
+      ]
+    };
+
+    render(<LeaderBoardDisplay />);
+
+    mockAxios.mockResponse({ data: mockData });
+
+    await waitFor(() => {
+      expect(screen.getByText('JohnDoe')).toBeInTheDocument();
+      expect(screen.getByText('JaneSmith')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+      expect(screen.getByText('90')).toBeInTheDocument();
+    });
+  });
+
+  it('should handle errors', async () => {
+    render(<LeaderBoardDisplay />); 
+
+ 
+    mockAxios.mockError(new Error('Failed to fetch'));
+
+    await waitFor(() => {
+      expect(screen.queryByText('JohnDoe')).toBeNull();
+    });
+});
+});

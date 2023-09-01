@@ -25,33 +25,47 @@ const DeleteUserWorkouts = () => {
   const location = useLocation();
   const deleteMessage = location.state && location.state.deletionMessage;
 
-  const [cookies] = useCookies(["authUser"]);
+  const [apiError, setApiError] = useState("");
 
+  const [cookies] = useCookies(["authUser"]);
   useEffect(() => {
+
+    fetchWorkoutIds();
+  }, [cookies.authUser]);
+    
+
     const fetchWorkoutIds = async () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/userworkouts/${cookies.authUser}`
         );
-        console.log("Response:", response.data); // Log the response data
 
-        const workoutIds = response.data.data.map(
-          (workoutsavaiable) => workoutsavaiable.workoutid
-        );
 
-        const workoutNames = response.data.data.map(
-          (workoutnamesavailable) => workoutnamesavailable.workoutname
-        );
-        console.log("Here are the workout ids:", workoutIds);
-        setWorkoutIds(workoutIds);
-        setWorkoutNames(workoutNames);
+        if (response.data.status === "success") {
+          console.log("Response:", response.data); // Log the response data
+
+          const workoutIds = response.data.data.map(
+            (workoutsavaiable) => workoutsavaiable.workoutid
+          );
+  
+          const workoutNames = response.data.data.map(
+            (workoutnamesavailable) => workoutnamesavailable.workoutname
+          );
+          console.log("Here are the workout ids:", workoutIds);
+          setWorkoutIds(workoutIds);
+          setWorkoutNames(workoutNames);
+        } else {
+          console.log(response.data)
+          setApiError(response.data.message)
+        }
+      
       } catch (error) {
         console.error("Error:", error);
+        setApiError("An error occurred")
       }
     };
 
-    fetchWorkoutIds();
-  }, [cookies.authUser]);
+  
 
   const handleDelete = async (event) => {
     event.preventDefault();
@@ -68,11 +82,22 @@ const DeleteUserWorkouts = () => {
     userid: cookies.authUser,
     workoutid: parseInt(workoutid),
     });
-     console.log('Response:' , response.data);
 
-     navigate('/deleteworkouts', { state: { deletionMessage: response.data.deletionMessage } });
+
+    if (response.data.status === "success") {
+      setShowConfirmModal(false);
+      fetchWorkoutIds();
+      navigate('/deleteworkouts', { state: { deletionMessage: response.data.deletionMessage } });
+      console.log('Response:' , response.data);
+    } else {
+      setApiError(response.data.message)
+    }
+   
+
+   
   } catch (error) {
     console.error('Error:' , error);
+    setApiError("An unexpected error has occured in the post, please try again later")
   }
   };
 
@@ -83,13 +108,13 @@ const DeleteUserWorkouts = () => {
         <Modal.Title>Confirm Deletion</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Are you sure you want to delete this user workout? This will completely reset progress in this exercise.
+        Are you sure you want to to stop tracking this progress? It cannot be undone.
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={handleDelete}>
+        <Button variant="danger" data-testid = "actualDelete" onClick={handleDelete}>
           Delete
         </Button>
       </Modal.Footer>
@@ -110,12 +135,13 @@ const DeleteUserWorkouts = () => {
             <Col sm={5}>
               <h1 className="fw-bold">Remove a personal exercise</h1>
               <p className="mt-3 fw-light">
-                If you no longer wish to work with this exercise then drop it! Be warned, you cannot delete an exercise without agreeing to reset your progress and removing it from your routines!
+                If you no longer wish to work with this exercise then drop it! Be warned an untracked exercise will only appear if it is not in any current routine, you cannot delete an exercise without agreeing to reset your progress and removing it from your routines!
               </p>
               <form onSubmit={handleDelete}>
                 <div className="mb-4">
                   <label htmlFor="workoutid">Workout:</label>
                   <select
+                  data-testid= "workoutselection"
                     type="String"
                     id="workoutid"
                     className="form-control"
@@ -140,6 +166,12 @@ const DeleteUserWorkouts = () => {
                 )}
             </Col>
           </Row>
+
+          {apiError && (
+             <div className="mt-3 alert alert-success">
+                {apiError}
+              </div>
+                )}
         </Container>
       </main>
       {confirmModal}

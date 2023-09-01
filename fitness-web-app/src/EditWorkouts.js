@@ -35,7 +35,7 @@ const EditWorkouts = () => {
     const fetchWorkoutIds = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/workoutinfos/${cookies.authUser}`
+          `http://localhost:4000/userworkouts/${cookies.authUser}`
         );
         console.log("Response:", response.data); // Log the response data
 
@@ -69,9 +69,13 @@ const EditWorkouts = () => {
       return;
     }
 
+    console.log('workoutid:', workoutid);
+    console.log('customliftreps:', customliftreps);
+    console.log('customliftweight:', customliftweight);
+
     try {
       const response = await axios.post("http://localhost:4000/editworkout", {
-        userid: cookies.authUser,
+        userid: parseInt(cookies.authUser),
         workoutid: parseInt(workoutid),
         customliftweight: customliftweight,
         customliftreps: customliftreps,
@@ -90,15 +94,18 @@ const EditWorkouts = () => {
 
 
   const handleWorkoutChange = (e) => {
-    setWorkoutID(e.target.value);
+    const selectedWorkoutId = e.target.value
+    setWorkoutID(selectedWorkoutId);
   
-    if (e.target.value === "") {
+    if (selectedWorkoutId === "") {
       // Clear the old values if nothing is selected
-    
+      setCustomLiftWeight("");
+      setCustomLiftReps("");
+
     } else {
       // Finds the selected workout in the object
       const selectedWorkout = workoutData.find(
-        (workout) => workout.workoutid === parseInt(e.target.value)
+        (workout) => workout.workoutid === parseInt(selectedWorkoutId)
       );
   
       console.log("Selected Workout:", selectedWorkout);
@@ -133,6 +140,7 @@ const EditWorkouts = () => {
                 <div className="mb-4">
                   <label htmlFor="workoutid">Workout:</label>
                   <select
+                    data-testid = "workoutSelection"
                     type="String"
                     id="workoutid"
                     className="form-control"
@@ -151,6 +159,7 @@ const EditWorkouts = () => {
                 <div className="mb-4">
                   <label htmlFor="customliftweight">How much weight will this lift be?:</label>
                   <input
+                    data-testid = "setWeight"
                     type="number"
                     id="customliftweight"
                     className="form-control"
@@ -162,6 +171,7 @@ const EditWorkouts = () => {
                 <div className="mb-4">
                   <label htmlFor="customliftreps">How many reps a set?</label>
                   <input
+                    data-testid = "setReps"
                     type="number"
                     id="customliftreps"
                     className="form-control"
@@ -169,7 +179,7 @@ const EditWorkouts = () => {
                     onChange={(e) => setCustomLiftReps(e.target.value)}
                   />
                 </div>
-                <Button type="submit" className="btn btn-primary">Ammend exercise </Button>
+                <Button type="submit" data-testid = "actualEdit" className="btn btn-primary">Ammend exercise</Button>
               </form>
 
               

@@ -21,9 +21,16 @@ const ProgressDeletion = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const deleteMessage = location.state && location.state.deletionMessage;
+  const [apiError, setApiError] = useState("");
   
 
   useEffect(() => {
+
+
+    fetchRoutineExercises();
+  }, [cookies.authUser]);
+
+  
     const fetchRoutineExercises = async () => {
       try {
         const response = await axios.get(
@@ -31,14 +38,20 @@ const ProgressDeletion = () => {
         );
         console.log("Response:", response.data); // Log the response data
 
-        setRoutineExercisesInfo(response.data.data);
+        if (response.data.status === "success") {
+          setRoutineExercisesInfo(response.data.data);
+        } else {
+
+          setApiError(response.data.message)
+        }
+     
       } catch (error) {
         console.error("Error:", error);
+        setApiError("An error occurred")
       }
     };
 
-    fetchRoutineExercises();
-  }, [cookies.authUser]);
+
 
   const handleUserWorkoutChange = (e) => {
     const selectedValue = e.target.value;
@@ -64,6 +77,10 @@ const ProgressDeletion = () => {
         userworkoutid: selectedUserWorkoutId, 
       });
       console.log('Response:', response.data);
+
+      fetchRoutineExercises();
+      setShowConfirmModal(false);
+
 
       navigate('/resetprogress', { state: { deletionMessage: response.data.deletionMessage } });
     } catch (error) {
@@ -103,7 +120,7 @@ const ProgressDeletion = () => {
         <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={handleDelete}>
+        <Button variant="danger" data-testid = "actualDelete" onClick={handleDelete}>
           Delete
         </Button>
       </Modal.Footer>
@@ -126,6 +143,7 @@ const ProgressDeletion = () => {
                 <div className="mb-4">
                   <label htmlFor="exercise">Select Exercise:</label>
                   <select
+                    data-testid = "exerciseselection"
                     id="routineexerciseId"
                     className="form-control"
                     value={selectedUserWorkoutId}
@@ -147,9 +165,16 @@ const ProgressDeletion = () => {
                 )}
             </Col>
           </Row>
+          
+          {apiError && (
+             <div className="mt-3 alert alert-danger">
+                {apiError}
+              </div>
+                )}
+
         </Container>
       </main>
-      {showConfirmModal}
+      {confirmModal}
     </div>
   );
 };

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
@@ -29,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "jest --config jest.config.js",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -53,9 +54,10 @@
     "@babel/core": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
-    "@testing-library/react": "^14.0.0",
     "babel-jest": "^29.6.3",
     "jest": "^27.5.1",
+    "jest-fetch-mock": "^3.0.3",
+    "jest-mock-axios": "^4.7.2",
     "nodemailer-mock": "^2.0.1",
     "supertest": "^6.3.3"
   }

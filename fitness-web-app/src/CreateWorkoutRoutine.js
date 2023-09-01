@@ -21,6 +21,7 @@ const NewUserWorkoutRoutine = () => {
   const message = location.state && location.state.message;
   const [userWorkoutDays, setUserWorkoutDays] = useState([]);
   const [showCreateWorkoutsButton, setShowCreateWorkoutsButton] = useState(false);
+  const [apiError, setApiError] = useState(null);
   const [availableDays, setAvailableDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
 
 
@@ -37,21 +38,28 @@ const NewUserWorkoutRoutine = () => {
         `http://localhost:4000/workoutdays/${cookies.authUser}`
       );
       
-      setUserWorkoutDays(response.data.data);
 
-      const daysTaken = response.data.data.map(workoutDay => workoutDay.day);
+      
+     
+    if (response.data.status === "success") {
+      const fetchedWorkoutDays = response.data.data;
+      setUserWorkoutDays(fetchedWorkoutDays);
 
+      const daysTaken = fetchedWorkoutDays.map(workoutDay => workoutDay.day);
       const daysNotTaken = availableDays.filter(day => !daysTaken.includes(day));
 
-      console.log(daysTaken)
+      console.log(daysTaken);
       console.log(daysNotTaken);
 
       setAvailableDays(daysNotTaken);
 
-    } catch (error) {
-      console.error("Error:", error);
+    } else if (response.data.status === "error") {
+      setApiError(response.data.message);
     }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
   
   const handleSubmit = async (event) => {
@@ -104,8 +112,10 @@ const NewUserWorkoutRoutine = () => {
               </p>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label htmlFor="emailpreference">Select a day:</label>
+                  <label htmlFor="daySelection">Select a day:</label>
                   <select
+                    id="daySelection"
+                    data-testid = "daySelection"
                     className="form-control"
                     value={day}
                     onChange={(e) => setDay(e.target.value)}
@@ -138,6 +148,13 @@ const NewUserWorkoutRoutine = () => {
               )}
               </form>
             </Col>
+
+
+            {apiError && (
+             <div className="mt-3 alert alert-danger">
+                {apiError}
+              </div>
+                )}
           </Row>
         </Container>
       </main>

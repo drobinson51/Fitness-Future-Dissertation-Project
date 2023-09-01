@@ -11,12 +11,16 @@ jest.mock('nodemailer', () => {
 
 
 
+
+
 const request = require('supertest');
 
 
 const {app, db, sendWeeklyMail, emailLayoutOptions, getUserEmailsData } = require('./Server'); 
 
-
+db.connect = jest.fn((callback) => {
+  callback(null); 
+});
 
 const bcrypt = require('bcryptjs');
 
@@ -174,108 +178,14 @@ describe('Email Utility Functions', () => {
     });
         
     it('should throw error if there is one', () => {
-        const error = new Error('DB error');
-        expect(() => sendWeeklyMail(error)).toThrow('DB error');
+        const error = new Error('Error');
+        expect(() => sendWeeklyMail(error)).toThrow('Error');
     });
 });
 });
 
 
 // API tests.
-
-describe('POST /exerciseprogress', () => {
-  it('should insert exercise progress into the database', async () => {
-    // Mock the request body
-    const requestBody = {
-      userid: 123,
-      userworkoutid: 456,
-      totalweightlifted: 100,
-      repscompleted: 10,
-    };
-
-
-    let exerciseprogress = queries.EXERCISEPROGRESS;
-
-    // Mock the database query function
-    db.query = jest.fn((query, values, callback) => {
-      expect(query).toEqual(exerciseprogress);
-      expect(values).toEqual([
-        requestBody.userid,
-        requestBody.userworkoutid,
-        requestBody.totalweightlifted,
-        requestBody.repscompleted,
-        expect.any(String),
-      ]);
-
-
-      // Simulate a successful database insertion
-      callback(null, { insertId: 1 });
-    });
-
-    // Perform the POST request using supertest
-    const response = await request(app)
-      .post('/exerciseprogress')
-      .send(requestBody);
-
-    // Assertions on the response
-    expect(response.statusCode).toBe(201);
-    expect(response.body).toEqual({
-      status: "success",
-      data: { insertId: 1 },  
-      successMessage: 'Nice workout you killed it! Keep it up.',
-    });
-  });
-    
-  it('should respond with internal server error if db error is present', async () => {
-    const requestBody = {
-      userid: 123,
-      userworkoutid: 456,
-      totalweightlifted: 100,
-      repscompleted: 10,
-    };
-  
-    
-    db.query = jest.fn((query, values, callback) => {
-      callback(new Error('Simulated DB error'));
-    });
-  
-    const response = await request(app)
-      .post('/exerciseprogress')
-      .send(requestBody);
-  
-    expect(response.statusCode).toBe(500);
-    expect(response.body).toEqual({
-      status: 'error',
-      message: 'Internal Server Error',
-    });
-  });
-
-  it('should respond with 404, if no data is available to post', async () => {
-    // Mock the request body
-    const requestBody = {
-      userid: null,
-      userworkoutid: null,
-      totalweightlifted: null,
-      repscompleted: null,
-    };
-  
-    // Mock the database query function to simulate no data
-    db.query = jest.fn((query, values, callback) => {
-      callback(null, []);
-    });
-  
-    const response = await request(app)
-      .post('/exerciseprogress')
-      .send(requestBody);
-  
-    expect(response.statusCode).toBe(404);
-    expect(response.body).toEqual({
-      status: 'Nothing found',
-      message: 'Nothing to post.',
-    });
-  });
-});  
-  
 
 describe('POST /userpoints', () => {
   it('should insert increments points in database', async () => {
@@ -360,6 +270,107 @@ describe('POST /userpoints', () => {
     });
   });
 });  
+
+describe('POST /exerciseprogress', () => {
+
+  it('should insert exercise progress into database database', async () => {
+    // Mock the request body
+
+    const timestamp = 12345;
+
+    const requestBody = {
+      userid: 123,
+      userworkoutid: 456,
+      totalweightlifted: 100,
+      repscompleted: 10,
+      timestamp: timestamp
+    };
+
+    
+    let exercisecompletion = queries.EXERCISEPROGRESS;
+
+    // Mock the database query function
+    db.query = jest.fn((query, values, callback) => {
+      expect(query).toEqual(exercisecompletion);
+      expect(values).toEqual([
+        requestBody.userid,
+        requestBody.userworkoutid,
+        requestBody.totalweightlifted,
+        requestBody.repscompleted,
+        expect.any(String),
+      ]);
+
+
+      // Simulate a successful database insertion
+      callback(null, { insertId: 1 });
+    });
+
+    // Perform the POST request using supertest
+    const response = await request(app)
+      .post('/exerciseprogress')
+      .send(requestBody);
+
+    // Assertions on the response
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toEqual({
+      status: "success",
+      data: { insertId: 1 },  
+      successMessage: 'Nice workout you killed it! Keep it up.',
+    });
+  });
+    
+  it('should respond with internal server error if db error is present', async () => {
+    const requestBody = {
+      userid: 123,
+      userworkoutid: 456,
+      totalweightlifted: 100,
+      repscompleted: 10,
+    };
+  
+    
+    db.query = jest.fn((query, values, callback) => {
+      callback(new Error('Simulated DB error'));
+    });
+  
+    const response = await request(app)
+      .post('/exerciseprogress')
+      .send(requestBody);
+  
+    expect(response.statusCode).toBe(500);
+    expect(response.body).toEqual({
+      status: 'error',
+      message: 'Internal Server Error',
+    });
+  });
+
+  it('should respond with 404, if no data is available to post', async () => {
+    // Mock the request body
+    const requestBody = {
+      userid: null,
+      userworkoutid: null,
+      totalweightlifted: null,
+      repscompleted: null,
+    };
+  
+    // Mock the database query function to simulate no data
+    db.query = jest.fn((query, values, callback) => {
+      callback(null, []);
+    });
+  
+    const response = await request(app)
+      .post('/exerciseprogress')
+      .send(requestBody);
+  
+    expect(response.statusCode).toBe(404);
+    expect(response.body).toEqual({
+      status: 'Nothing found',
+      message: 'Nothing to post.',
+    });
+  });
+});  
+  
+
+
 
 
 
@@ -649,17 +660,18 @@ describe('POST /addnewuserworkout', () => {
 
 
 describe('POST /editworkout', () => {
-  it('should eid userworkout in database', async () => {
+  it('should edit userworkout in database', async () => {
     // Mock the request body
 
     const mockData = { insertId: 1 }
 
 
     const requestBody = {
-      userid: 123,
-      workoutid: 456,
       customliftweight: 200,
       customliftreps: 5,
+      userid: 123,
+      workoutid: 456,
+   
     };
 
 
@@ -670,10 +682,10 @@ describe('POST /editworkout', () => {
     db.query = jest.fn((query, values, callback) => {
       expect(query).toEqual(editworkout);
       expect(values).toEqual([
-        requestBody.userid,
-        requestBody.workoutid,
         requestBody.customliftweight,
-        requestBody.customliftreps
+        requestBody.customliftreps,
+        requestBody.userid,
+        requestBody.workoutid
       ]);
     
       // Simulate a successful database update
@@ -1064,7 +1076,7 @@ describe('GET /workoutroutines/:userid', () => {
 
     console.log('db.query mock is called!'); 
 
-      const userid = '123'; // or whatever valid user ID you want to use
+      const userid = '123'; 
 
       // Mocking the expected data to be returned by the database
       const mockData = [
@@ -1233,10 +1245,7 @@ describe('GET /workoutdays/:userid', () => {
 
 describe('GET /workoutinfos/:userid', () => {
   it('should fetch all workout infos for the user', async () => {
-
       const userid = 456; 
-
-      
       const mockData = [
         {userworkoutid: 123,
         userid: 456,
@@ -1250,7 +1259,6 @@ describe('GET /workoutinfos/:userid', () => {
         orderperformed: 2,
         day: "Friday"},
     ];
-
       
     let getworkoutinfo = queries.GET_WORKOUT_INFO;
 
@@ -1330,7 +1338,7 @@ describe('GET /userworkouts/:userid', () => {
   it('should fetch all userworkouts days for the user', async () => {
 
 
-      const userid = '123'; // or whatever valid user ID you want to use
+      const userid = '123'; 
 
       let userworkoutquery = queries.USERWORKOUTSELECT;
 
@@ -1418,7 +1426,7 @@ describe('GET /tierlist/:userid', () => {
   it('should fetch all user position in tierlist for the user', async () => {
 
 
-      const userid = '123'; // or whatever valid user ID you want to use
+      const userid = '123'; 
 
       let tierlistentry = queries.TIERLIST;
 
@@ -1506,7 +1514,7 @@ describe('GET /userbarchart/:userid', () => {
   it('should fetch all user progress for the barchart function', async () => {
 
 
-      const userid = '123'; // or whatever valid user ID you want to use
+      const userid = '123'; 
 
       let barchart = queries.USERBARCHART;
 
@@ -1637,7 +1645,7 @@ describe('GET /leaderboard', () => {
 
 
   it('should return internal server error', async () => {
-    // Mocking the expected data to be returned by the database
+
 
 
     let leaderboard = queries.LEADERBOARDPOSITIONS
@@ -1663,8 +1671,7 @@ describe('GET /leaderboard', () => {
   });
 
   it('should get no data found', async () => {
-    // Mocking the expected data to be returned by the database
-
+    
     let leaderboard = queries.LEADERBOARDPOSITIONS
     db.query = jest.fn((query, callback) => {
     

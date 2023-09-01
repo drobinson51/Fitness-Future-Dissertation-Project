@@ -27,7 +27,12 @@ const RemoveRoutineExercise = () => {
   const deleteMessage = location.state && location.state.deletionMessage;
   const [cookies] = useCookies(["authUser"]);
 
+
   useEffect(() => {
+
+    fetchRoutineExercises();
+  }, [cookies.authUser]);
+  
     const fetchRoutineExercises = async () => {
       try {
         const response = await axios.get(
@@ -52,35 +57,35 @@ const RemoveRoutineExercise = () => {
       }
     };
 
-    fetchRoutineExercises();
-  }, [cookies.authUser]);
-
   //Function that handles what happens when day is selected
   const handleWorkoutRoutineRoutineSelection = (e) => {
     const selectedDay = e.target.value;
     setSelectedDay(selectedDay);
-
   
-    const workoutRoutinesAvailable = routineExercisesInfo.find((exercise) => exercise.day === selectedDay);
-
-    if (workoutRoutinesAvailable) {
-      setSelectedWorkoutRoutine(workoutRoutinesAvailable.workoutroutineid)
+    const workoutRoutineAvailable = routineExercisesInfo.find((exercise) => exercise.day === selectedDay);
+  
+    if (workoutRoutineAvailable) {
+      setSelectedWorkoutRoutine(workoutRoutineAvailable.workoutroutineid);
     } else {
       setSelectedWorkoutRoutine("");
     }
-  }
+    
+    console.log("Selected Workout Routine:", selectedWorkoutRoutine); // Add this line
+  };
 
-  const handleRoutineExerciseChange = (e) => {
-    const selectedValue = e.target.value;
+
+
+const handleRoutineExerciseChange = (e) => {
+  const selectedValue = e.target.value;
     
-  
-    if (selectedValue === "") {
-      setSelectedRoutineExerciseId(""); 
-    }
-    
-    setSelectedRoutineExerciseId(selectedValue);
+  if (selectedValue === "") {
+    setSelectedRoutineExerciseId(""); 
   }
+    
+  setSelectedRoutineExerciseId(selectedValue);
   
+  console.log("Selected Routine Exercise ID:", selectedRoutineExerciseId); // Add this line
+};
 
   const handleDelete = async (event) => {
     event.preventDefault();
@@ -96,6 +101,9 @@ const RemoveRoutineExercise = () => {
       });
       console.log('Response:', response.data);
 
+      fetchRoutineExercises();
+      setShowConfirmModal(false);
+
       
 
       navigate('/removeroutineexercise', { state: { deletionMessage: response.data.deletionMessage } });
@@ -107,13 +115,13 @@ const RemoveRoutineExercise = () => {
   // filters through the exercises that can be added to the routine to match them up to the relevant routine
   const exercisesAvailableForSelectedWorkoutRoutine = routineExercisesInfo.filter((exercise) => exercise.workoutroutineid === parseInt(selectedWorkoutRoutine));
 
-  const confirmModal = (
+    const confirmModal = (
     <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Deletion</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Are you sure you want to reset this progress? This cannot be undone.
+        Are you sure you want to remove this exercise from the routine?
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>
@@ -125,6 +133,7 @@ const RemoveRoutineExercise = () => {
       </Modal.Footer>
     </Modal>
   );
+  
 
 
   return (
@@ -145,6 +154,7 @@ const RemoveRoutineExercise = () => {
                 <div className="mb-4">
                   <label htmlFor="routineexerciseinfo">Select Workout Routine:</label>
                   <select
+                   data-testid="workoutroutine"
                     type="String"
                     id="workoutroutine"
                     className="form-control"
@@ -164,6 +174,7 @@ const RemoveRoutineExercise = () => {
                 <div className="mb-4">
                   <label htmlFor="routineexercise">Select Exercise to remove:</label>
                   <select
+                   data-testid="routineexercise"
                     type="String"
                     id="routineexercise"
                     className="form-control"
@@ -181,7 +192,7 @@ const RemoveRoutineExercise = () => {
 
                     )}
 
-              <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete Routine</Button>
+              <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Remove Exercise</Button>
               </form>
 
               
@@ -194,7 +205,7 @@ const RemoveRoutineExercise = () => {
           </Row>
         </Container>
       </main>
-      {showConfirmModal}
+      {confirmModal}
     </div>
   );
 };

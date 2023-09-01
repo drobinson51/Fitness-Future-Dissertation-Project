@@ -21,7 +21,7 @@ const NewWorkoutToRoutine = () => {
   const [userworkoutid, setUserWorkoutID] = useState([]);
   const [selectedUserWorkoutId, setSelectedUserWorkoutId] = useState("");
   const [orderperformed, setOrderPerformed] = useState("");
-
+  const [apiError, setApiError] = useState(null);
   const [showExerciseCompletionButton, setShowExerciseCompletionButton] = useState(false);
 
 
@@ -34,6 +34,12 @@ const NewWorkoutToRoutine = () => {
   const successMessage = location.state && location.state.successMessage;
 
   useEffect(() => {
+
+
+    fetchWorkoutIds();
+  }, [cookies.authUser]);
+
+
     const fetchWorkoutIds = async () => {
       try {
         const response = await axios.get(
@@ -44,6 +50,9 @@ const NewWorkoutToRoutine = () => {
           `http://localhost:4000/workoutroutines/${cookies.authUser}`
         );
 
+
+
+        if (response.data.status === "success" && secondResponse.data.status === "success") {
         // Simple two responses which maps out and gets ids relevant along with the names to opulated them
         const userworkoutids = response.data.data.map(
           (userworkout) => userworkout.userworkoutid
@@ -67,13 +76,17 @@ const NewWorkoutToRoutine = () => {
         setDay(days);
         setUserWorkoutID(userworkoutids);
         setWorkoutRoutineID(workoutroutineids);
+        } else if ( response.data.status === "error" || secondResponse.data.status === "error") {
+          setApiError(response.data.message);
+        }
       } catch (error) {
         console.error("Error:", error);
+        setApiError("Something went wrong!")
       }
     };
 
-    fetchWorkoutIds();
-  }, [cookies.authUser]);
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -105,6 +118,7 @@ const NewWorkoutToRoutine = () => {
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
+      setApiError(error)
     }
   };
   return (
@@ -123,8 +137,10 @@ const NewWorkoutToRoutine = () => {
               </p>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label htmlFor="workoutid">Workout:</label>
+                
+                  <label htmlFor="userworkoutid">Workout:</label>
                   <select
+                    data-testid = "workoutSelection"
                     type="String"
                     id="userworkoutid"
                     className="form-control"
@@ -141,8 +157,9 @@ const NewWorkoutToRoutine = () => {
                     </select>
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="workoutroutineid">Select Routine Day:</label>
+                  <label htmlFor="selectedWorkoutRoutineId">Select Routine Day:</label>
                   <select
+                    data-testid = "routineSelection"
                     type="String"
                     id="selectedWorkoutRoutineId"
                     className="form-control"
@@ -159,7 +176,7 @@ const NewWorkoutToRoutine = () => {
                   
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="orderPerformed">Set the order this should be performed in your routine:</label>
+                  <label htmlFor="orderperformed">Set the order this should be performed in your routine:</label>
                   <input
                     type="String"
                     id="orderperformed"
@@ -187,6 +204,15 @@ const NewWorkoutToRoutine = () => {
               )}
               
             </Col>
+
+            
+            {apiError && (
+             <div className="mt-3 alert alert-danger">
+                {apiError}
+              </div>
+                )}
+
+
           </Row>
         </Container>
       </main>
