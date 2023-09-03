@@ -45,7 +45,10 @@ return (
            <NavDropdown.Item href="/addexercisestoroutine">
              Customise Routine 
            </NavDropdown.Item>
-           <NavDropdown.Divider />
+           <NavDropdown.Divider/>
+           <NavDropdown.Item href="/deleteworkouts">
+             Stop Tracking Exercise
+           </NavDropdown.Item>
            <NavDropdown.Item href="/resetprogress">Reset exercise progress</NavDropdown.Item>
            <NavDropdown.Item href="/removeroutineexercise">
              Drop Exercise From Routine

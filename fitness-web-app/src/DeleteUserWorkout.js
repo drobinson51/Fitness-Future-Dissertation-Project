@@ -39,18 +39,33 @@ const DeleteUserWorkouts = () => {
         const response = await axios.get(
           `http://localhost:4000/userworkouts/${cookies.authUser}`
         );
+        const secondResponse = await axios.get(
+          `http://localhost:4000/workoutinfos/${cookies.authUser}`
+        );
 
-
-        if (response.data.status === "success") {
+        if (response.data.status === "success" && secondResponse.data.status !== "error") {
           console.log("Response:", response.data); // Log the response data
 
-          const workoutIds = response.data.data.map(
-            (workoutsavaiable) => workoutsavaiable.workoutid
+          const workoutsInRoutine = new Set(
+            secondResponse.data.data.map(
+              (workoutInfo) => workoutInfo.workoutid
+            )
           );
-  
-          const workoutNames = response.data.data.map(
-            (workoutnamesavailable) => workoutnamesavailable.workoutname
+
+
+          const workoutsNotInRoutine = response.data.data.filter(
+            (workout) => !workoutsInRoutine.has(workout.workoutid)
           );
+    
+    
+          const workoutIds = workoutsNotInRoutine.map(
+            (workout) => workout.workoutid
+          );
+          const workoutNames = workoutsNotInRoutine.map(
+            (workout) => workout.workoutname
+          );
+
+
           console.log("Here are the workout ids:", workoutIds);
           setWorkoutIds(workoutIds);
           setWorkoutNames(workoutNames);
@@ -90,6 +105,7 @@ const DeleteUserWorkouts = () => {
       navigate('/deleteworkouts', { state: { deletionMessage: response.data.deletionMessage } });
       console.log('Response:' , response.data);
     } else {
+      setShowConfirmModal(false);
       setApiError(response.data.message)
     }
    

@@ -54,12 +54,13 @@ describe("Registed Navbar", () => {
         expect(screen.getByText('Create Routine').closest('a')).toHaveAttribute('href', '/createroutine');
         expect(screen.getByText('Edit Tracked Exercises').closest('a')).toHaveAttribute('href', '/editworkouts');
         expect(screen.getByText('Customise Routine').closest('a')).toHaveAttribute('href', '/addexercisestoroutine');
+        expect(screen.getByText('Stop Tracking Exercise').closest('a')).toHaveAttribute('href', '/deleteworkouts');
         
-      expect(screen.getByText('Drop Exercise From Routine').closest('a')).toHaveAttribute('href', '/removeroutineexercise');
-      expect(screen.getByText('Delete Routine').closest('a')).toHaveAttribute('href', '/deleteworkoutroutine');
-      expect(screen.getByText('Reset exercise progress').closest('a')).toHaveAttribute('href', '/resetprogress');
-      
-      });
+        expect(screen.getByText('Drop Exercise From Routine').closest('a')).toHaveAttribute('href', '/removeroutineexercise');
+        expect(screen.getByText('Delete Routine').closest('a')).toHaveAttribute('href', '/deleteworkoutroutine');
+        expect(screen.getByText('Reset exercise progress').closest('a')).toHaveAttribute('href', '/resetprogress');
+        
+        });
 
 
 
