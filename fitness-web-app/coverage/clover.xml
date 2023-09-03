@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1693754927441" clover="3.2.0">
-  <project timestamp="1693754927441" name="All files">
+<coverage generated="1693764640748" clover="3.2.0">
+  <project timestamp="1693764640748" name="All files">
     <metrics statements="1013" coveredstatements="779" conditionals="363" coveredconditionals="254" methods="217" coveredmethods="162" elements="1593" coveredelements="1195" complexity="0" loc="1013" ncloc="1013" packages="1" files="22" classes="22"/>
     <file name="AddWorkoutsToRoutine.js" path="C:\Users\User-Admin\Documents\UniWork\WorkingDissertationV2\Fitness-Future-Dissertation-Project\fitness-web-app\src\AddWorkoutsToRoutine.js">
       <metrics statements="77" coveredstatements="43" conditionals="33" coveredconditionals="14" methods="16" coveredmethods="10"/>

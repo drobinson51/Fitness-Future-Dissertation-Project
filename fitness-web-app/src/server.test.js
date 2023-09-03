@@ -1157,6 +1157,93 @@ describe('GET /workoutroutines/:userid', () => {
 
 });
 
+
+describe('GET /routineexercises/:workoutroutineid', () => {
+  it('should fetch all workout routines for the user', async () => {
+
+    console.log('db.query mock is called!'); 
+
+      const workoutroutineid = '123'; 
+
+      // Mocking the expected data to be returned by the database
+      const mockData = [
+          { routineexerciseid: 456, workoutroutineid: 123, userworkoutid: 789, orderperformed: 321 },
+          { routineexerciseid: 654, workoutroutineid: 123, userworkoutid: 987, orderperformed: 203 },
+      ];
+
+      let exerciseroutines = queries.ROUTINEEXERCISES
+
+      // Mocking the db.query function
+      db.query = jest.fn((query, userid, callback) => {
+          if (query === exerciseroutines) {
+              callback(null, mockData);
+          } else {
+              callback(new Error('Unexpected SQL or values'));
+          }
+      });
+
+      const response = await request(app).get(`/routineexercises/${workoutroutineid}`);
+
+      // Assert that the status code is 200 OK
+      expect(response.statusCode).toBe(200);
+
+      // Assert that the response body matches the mock data
+      expect(response.body).toEqual({
+          status: 'success',
+          data: mockData
+      });
+  });
+
+  it('should return internal server error', async () => {
+    // Mocking the expected data to be returned by the database
+
+
+    const workoutroutineid = '123'; 
+    
+
+    db.query = jest.fn((query, values, callback) => {
+      callback(new Error('Internal Error'), null);
+    });
+
+
+    const response = await request(app).get(`/routineexercises/${workoutroutineid}`);
+
+    expect(response.statusCode).toBe(500);
+
+    
+    
+    expect(response.body).toEqual({
+      status: 'error',
+      message: 'Internal Server Error'
+    });
+  });
+
+  it('should get no data found', async () => {
+    // Mocking the expected data to be returned by the database
+
+
+    const workoutroutineid = '123'; 
+
+
+  db.query = jest.fn((query, values, callback) => {
+  callback(null, []);
+    });
+
+    const response = await request(app).get(`/routineexercises/${workoutroutineid}`);
+
+    expect(response.statusCode).toBe(404);
+
+    
+    
+    expect(response.body).toEqual({
+      status: 'Nothing found',
+      message: "No workout routines found for the given userid",
+    });
+  });
+  
+
+});
+
 describe('GET /workoutdays/:userid', () => {
   it('should fetch all workout days for the user', async () => {
 
