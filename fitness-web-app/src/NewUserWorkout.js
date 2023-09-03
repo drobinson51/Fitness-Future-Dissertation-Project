@@ -101,6 +101,9 @@ const NewUserWorkout = () => {
     fetchworkoutids();
     fetchUserWorkouts();
 
+    setCustomLiftReps("")
+
+    setCustomLiftWeight("");
     setShowCreateRoutineButton(true);
     navigate('/addworkouts', { state: { successMessage: response.data.successMessage } });
 
@@ -138,6 +141,7 @@ const NewUserWorkout = () => {
                 value={workoutid}
                 onChange={(e) => setWorkoutID(e.target.value)}
               >
+                 <option value="" disabled>Select a workout</option> 
                 {workouts.map((workout) => {
                   const isTracked = userWorkouts.some(
                     (userWorkout) => userWorkout.workoutid === workout.workoutid

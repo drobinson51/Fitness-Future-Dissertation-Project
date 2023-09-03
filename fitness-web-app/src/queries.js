@@ -21,6 +21,8 @@
 
     WORKOUTROUTINES: `SELECT * FROM workoutroutine WHERE userid = ?;`,
 
+    ROUTINEEXERCISES: `SELECT * FROM routineexercises WHERE workoutroutineid = ?;`,
+
     WORKOUTDAYS: `SELECT * FROM workoutroutine WHERE workoutroutine.userid = ?;`,
 
     USERWORKOUTDELETE: `DELETE FROM userworkout WHERE userid = ? AND workoutid = ?`,

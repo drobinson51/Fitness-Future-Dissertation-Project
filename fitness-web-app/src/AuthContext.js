@@ -7,7 +7,11 @@ const AuthContext = React.createContext();
 
 export function AuthProvider(props) {
   
-  const [cookies, setCookie, removeCookie] = useCookies('authUser');
+  // const [cookies, setCookie, removeCookie] = useCookies('authUser');
+
+  const [cookies, setCookie, removeCookie] = useCookies(['authUser', 'isLoggedIn', 'userName']);
+
+
 
   const [authUser, setAuthUser] = useState(cookies.authUser || null);
   const [isLoggedIn, setIsLoggedIn] = useState(cookies.isLoggedIn || false);
@@ -48,13 +52,14 @@ export function AuthProvider(props) {
   };
  
   const logout = () => {
-    setAuthUser(null);
+  setAuthUser(null);
     setIsLoggedIn(false);
-
+    setUserName(null); 
 
 
     removeCookie('authUser');
     removeCookie ('isLoggedIn');
+    removeCookie('userName');
   };
 
   console.log('authUser value:', authUser); 
@@ -64,6 +69,7 @@ export function AuthProvider(props) {
     authUser,
     isLoggedIn,
     login,
+    logout
     };
 
   return (

@@ -301,6 +301,36 @@ app.get("/workoutroutines/:userid", async (req, res) => {
   });
 });
 
+app.get("/routineexercises/:workoutroutineid", async (req, res) => {
+  const { workoutroutineid } = req.params;
+
+  let getroutinexercises = queries.ROUTINEEXERCISES;
+
+
+  db.query(getroutinexercises, [workoutroutineid], (err, data) => {
+    if (err) {
+      console.error("Error fetching workouts:", err);
+      return res.status(500).json({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
+    }
+  
+    if (!data || data.length === 0) {
+      return res.status(404).json({
+        status: 'Nothing found',
+        message: 'No workout routines found for the given userid'
+      });
+    }
+  
+    res.status(200).json({
+      status: 'success',
+      data: data
+    });
+  });
+});
+
+
 app.get("/workoutinfos/:userid", async (req, res) => {
   const { userid } = req.params;
 
@@ -762,9 +792,9 @@ app.get("/exerciseroutines/:userid", async (req, res) => {
     }
   
     if (!data || data.length === 0) {
-      return res.status(404).json({
+      return res.status(200).json({
         status: 'Nothing found',
-        message: 'No workouts found for the given userid'
+        message: 'No routines found for the given userid'
       });
     }
   

@@ -1,7 +1,20 @@
+
+jest.mock('./AuthContext', () => ({
+  useAuth: () => ({
+    logout: jest.fn(),
+  }),
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+}));
+
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'; 
 import { BrowserRouter as Router } from 'react-router-dom';
+
 
 import RegisteredNavbar from './RegisteredNavbar';
 
@@ -25,7 +38,6 @@ describe("Registed Navbar", () => {
 
 
       it("should render the href links of the navbar", () => {
-        expect(screen.getByText('Logout').closest('a')).toHaveAttribute('href', '/logout');
         expect(screen.getByText('The Leaderboard').closest('a')).toHaveAttribute('href', '/leaderboard');
         expect(screen.getByText('Workout Record').closest('a')).toHaveAttribute('href', '/exercisecompletion');
       });

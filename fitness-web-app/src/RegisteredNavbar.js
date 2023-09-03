@@ -5,11 +5,22 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
  
-const RegisteredNavbar = () => (
- 
-        
+const RegisteredNavbar = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+
+
+return (      
 <Navbar
    expand="lg"
    bg="primary" 
@@ -20,7 +31,7 @@ const RegisteredNavbar = () => (
      <Navbar.Toggle aria-controls="basic-navbar-nav" />
      <Navbar.Collapse id="basic-navbar-nav">
        <Nav className="me-auto">
-         <Nav.Link href="/logout">Logout</Nav.Link>
+       <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
          <NavDropdown title="Workout Management" id="basic-nav-dropdown">
          <NavDropdown.Item href="/addworkouts">
              Exercise Tracker
@@ -54,6 +65,8 @@ const RegisteredNavbar = () => (
  </Navbar>
 
 );
+
+};
  
 export default RegisteredNavbar;
 

@@ -44,8 +44,8 @@ const DeleteWorkoutRoutine = () => {
       setDays(days);
 
 
-      } else {
-        setApiError(response.data.message)
+      } else if (response.data.status === "Nothing found") {
+        setApiError("You don't have any routines to delete")
         console.log(response.data.data)
       }
    

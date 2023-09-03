@@ -22,6 +22,7 @@ const NewWorkoutToRoutine = () => {
   const [selectedUserWorkoutId, setSelectedUserWorkoutId] = useState("");
   const [orderperformed, setOrderPerformed] = useState("");
   const [apiError, setApiError] = useState(null);
+  const [alreadyAssignedWorkouts, setAlreadyAssignedWorkouts] = useState([])
   const [showExerciseCompletionButton, setShowExerciseCompletionButton] = useState(false);
 
 
@@ -36,11 +37,16 @@ const NewWorkoutToRoutine = () => {
   useEffect(() => {
 
 
+
     fetchWorkoutIds();
-  }, [cookies.authUser]);
+
+    fetchAlreadyAssignedWorkouts();
+  }, [cookies.authUser, selectedWorkoutRoutineId]);
 
 
     const fetchWorkoutIds = async () => {
+
+
       try {
         const response = await axios.get(
           `http://localhost:4000/userworkouts/${cookies.authUser}`
@@ -85,7 +91,25 @@ const NewWorkoutToRoutine = () => {
       }
     };
 
-
+    const fetchAlreadyAssignedWorkouts = async () => {
+      if (selectedWorkoutRoutineId) {
+        try {
+          const response = await axios.get(`http://localhost:4000/routineexercises/${selectedWorkoutRoutineId}`);
+          
+          if (response.data.status === "success") {
+            const assignedWorkouts = response.data.data.map((item) => item.userworkoutid);
+            setAlreadyAssignedWorkouts(assignedWorkouts);
+          } else if (response.data.status === "Nothing found") {
+            setAlreadyAssignedWorkouts([]);
+          }
+          
+        } catch (error) {
+          if (error.response && error.response.status !== 404) {
+            console.error("Error:", error);
+          }
+        }
+      }
+    };
 
 
   const handleSubmit = async (event) => {
@@ -112,6 +136,14 @@ const NewWorkoutToRoutine = () => {
       
       );
   
+      
+      fetchWorkoutIds();
+      fetchAlreadyAssignedWorkouts();
+
+      setOrderPerformed("");
+      setSelectedWorkoutRoutineId("");
+      setSelectedUserWorkoutId("");
+      
       setShowExerciseCompletionButton(true);
 
       navigate('/addexercisestoroutine', { state: { successMessage: response.data.successMessage } });
@@ -148,13 +180,17 @@ const NewWorkoutToRoutine = () => {
                     onChange={(e) => setSelectedUserWorkoutId(e.target.value)}
                   >
                     
+         
                     <option value="">Select Workout</option>
                     {userworkoutid.map((id, index) => (
-                    <option key={id} value={id}>
-                    {workoutname[index]}
-                     </option>
-                     ))}
-                    </select>
+                      // Prevents inclusion of already tracked exercises for that particular day
+                      !alreadyAssignedWorkouts.includes(id) && (
+                        <option key={id} value={id}>
+                          {workoutname[index]}
+                        </option>
+                      )
+                    ))}
+                  </select>
                 </div>
                 <div className="mb-4">
                   <label htmlFor="selectedWorkoutRoutineId">Select Routine Day:</label>
