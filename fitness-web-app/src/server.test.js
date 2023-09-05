@@ -22,6 +22,7 @@ db.connect = jest.fn((callback) => {
   callback(null); 
 });
 
+
 const bcrypt = require('bcryptjs');
 
 const nodemailer = require('nodemailer');
@@ -39,7 +40,7 @@ jest.setTimeout(5000);
 beforeEach(() => {
   jest.resetModules();
   jest.clearAllMocks();
-
+  jest.spyOn(db, 'query').mockImplementation(jest.fn());
   callCount = 0;
 });
 
@@ -190,38 +191,40 @@ describe('Email Utility Functions', () => {
 describe('POST /userpoints', () => {
   it('should insert increments points in database', async () => {
     // Mock the request body
-    const requestBody = {
+      const requestBody = {
       userid: 123,
     };
 
-
-
     let earnedpoints = queries.USERPOINTS;
+    let leaderboardIncrement = queries.LEADERBOARDINCREMENT;
 
-    // Mock the database query function
-    db.query = jest.fn((query, values, callback) => {
-      expect(query).toEqual(earnedpoints);
-      expect(values).toEqual([
-        requestBody.userid,
-        expect.any(String),
-      ]);
+    // Mock the database query function to handle multiple calls
+    db.query
+      .mockImplementationOnce((query, values, callback) => {
+        // This will handle the first call
+        expect(query).toEqual(earnedpoints);
+        expect(values).toEqual([
+          requestBody.userid,
+          expect.any(String),
+        ]);
+        callback(null, { userid: 123 });
+      })
+      .mockImplementationOnce((query, values, callback) => {
+        // This will handle the second call
+        expect(query).toEqual(leaderboardIncrement);
+        expect(values).toEqual([requestBody.userid]);
+        callback(null, {});
+      });
 
-
-      // Simulate a successful database insertion
-      callback(null, { userid: 123 });
-    });
-
-    // Perform the POST request using supertest
     const response = await request(app)
       .post('/userpoints')
       .send(requestBody);
 
-    // Assertions on the response
     expect(response.statusCode).toBe(201);
     expect(response.body).toEqual({
-      status: "success",
-      data: { userid: 123 },  
-      successMessage: 'Points incremented!',
+      status: 'success',
+      data: { userid: 123 },
+      successMessage: 'Points and leaderboard updated!',
     });
   });
     
@@ -1407,7 +1410,7 @@ describe('GET /workoutinfos/:userid', () => {
 
     const response = await request(app).get(`/workoutinfos/${userid}`);
 
-    expect(response.statusCode).toBe(404);
+    expect(response.statusCode).toBe(200);
 
     
     
@@ -1495,7 +1498,7 @@ describe('GET /userworkouts/:userid', () => {
 
     const response = await request(app).get(`/userworkouts/${userid}`);
 
-    expect(response.statusCode).toBe(404);
+    expect(response.statusCode).toBe(200);
 
     
     

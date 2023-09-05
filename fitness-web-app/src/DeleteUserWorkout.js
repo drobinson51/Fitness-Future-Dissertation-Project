@@ -34,52 +34,50 @@ const DeleteUserWorkouts = () => {
   }, [cookies.authUser]);
     
 
-    const fetchWorkoutIds = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/userworkouts/${cookies.authUser}`
-        );
-        const secondResponse = await axios.get(
-          `http://localhost:4000/workoutinfos/${cookies.authUser}`
-        );
-
-        if (response.data.status === "success" && secondResponse.data.status !== "error") {
-          console.log("Response:", response.data); // Log the response data
-
-          const workoutsInRoutine = new Set(
-            secondResponse.data.data.map(
-              (workoutInfo) => workoutInfo.workoutid
-            )
-          );
-
-
-          const workoutsNotInRoutine = response.data.data.filter(
-            (workout) => !workoutsInRoutine.has(workout.workoutid)
-          );
+  const fetchWorkoutIds = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/userworkouts/${cookies.authUser}`
+      );
+      const secondResponse = await axios.get(
+        `http://localhost:4000/workoutinfos/${cookies.authUser}`
+      );
     
+      if (response.data.status === "Nothing found" && secondResponse.data.status === "Nothing found") {
+
+
+        setWorkoutIds([]);
+        setWorkoutNames([]);
+        setApiError("You have no tracked exercises.");
+        return;
+      } else if (secondResponse.data.status === "Nothing found") {
+        const workoutIds = response.data.data.map((workout) => workout.workoutid);
+        const workoutNames = response.data.data.map((workout) => workout.workoutname);
+          
+        setWorkoutIds(workoutIds);
+        setWorkoutNames(workoutNames);
+      } else {
+        const workoutsInRoutine = new Set(
+          secondResponse.data.data.map((workoutInfo) => workoutInfo.workoutid)
+        );
     
-          const workoutIds = workoutsNotInRoutine.map(
-            (workout) => workout.workoutid
-          );
-          const workoutNames = workoutsNotInRoutine.map(
-            (workout) => workout.workoutname
-          );
-
-
-          console.log("Here are the workout ids:", workoutIds);
-          setWorkoutIds(workoutIds);
-          setWorkoutNames(workoutNames);
-        } else {
-          console.log(response.data)
-          setApiError(response.data.message)
-        }
-      
-      } catch (error) {
-        console.error("Error:", error);
-        setApiError("An error occurred")
+        const workoutsNotInRoutine = response.data.data.filter(
+          (workout) => !workoutsInRoutine.has(workout.workoutid)
+        );
+    
+        const workoutIds = workoutsNotInRoutine.map((workout) => workout.workoutid);
+        const workoutNames = workoutsNotInRoutine.map((workout) => workout.workoutname);
+          
+        setWorkoutIds(workoutIds);
+        setWorkoutNames(workoutNames);
       }
-    };
-
+    
+    } catch (error) {
+      console.error("Error:", error);
+      setApiError("An error occurred");
+    }
+  };
+  
   
 
   const handleDelete = async (event) => {
@@ -101,6 +99,7 @@ const DeleteUserWorkouts = () => {
 
     if (response.data.status === "success") {
       setShowConfirmModal(false);
+      setWorkoutID("");
       fetchWorkoutIds();
       navigate('/deleteworkouts', { state: { deletionMessage: response.data.deletionMessage } });
       console.log('Response:' , response.data);
@@ -143,10 +142,10 @@ const DeleteUserWorkouts = () => {
     <div className="home">
       
       <main>
-        <Container>
+      <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="https://picsum.photos/900/400" fluid rounded />
+              <Image src="/image/DeleteWorkouts.jpeg" className="image-size" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Remove a personal exercise</h1>
@@ -184,7 +183,7 @@ const DeleteUserWorkouts = () => {
           </Row>
 
           {apiError && (
-             <div className="mt-3 alert alert-success">
+             <div className="mt-3 alert alert-danger">
                 {apiError}
               </div>
                 )}

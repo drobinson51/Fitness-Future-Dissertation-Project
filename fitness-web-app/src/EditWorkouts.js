@@ -32,34 +32,37 @@ const EditWorkouts = () => {
   const [cookies] = useCookies(["authUser"]);
 
   useEffect(() => {
-    const fetchWorkoutIds = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/userworkouts/${cookies.authUser}`
-        );
-        console.log("Response:", response.data); // Log the response data
 
-      
-        setWorkoutData(response.data.data);
-
-        const workoutIds = response.data.data.map(
-          (workoutsavaiable) => workoutsavaiable.workoutid
-        );
-
-        const workoutNames = response.data.data.map(
-          (workoutnamesavailable) => workoutnamesavailable.workoutname
-        );
-        console.log("Here are the workout ids:", workoutIds);
-        setWorkoutIds(workoutIds);
-        setWorkoutNames(workoutNames);
-
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
 
     fetchWorkoutIds();
   }, [cookies.authUser]);
+
+
+  const fetchWorkoutIds = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/userworkouts/${cookies.authUser}`
+      );
+      console.log("Response:", response.data); // Log the response data
+
+    
+      setWorkoutData(response.data.data);
+
+      const workoutIds = response.data.data.map(
+        (workoutsavaiable) => workoutsavaiable.workoutid
+      );
+
+      const workoutNames = response.data.data.map(
+        (workoutnamesavailable) => workoutnamesavailable.workoutname
+      );
+      console.log("Here are the workout ids:", workoutIds);
+      setWorkoutIds(workoutIds);
+      setWorkoutNames(workoutNames);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -85,6 +88,11 @@ const EditWorkouts = () => {
     
       console.log("Response:", response.data);
 
+
+      setWorkoutID("");
+      setCustomLiftReps("");
+      setCustomLiftWeight("");
+      fetchWorkoutIds();
       setShowHomeButton(true);
       navigate('/editworkouts', { state: { message: response.data.successMessage } });
     } catch (error) {

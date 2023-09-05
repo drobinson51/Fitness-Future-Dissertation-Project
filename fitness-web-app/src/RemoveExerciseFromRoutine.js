@@ -33,29 +33,57 @@ const RemoveRoutineExercise = () => {
     fetchRoutineExercises();
   }, [cookies.authUser]);
   
+    // const fetchRoutineExercises = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       `http://localhost:4000/workoutinfos/${cookies.authUser}`
+    //     );
+    //     console.log("Response:", response.data); // Log the response data
+
+    //     // For use my various sets
+    //     setRoutineExercisesInfo(response.data.data);
+
+     
+    //     // Days are kept in sets, mostly as constraints are now placed to ensure a user will never have more than one routine on a day anyways but serves as an additional check. 
+    //     const daysAvailable = [...new Set(response.data.data.map((exercise) => exercise.day))];
+    //     setDays(daysAvailable);
+
+
+    //   //  Creates as et of workout routines available 
+    //     const workoutRoutinesAvailable = [...new Set(response.data.data.map((exercise) => exercise.workoutroutineid))];
+    //     setWorkoutRoutinesAvailable(workoutRoutinesAvailable);
+    //   } catch (error) {
+    //     console.error("Error:", error);
+    //   }
+    // };
+
     const fetchRoutineExercises = async () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/workoutinfos/${cookies.authUser}`
         );
-        console.log("Response:", response.data); // Log the response data
-
-        // For use my various sets
+    
+        if (response.data.status === "Nothing found") {
+          setRoutineExercisesInfo([]);
+          setDays([]);
+          setWorkoutRoutinesAvailable([]);
+          return;
+        }
+    
+        console.log("Response:", response.data);
+    
         setRoutineExercisesInfo(response.data.data);
-
-     
-        // Days are kept in sets, mostly as constraints are now placed to ensure a user will never have more than one routine on a day anyways but serves as an additional check. 
+    
         const daysAvailable = [...new Set(response.data.data.map((exercise) => exercise.day))];
         setDays(daysAvailable);
-
-
-      //  Creates as et of workout routines available 
+    
         const workoutRoutinesAvailable = [...new Set(response.data.data.map((exercise) => exercise.workoutroutineid))];
         setWorkoutRoutinesAvailable(workoutRoutinesAvailable);
       } catch (error) {
         console.error("Error:", error);
       }
     };
+    
 
   //Function that handles what happens when day is selected
   const handleWorkoutRoutineRoutineSelection = (e) => {

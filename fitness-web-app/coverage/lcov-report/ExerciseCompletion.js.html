@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50.72% </span>
+                <span class="strong">51.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>35/69</span>
+                <span class='fraction'>36/70</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.61% </span>
+                <span class="strong">52.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>32/62</span>
+                <span class='fraction'>33/63</span>
             </div>
         
             
@@ -342,7 +342,12 @@
 <a name='L277'></a><a href='#L277'>277</a>
 <a name='L278'></a><a href='#L278'>278</a>
 <a name='L279'></a><a href='#L279'>279</a>
-<a name='L280'></a><a href='#L280'>280</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -362,6 +367,8 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
@@ -475,7 +482,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -557,19 +563,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -593,6 +586,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -641,6 +651,8 @@ const Completedworkoutform = () =&gt; {
   const [availableDays, setAvailableDays] = useState([]);
   const [workoutData, setWorkoutData] = useState([]);
   const [cookies] = useCookies(["authUser"]);
+  const [cookieName] = useCookies(["userName"]);
+&nbsp;
   const [workoutProgress, setWorkoutProgress] = useState([]);
 &nbsp;
   const [apiError, setApiError] = useState("")
@@ -753,8 +765,7 @@ const Completedworkoutform = () =&gt; {
       });
   
 <span class="cstat-no" title="statement not covered" >      console.log('Response:' , secondResponse.data);</span>
-<span class="cstat-no" title="statement not covered" >      navigate('/userhome', { state: { successMessage: "Congratulations you killed it!" } })</span>
-    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      navigate('/userhome', { state: { successMessage: "Congratulations you killed it!", userName: cookieName } }) </span>   } catch (error) {
 <span class="cstat-no" title="statement not covered" >      console.error('Error:' , error);</span>
 <span class="cstat-no" title="statement not covered" >      setApiError("An error has occured")</span>
     }
@@ -827,12 +838,14 @@ const Completedworkoutform = () =&gt; {
                         .map((workout, index) =&gt; (
                           &lt;tr key={index}&gt;
                             &lt;td&gt;{workout.workoutname}&lt;/td&gt;
-                            &lt;td&gt;{workout.customliftweight}&lt;/td&gt;
+                            &lt;td&gt;{workout.customliftweight} kg&lt;/td&gt;
                             &lt;td&gt;{workout.customliftreps}&lt;/td&gt;
                             &lt;td&gt;
                               &lt;input
                                 type="number"
+                                min="1"
                                 className="form-control custom-input"
+                                placeholder="kg"
                                 // Optional chaining deals with null values, sets the workoutProgress value to whatever is inputted, similar operation below
                                 value={workoutProgress[index]?.totalweightlifted || ""}
                                 onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
@@ -892,6 +905,8 @@ const Completedworkoutform = () =&gt; {
                 {apiError}
               &lt;/div&gt;
                 )}
+&nbsp;
+                
             &lt;/Col&gt;
           &lt;/Row&gt;
         &lt;/Container&gt;
@@ -907,7 +922,7 @@ export default Completedworkoutform;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-03T18:10:40.695Z
+                at 2023-09-05T17:38:22.032Z
             </div>
         <script src="prettify.js"></script>
         <script>

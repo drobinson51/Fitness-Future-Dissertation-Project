@@ -1,0 +1,16 @@
+AddWorkoutToRoutine: "https://www.puregym.com/equipment/"
+CreateRoutine: "https://stock.adobe.com/au/images/fit-man-with-water-bottle-and-bag-entering-in-gym/217326501"
+DeleteRoutine: "https://www.istockphoto.com/photo/leaving-the-gym-gm1040495010-278549347"
+EditWorkout: "https://stock.adobe.com/au/images/black-woman-thinking-and-exercise-stretching-arms-for-fitness-workout-wellness-training-or-cardio-runner-lifestyle-african-athlete-healthy-warm-up-motivation-and-mindset-vision-in-sports-gym/563209387"
+LandingPage: "https://stock.adobe.com/images/cropped-image-of-female-personal-trainer-with-digital-tablet-and-athletic-man-with-barbell-at-gym/203863688"
+LoginPage: "https://diabetesstories.com/2022/09/13/just-2-minutes-of-walking-after-a-meal-can-lower-blood-sugar/"
+NewUserWorkout: "https://www.technogym.com/my/wellness/best-glute-exercises-workouts/"
+ProgressDeletion: "https://www.pexels.com/photo/person-holding-barbell-1092875/"
+RegistrationPage: "https://www.linkedin.com/pulse/motivation-shifts-from-doing-being-age-ai-elena-badea?trk=pulse-article"
+RemoveExerciseFromRoutine: "https://julienquaglierini.com/en/2018/06/programme-musculation-debutant/"
+UserhomePage: "https://www.muscleandfitness.com/workouts/workout-tips/how-tell-youre-not-weight-training-beginner-anymore/"
+WorkoutRecord: "https://www.acleisure.com/how-should-i-plan-my-gym-session/"
+DeleteWorkouts: "https://usavolleyball.org/resource/why-and-how-to-teach-mindfulness/"
+
+
+None of these pictures are intended to or will be used in a commercialised product, they are simply present to help completion of this project.

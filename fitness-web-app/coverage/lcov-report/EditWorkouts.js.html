@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.66% </span>
+                <span class="strong">48.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/60</span>
+                <span class='fraction'>31/64</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.66% </span>
+                <span class="strong">48.43% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/60</span>
+                <span class='fraction'>31/64</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -269,7 +269,15 @@
 <a name='L204'></a><a href='#L204'>204</a>
 <a name='L205'></a><a href='#L205'>205</a>
 <a name='L206'></a><a href='#L206'>206</a>
-<a name='L207'></a><a href='#L207'>207</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -303,7 +311,13 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -327,9 +341,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -356,6 +367,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -509,34 +525,37 @@ const EditWorkouts = () =&gt; {
   const [cookies] = useCookies(["authUser"]);
 &nbsp;
   useEffect(() =&gt; {
-    const fetchWorkoutIds = async () =&gt; {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/userworkouts/${cookies.authUser}`
-        );
-        console.log("Response:", response.data); // Log the response data
 &nbsp;
-      
-        setWorkoutData(response.data.data);
-&nbsp;
-        const workoutIds = response.data.data.map(
-          (workoutsavaiable) =&gt; workoutsavaiable.workoutid
-        );
-&nbsp;
-        const workoutNames = response.data.data.map(
-          (workoutnamesavailable) =&gt; workoutnamesavailable.workoutname
-        );
-        console.log("Here are the workout ids:", workoutIds);
-        setWorkoutIds(workoutIds);
-        setWorkoutNames(workoutNames);
-&nbsp;
-      } catch (error) {
-<span class="cstat-no" title="statement not covered" >        console.error("Error:", error);</span>
-      }
-    };
 &nbsp;
     fetchWorkoutIds();
   }, [cookies.authUser]);
+&nbsp;
+&nbsp;
+  const fetchWorkoutIds = async () =&gt; {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/userworkouts/${cookies.authUser}`
+      );
+      console.log("Response:", response.data); // Log the response data
+&nbsp;
+    
+      setWorkoutData(response.data.data);
+&nbsp;
+      const workoutIds = response.data.data.map(
+        (workoutsavaiable) =&gt; workoutsavaiable.workoutid
+      );
+&nbsp;
+      const workoutNames = response.data.data.map(
+        (workoutnamesavailable) =&gt; workoutnamesavailable.workoutname
+      );
+      console.log("Here are the workout ids:", workoutIds);
+      setWorkoutIds(workoutIds);
+      setWorkoutNames(workoutNames);
+&nbsp;
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >      console.error("Error:", error);</span>
+    }
+  };
 &nbsp;
   const handleSubmit = <span class="fstat-no" title="function not covered" >as</span>ync (event) =&gt; {
 <span class="cstat-no" title="statement not covered" >    event.preventDefault();</span>
@@ -562,6 +581,11 @@ const EditWorkouts = () =&gt; {
     
 <span class="cstat-no" title="statement not covered" >      console.log("Response:", response.data);</span>
 &nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      setWorkoutID("");</span>
+<span class="cstat-no" title="statement not covered" >      setCustomLiftReps("");</span>
+<span class="cstat-no" title="statement not covered" >      setCustomLiftWeight("");</span>
+<span class="cstat-no" title="statement not covered" >      fetchWorkoutIds();</span>
 <span class="cstat-no" title="statement not covered" >      setShowHomeButton(true);</span>
 <span class="cstat-no" title="statement not covered" >      navigate('/editworkouts', { state: { message: response.data.successMessage } });</span>
     } catch (error) {
@@ -688,7 +712,7 @@ export default EditWorkouts;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-03T18:10:40.695Z
+                at 2023-09-05T17:38:22.032Z
             </div>
         <script src="prettify.js"></script>
         <script>

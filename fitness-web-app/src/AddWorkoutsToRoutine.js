@@ -24,7 +24,7 @@ const NewWorkoutToRoutine = () => {
   const [apiError, setApiError] = useState(null);
   const [alreadyAssignedWorkouts, setAlreadyAssignedWorkouts] = useState([])
   const [showExerciseCompletionButton, setShowExerciseCompletionButton] = useState(false);
-
+  const [filteredWorkouts, setFilteredWorkouts] = useState([])
 
   const [cookies] = useCookies(["authUser"]);
 
@@ -36,13 +36,17 @@ const NewWorkoutToRoutine = () => {
 
   useEffect(() => {
 
-
+    console.log("useEffect triggered");
+    console.log("Current selectedWorkoutRoutineId:", selectedWorkoutRoutineId);
+    console.log("Current selectedUserWorkoutId:", selectedUserWorkoutId);
 
     fetchWorkoutIds();
 
     fetchAlreadyAssignedWorkouts();
+
   }, [cookies.authUser, selectedWorkoutRoutineId]);
 
+  
 
     const fetchWorkoutIds = async () => {
 
@@ -92,25 +96,33 @@ const NewWorkoutToRoutine = () => {
     };
 
     const fetchAlreadyAssignedWorkouts = async () => {
+      console.log("fetchAlreadyAssignedWorkouts called");
       if (selectedWorkoutRoutineId) {
         try {
           const response = await axios.get(`http://localhost:4000/routineexercises/${selectedWorkoutRoutineId}`);
           
+          console.log("Response from fetchAlreadyAssignedWorkouts:", response.data);
+    
           if (response.data.status === "success") {
             const assignedWorkouts = response.data.data.map((item) => item.userworkoutid);
             setAlreadyAssignedWorkouts(assignedWorkouts);
           } else if (response.data.status === "Nothing found") {
             setAlreadyAssignedWorkouts([]);
+            console.log("Setting alreadyAssignedWorkouts to an empty array");
           }
           
         } catch (error) {
-          if (error.response && error.response.status !== 404) {
+          if (error.response && error.response.status === 404) {
+            setAlreadyAssignedWorkouts([]);
+            console.log("Setting alreadyAssignedWorkouts to an empty array because of 404");
+          }
+          else {
             console.error("Error:", error);
           }
         }
       }
     };
-
+    
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -168,6 +180,25 @@ const NewWorkoutToRoutine = () => {
                 Pick from your range of tracked exercises, and add them to a personal routine of your choosing. 
               </p>
               <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                  <label htmlFor="selectedWorkoutRoutineId">Select Routine Day:</label>
+                  <select
+                    data-testid = "routineSelection"
+                    type="String"
+                    id="selectedWorkoutRoutineId"
+                    className="form-control"
+                    value={selectedWorkoutRoutineId}
+                    onChange={(e) => setSelectedWorkoutRoutineId(e.target.value)}
+                    >
+                    <option value="">Select Day</option>
+                    {workoutroutineid.map((id, index) => (
+                    <option key={id} value={id}>
+                    {day[index]}
+                    </option>
+                    ))}
+                    </select>
+                  
+                </div>
                 <div className="mb-4">
                 
                   <label htmlFor="userworkoutid">Workout:</label>
@@ -191,25 +222,6 @@ const NewWorkoutToRoutine = () => {
                       )
                     ))}
                   </select>
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="selectedWorkoutRoutineId">Select Routine Day:</label>
-                  <select
-                    data-testid = "routineSelection"
-                    type="String"
-                    id="selectedWorkoutRoutineId"
-                    className="form-control"
-                    value={selectedWorkoutRoutineId}
-                    onChange={(e) => setSelectedWorkoutRoutineId(e.target.value)}
-                    >
-                    <option value="">Select Day</option>
-                    {workoutroutineid.map((id, index) => (
-                    <option key={id} value={id}>
-                    {day[index]}
-                    </option>
-                    ))}
-                    </select>
-                  
                 </div>
                 <div className="mb-4">
                   <label htmlFor="orderperformed">Set the order this should be performed in your routine:</label>

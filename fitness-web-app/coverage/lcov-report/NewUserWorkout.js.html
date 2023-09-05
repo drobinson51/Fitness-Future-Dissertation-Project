@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.61% </span>
+                <span class="strong">52% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/21</span>
+                <span class='fraction'>13/25</span>
             </div>
         
             
@@ -282,7 +282,10 @@
 <a name='L217'></a><a href='#L217'>217</a>
 <a name='L218'></a><a href='#L218'>218</a>
 <a name='L219'></a><a href='#L219'>219</a>
-<a name='L220'></a><a href='#L220'>220</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L220'></a><a href='#L220'>220</a>
+<a name='L221'></a><a href='#L221'>221</a>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -438,7 +441,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -452,7 +454,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -634,34 +640,34 @@ const NewUserWorkout = () =&gt; {
                 &lt;div className="mb-4"&gt;
                 &lt;label htmlFor="workoutid"&gt;Workout:&lt;/label&gt;
 &nbsp;
-                  {workouts.length === userWorkouts.length + 1 ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >              &lt;p&gt;All available workouts are already being tracked.&lt;/p&gt;</span>
-            ) : (
-              &lt;select
-                type="String"
-                id="workoutid"
-                className="form-control"
-                value={workoutid}
-                onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setWorkoutID(e.target.value)}</span>
-              &gt;
-                 &lt;option value="" disabled&gt;Select a workout&lt;/option&gt; 
-                {workouts.map((workout) =&gt; {
-                  const isTracked = userWorkouts.some(
-<span class="fstat-no" title="function not covered" >                    (u</span>serWorkout) =&gt; <span class="cstat-no" title="statement not covered" >userWorkout.workoutid === workout.workoutid</span>
-                  );
+                {workouts.length === (userWorkouts ? userWorkouts.length : <span class="branch-1 cbranch-no" title="branch not covered" >0)</span> + 1 ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >                  &lt;p&gt;All available workouts are already being tracked.&lt;/p&gt;</span>
+                ) : (
+                  &lt;select
+                    type="String"
+                    id="workoutid"
+                    className="form-control"
+                    value={workoutid}
+                    onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setWorkoutID(e.target.value)}</span>
+                  &gt;
+                    &lt;option value="" disabled&gt;Select a workout&lt;/option&gt; 
+                    {workouts.map((workout) =&gt; {
+                      const isTracked = userWorkouts &amp;&amp; userWorkouts.some(
+<span class="fstat-no" title="function not covered" >                        (u</span>serWorkout) =&gt; <span class="cstat-no" title="statement not covered" >userWorkout.workoutid === workout.workoutid</span>
+                      );
 &nbsp;
-                  <span class="missing-if-branch" title="else path not taken" >E</span>if (!isTracked) {
-                    return (
-                      &lt;option key={workout.workoutid} value={workout.workoutid}&gt;
-                        {workout.workoutname}
-                      &lt;/option&gt;
-                    );
-                  }
+                      <span class="missing-if-branch" title="else path not taken" >E</span>if (!isTracked) {
+                        return (
+                          &lt;option key={workout.workoutid} value={workout.workoutid}&gt;
+                            {workout.workoutname}
+                          &lt;/option&gt;
+                        );
+                      }
+<span class="cstat-no" title="statement not covered" >                      return null;</span>
+                    })}
+                  &lt;/select&gt;
+                )}
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                  return null;</span>
-                })}
-              &lt;/select&gt;
-            )}
 &nbsp;
                 &lt;/div&gt;
                 &lt;div className="mb-4"&gt;
@@ -669,6 +675,8 @@ const NewUserWorkout = () =&gt; {
                   &lt;input
                     type="number"
                     id="customliftweight"
+                    placeholder="kg"
+                    min = "1"
                     className="form-control"
                     value={customliftweight}
                     onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setCustomLiftWeight(e.target.value)}</span>
@@ -679,6 +687,7 @@ const NewUserWorkout = () =&gt; {
                   &lt;input
                     type="number"
                     id="customliftreps"
+                    min = "1"
                     className="form-control"
                     value={customliftreps}
                     onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setCustomLiftReps(e.target.value)}</span>
@@ -727,7 +736,7 @@ export default NewUserWorkout;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-09-03T18:10:40.695Z
+                at 2023-09-05T17:38:22.032Z
             </div>
         <script src="prettify.js"></script>
         <script>

@@ -131,34 +131,34 @@ const NewUserWorkout = () => {
                 <div className="mb-4">
                 <label htmlFor="workoutid">Workout:</label>
 
-                  {workouts.length === userWorkouts.length + 1 ? (
-              <p>All available workouts are already being tracked.</p>
-            ) : (
-              <select
-                type="String"
-                id="workoutid"
-                className="form-control"
-                value={workoutid}
-                onChange={(e) => setWorkoutID(e.target.value)}
-              >
-                 <option value="" disabled>Select a workout</option> 
-                {workouts.map((workout) => {
-                  const isTracked = userWorkouts.some(
-                    (userWorkout) => userWorkout.workoutid === workout.workoutid
-                  );
+                {workouts.length === (userWorkouts ? userWorkouts.length : 0) + 1 ? (
+                  <p>All available workouts are already being tracked.</p>
+                ) : (
+                  <select
+                    type="String"
+                    id="workoutid"
+                    className="form-control"
+                    value={workoutid}
+                    onChange={(e) => setWorkoutID(e.target.value)}
+                  >
+                    <option value="" disabled>Select a workout</option> 
+                    {workouts.map((workout) => {
+                      const isTracked = userWorkouts && userWorkouts.some(
+                        (userWorkout) => userWorkout.workoutid === workout.workoutid
+                      );
 
-                  if (!isTracked) {
-                    return (
-                      <option key={workout.workoutid} value={workout.workoutid}>
-                        {workout.workoutname}
-                      </option>
-                    );
-                  }
+                      if (!isTracked) {
+                        return (
+                          <option key={workout.workoutid} value={workout.workoutid}>
+                            {workout.workoutname}
+                          </option>
+                        );
+                      }
+                      return null;
+                    })}
+                  </select>
+                )}
 
-                  return null;
-                })}
-              </select>
-            )}
 
                 </div>
                 <div className="mb-4">
@@ -166,6 +166,8 @@ const NewUserWorkout = () => {
                   <input
                     type="number"
                     id="customliftweight"
+                    placeholder="kg"
+                    min = "1"
                     className="form-control"
                     value={customliftweight}
                     onChange={(e) => setCustomLiftWeight(e.target.value)}
@@ -176,6 +178,7 @@ const NewUserWorkout = () => {
                   <input
                     type="number"
                     id="customliftreps"
+                    min = "1"
                     className="form-control"
                     value={customliftreps}
                     onChange={(e) => setCustomLiftReps(e.target.value)}

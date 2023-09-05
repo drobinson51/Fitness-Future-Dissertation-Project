@@ -133,7 +133,8 @@ const getUserEmailsData = (rows) => {
 
 // Email construction, how it is layed out 
 const emailLayoutOptions = (userEmail, userData) => {
-  let text = `Hello ${userData.userName}, I hope this finds you in fitness and health. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
+  let text = `Hello ${userData.userName},
+   I hope this finds you in fitness and health. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
 
   for (const workoutDay in userData) {
       if (workoutDay !== "userName" && workoutDay !== "workoutdays") {
@@ -155,7 +156,7 @@ const emailLayoutOptions = (userEmail, userData) => {
 };
 
 
-schedule.scheduleJob("28 16 * * 6", () => {
+schedule.scheduleJob("09 14 * * 2", () => {
   const emailCheckQuery = `
       SELECT * FROM users 
       INNER JOIN workoutroutine ON users.userid = workoutroutine.userid 
@@ -347,7 +348,7 @@ db.query(getworkoutinfo, [userid], (err, data) => {
   }
 
   if (!data || data.length === 0) {
-    return res.status(404).json({
+    return res.status(200).json({
       status: 'Nothing found',
       message: 'No workouts info found for the given userid'
     });
@@ -404,7 +405,7 @@ app.get("/userworkouts/:userid", async (req, res) => {
     }
   
     if (!data || data.length === 0) {
-      return res.status(404).json({
+      return res.status(200).json({
         status: 'Nothing found',
         message: 'No workouts found for the given userid'
       });
@@ -486,34 +487,46 @@ app.post("/exerciseprogress", async (req, res) => {
 
 app.post("/userpoints", async (req, res) => {
   const { userid } = req.body;
-
   const earnedat = new Date().toISOString();
-
   let earnedpoints = queries.USERPOINTS;
+  let leaderboardIncrement = queries.LEADERBOARDINCREMENT;
 
-db.query(earnedpoints, [userid, earnedat], (err, data) => {
-  if (err) {
-    console.error("Error fetching workouts:", err);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Internal Server Error'
+  db.query(earnedpoints, [userid, earnedat], (err, data) => {
+    if (err) {
+      console.error("Error fetching workouts:", err);
+      return res.status(500).json({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
+    }
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({
+        status: 'Nothing found',
+        message: 'Nothing to increment.'
+      });
+    }
+
+    // Nested query to update the leaderboard
+    db.query(leaderboardIncrement, [userid], (err) => {
+      if (err) {
+        console.error("Error updating leaderboard:", err);
+        return res.status(500).json({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
+      }
+
+      // If everything is fine, send a success response
+      res.status(201).json({
+        status: 'success',
+        data: { userid },
+        successMessage: "Points and leaderboard updated!",
+      });
     });
-  }
-
-  if (!data || data.length === 0) {
-    return res.status(404).json({
-      status: 'Nothing found',
-      message: 'Nothing to increment.'
-    });
-  }
-
-  res.status(201).json({
-    status: 'success',
-    data: {userid: data.userid},
-    successMessage: "Points incremented!",
   });
 });
-});
+
 
 
 app.post("/addworkoutroutine", async (req, res) => {
@@ -822,7 +835,7 @@ app.get("/progressinfos/:userid", async (req, res) => {
     }
   
     if (!data || data.length === 0) {
-      return res.status(404).json({
+      return res.status(200).json({
         status: 'Nothing found',
         message: 'No workouts found for the given userid'
       });

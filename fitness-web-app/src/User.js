@@ -182,17 +182,23 @@ useEffect(() => {
     <div className="home">
    
       <main>
+        <Container>
+        {successMessage && (
+        <Row className="mt-3">
+            <Col>
+                <div className="alert alert-success">
+                    {successMessage}
+                </div>
+            </Col>
+        </Row>
+    )}
+        </Container>
       <Container>
       <Row className = "px-4 my-5">
         <Col sm={6}>
         <Image src="image/userhomepage.jpg"  className = "image-size" fluid rounded/>
         </Col>
      
-        {successMessage && (
-             <div className="mt-3 alert alert-success">
-                {successMessage}
-              </div>
-                )}
         <Col sm={6}>  
         <h1 className = "fw-bold">Hello {cookiesName.userName}</h1>
         <p className = "mt-3 fw-light">

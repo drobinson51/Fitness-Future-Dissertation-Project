@@ -40,9 +40,11 @@ const ProgressDeletion = () => {
 
         if (response.data.status === "success") {
           setRoutineExercisesInfo(response.data.data);
-        } else {
+        } else if (response.data.status === "Nothing found") {
 
-          setApiError(response.data.message)
+          setRoutineExercisesInfo([]);
+          setApiError("You don't have progress to delete")
+          console.log(response.data.data)
         }
      
       } catch (error) {
@@ -78,6 +80,8 @@ const ProgressDeletion = () => {
       });
       console.log('Response:', response.data);
 
+
+      setSelectedUserWorkoutId("");
       fetchRoutineExercises();
       setShowConfirmModal(false);
 

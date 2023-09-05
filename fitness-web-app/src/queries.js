@@ -66,6 +66,8 @@
     ON userworkout.workoutid = workouts.workoutid
     WHERE exerciseprogress.userid = ?`,
 
+    LEADERBOARDINCREMENT: 'UPDATE leaderboard SET points = points + 1 WHERE userid = ?;',
+
 
     LEADERBOARDPOSITIONS: `SELECT leaderboard.leaderboardid, leaderboard.points, users.userid, users.username FROM leaderboard INNER JOIN users ON leaderboard.userid = users.userid ORDER by points DESC;`,
 

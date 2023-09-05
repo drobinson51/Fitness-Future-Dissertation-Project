@@ -55,7 +55,7 @@ describe('Exercise Completion', () => {
           expect(screen.getByText('Reps completed')).toBeInTheDocument();
           expect(screen.getByText('Sets Completed')).toBeInTheDocument();
           expect(screen.getByText('Overhead press')).toBeInTheDocument();
-          expect(screen.getByText('140')).toBeInTheDocument();
+          expect(screen.getByText(/140\s*kg/)).toBeInTheDocument();
           expect(screen.getByText('5')).toBeInTheDocument();
    });
 

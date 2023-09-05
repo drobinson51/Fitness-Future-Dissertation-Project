@@ -18,6 +18,8 @@ const Completedworkoutform = () => {
   const [availableDays, setAvailableDays] = useState([]);
   const [workoutData, setWorkoutData] = useState([]);
   const [cookies] = useCookies(["authUser"]);
+  const [cookieName] = useCookies(["userName"]);
+
   const [workoutProgress, setWorkoutProgress] = useState([]);
 
   const [apiError, setApiError] = useState("")
@@ -130,8 +132,7 @@ const Completedworkoutform = () => {
       });
   
       console.log('Response:' , secondResponse.data);
-      navigate('/userhome', { state: { successMessage: "Congratulations you killed it!" } })
-    } catch (error) {
+      navigate('/userhome', { state: { successMessage: "Congratulations you killed it!", userName: cookieName } })    } catch (error) {
       console.error('Error:' , error);
       setApiError("An error has occured")
     }
@@ -204,12 +205,14 @@ const Completedworkoutform = () => {
                         .map((workout, index) => (
                           <tr key={index}>
                             <td>{workout.workoutname}</td>
-                            <td>{workout.customliftweight}</td>
+                            <td>{workout.customliftweight} kg</td>
                             <td>{workout.customliftreps}</td>
                             <td>
                               <input
                                 type="number"
+                                min="1"
                                 className="form-control custom-input"
+                                placeholder="kg"
                                 // Optional chaining deals with null values, sets the workoutProgress value to whatever is inputted, similar operation below
                                 value={workoutProgress[index]?.totalweightlifted || ""}
                                 onChange={(e) => {
@@ -269,6 +272,8 @@ const Completedworkoutform = () => {
                 {apiError}
               </div>
                 )}
+
+                
             </Col>
           </Row>
         </Container>
