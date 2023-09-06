@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom"; // To handle the Link component
 import HomePage from "./Home";
 
+// Checks the home page is rendering correctly
 describe("HomePage", () => {
   beforeEach(() => {
     render(

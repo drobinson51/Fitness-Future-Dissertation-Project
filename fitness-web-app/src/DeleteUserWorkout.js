@@ -28,12 +28,15 @@ const DeleteUserWorkouts = () => {
   const [apiError, setApiError] = useState("");
 
   const [cookies] = useCookies(["authUser"]);
+
+  // UseEffect as expected from other behaviour
   useEffect(() => {
 
     fetchWorkoutIds();
   }, [cookies.authUser]);
     
 
+  // Two responses for filter
   const fetchWorkoutIds = async () => {
     try {
       const response = await axios.get(
@@ -43,6 +46,7 @@ const DeleteUserWorkouts = () => {
         `http://localhost:4000/workoutinfos/${cookies.authUser}`
       );
     
+      // If the two responses are nothing found
       if (response.data.status === "Nothing found" && secondResponse.data.status === "Nothing found") {
 
 
@@ -50,6 +54,8 @@ const DeleteUserWorkouts = () => {
         setWorkoutNames([]);
         setApiError("You have no tracked exercises.");
         return;
+
+        // This means the user has something tracked, but nothing in their routines. Therefore the dropdowns can be populated. Deleting them.
       } else if (secondResponse.data.status === "Nothing found") {
         const workoutIds = response.data.data.map((workout) => workout.workoutid);
         const workoutNames = response.data.data.map((workout) => workout.workoutname);
@@ -57,6 +63,8 @@ const DeleteUserWorkouts = () => {
         setWorkoutIds(workoutIds);
         setWorkoutNames(workoutNames);
       } else {
+
+        // creates a set and then uses that to filter out the data
         const workoutsInRoutine = new Set(
           secondResponse.data.data.map((workoutInfo) => workoutInfo.workoutid)
         );
@@ -79,23 +87,26 @@ const DeleteUserWorkouts = () => {
   };
   
   
-
+// Typical delete logic used in this project
   const handleDelete = async (event) => {
     event.preventDefault();
 
 
+    // Alert
     if (!workoutid) {
       alert("You need to select a workout to delete!")
       return;
     }
 
 
+    // Posts
   try {
     const response = await axios.post('http://localhost:4000/deleteuserworkouts', {
     userid: cookies.authUser,
     workoutid: parseInt(workoutid),
     });
 
+    // Resets everything and handles message generation on a successful post
 
     if (response.data.status === "success") {
       setShowConfirmModal(false);
@@ -109,6 +120,7 @@ const DeleteUserWorkouts = () => {
     }
    
 
+    // Error handling
    
   } catch (error) {
     console.error('Error:' , error);
@@ -117,6 +129,7 @@ const DeleteUserWorkouts = () => {
   };
 
 
+  // Modal, this handles the actual delete it is called whenever the user hits the delete button
   const confirmModal = (
     <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
       <Modal.Header closeButton>
@@ -163,6 +176,7 @@ const DeleteUserWorkouts = () => {
                     value={workoutid}
                     onChange={(e) => setWorkoutID(e.target.value)}
                   >
+                    {/* Typical population of dropdowns based on iteration through workoutIds data structure */}
                    <option value="">Select Workout</option>
                     {workoutIds.map((id, index) => (
                     <option key={id} value={id}>
@@ -171,9 +185,11 @@ const DeleteUserWorkouts = () => {
                     ))}
                 </select>
                 </div>
+                {/* Calls the modal */}
                 <Button variant="danger" onClick={() => setShowConfirmModal(true)}>Delete User Workout</Button>
               </form>
 
+              {/*Successful delete  */}
               {deleteMessage && (
              <div className="mt-3 alert alert-success">
                 {deleteMessage}
@@ -182,6 +198,7 @@ const DeleteUserWorkouts = () => {
             </Col>
           </Row>
 
+                {/* Error */}
           {apiError && (
              <div className="mt-3 alert alert-danger">
                 {apiError}
@@ -189,6 +206,7 @@ const DeleteUserWorkouts = () => {
                 )}
         </Container>
       </main>
+      {/* Where the modal is kept */}
       {confirmModal}
     </div>
   );

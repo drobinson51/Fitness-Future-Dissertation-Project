@@ -43,11 +43,13 @@ const EditWorkouts = () => {
       const response = await axios.get(
         `http://localhost:4000/userworkouts/${cookies.authUser}`
       );
-      console.log("Response:", response.data); // Log the response data
+      console.log("Response:", response.data); 
 
     
+      // Sets workout data
       setWorkoutData(response.data.data);
 
+      // Maps the data as expected
       const workoutIds = response.data.data.map(
         (workoutsavaiable) => workoutsavaiable.workoutid
       );
@@ -55,6 +57,8 @@ const EditWorkouts = () => {
       const workoutNames = response.data.data.map(
         (workoutnamesavailable) => workoutnamesavailable.workoutname
       );
+
+      // Sets the data structures as expected
       console.log("Here are the workout ids:", workoutIds);
       setWorkoutIds(workoutIds);
       setWorkoutNames(workoutNames);
@@ -88,7 +92,7 @@ const EditWorkouts = () => {
     
       console.log("Response:", response.data);
 
-
+      // Resets after a successful post
       setWorkoutID("");
       setCustomLiftReps("");
       setCustomLiftWeight("");
@@ -101,6 +105,7 @@ const EditWorkouts = () => {
   };
 
 
+  // Whole function does a few things, basically serves to get the old values assigned to workout and show them to user helping them in editing it. 
   const handleWorkoutChange = (e) => {
     const selectedWorkoutId = e.target.value
     setWorkoutID(selectedWorkoutId);

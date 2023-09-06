@@ -12,10 +12,11 @@ const mockLocationState = {
     deletionMessage: "The exercise has been removed from your routine."
 };
 
+// Mocks react router dom
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ state: mockLocationState })  // Add this mock
+    useLocation: () => ({ state: mockLocationState }) 
 }));
 
 describe('Progress Deletion', () => {
@@ -52,6 +53,20 @@ describe('Progress Deletion', () => {
         });
     });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     it('modal appears', async () => {
   
         const mockedRoutineExercises = {

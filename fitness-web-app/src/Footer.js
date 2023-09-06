@@ -1,6 +1,8 @@
 import React from 'react';
 import Container from "react-bootstrap/Container";
 
+
+// Just a footer, shows up everywhere. 
  
 const Footer = () => (
     <footer className='footer'>

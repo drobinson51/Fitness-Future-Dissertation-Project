@@ -6,6 +6,7 @@ import { MemoryRouter, useNavigate } from 'react-router-dom';
 import mockAxios from './__mocks__/axios';
 
 
+
 describe('RemoveExerciseFromRoutine', () => {
   
     afterEach(() => {
@@ -14,6 +15,7 @@ describe('RemoveExerciseFromRoutine', () => {
   
     it('fetches and populates dropdowns', async () => {
   
+        // Dropdowns working correctly
         const mockedRoutineExercises = {
             status: 'success',
             data: [
@@ -22,6 +24,7 @@ describe('RemoveExerciseFromRoutine', () => {
             ],
           };
     
+    // Mocks get
           mockAxios.get.mockResolvedValueOnce({ data: mockedRoutineExercises });
 
 
@@ -41,6 +44,7 @@ describe('RemoveExerciseFromRoutine', () => {
             expect(routineDropdown.innerHTML).toContain("Tuesday");
 
 
+            // Select a routine
             fireEvent.change(routineDropdown, { target: { value: 'Monday' } });
 
            

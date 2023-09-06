@@ -12,13 +12,16 @@ import mockAxios from './__mocks__/axios';
 
 // Mock useCookies
 
-
 jest.mock('react-cookie');
 
 describe('AuthContext', () => {
+
+  // mocks
     let mockCookies = {};
     let mockSetCookie = jest.fn();
     let mockRemoveCookie = jest.fn();
+
+    // Again mocks
 
     useCookies.mockReturnValue([mockCookies, mockSetCookie, mockRemoveCookie]);
 
@@ -30,6 +33,7 @@ describe('AuthContext', () => {
         mockSetCookie = jest.fn();
         let mockRemoveCookie = jest.fn();
       
+        // Mocks beign returned
         useCookies.mockReturnValue([{}, mockSetCookie, mockRemoveCookie]);
       
         // mock axios post which is crux of non-mocked version
@@ -45,6 +49,7 @@ describe('AuthContext', () => {
 
      it('axios returns expected data from login', async () => {
 
+      // Expected response
         const expectedData = {
             message: 'Login successful',
             userid: 'sampleUserId',
@@ -52,7 +57,7 @@ describe('AuthContext', () => {
         };
 
         
-
+        //Assert data is the same 
         await act(async () => {
             const result = await mockAxios.post('/login', {
                 username: 'sampleUsername',

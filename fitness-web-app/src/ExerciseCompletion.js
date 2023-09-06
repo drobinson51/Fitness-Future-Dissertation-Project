@@ -64,6 +64,7 @@ const Completedworkoutform = () => {
 
   console.log(workoutData);
 
+  // Day change resets everything and gets the relevant info, basically gets the day and filters the workout info based around that day
   const handleDayChange = (e) => {
     const selectedDay = e.target.value;
     setDay(selectedDay);
@@ -81,6 +82,7 @@ const Completedworkoutform = () => {
     event.preventDefault();
 
 
+    // Different style of alert due to some strangeness in interacting with a table vs standard form
     const isInvalid = workoutProgress.some(workout => {
       return (
         !workout.totalweightlifted || 
@@ -213,7 +215,7 @@ const Completedworkoutform = () => {
                                 min="1"
                                 className="form-control custom-input"
                                 placeholder="kg"
-                                // Optional chaining deals with null values, sets the workoutProgress value to whatever is inputted, similar operation below
+                                // Optional chaining deals with null values, sets the workoutProgress value to whatever is inputted, similar operation below constantly updates to store values
                                 value={workoutProgress[index]?.totalweightlifted || ""}
                                 onChange={(e) => {
                                   const updatedWorkoutProgress = [...workoutProgress];

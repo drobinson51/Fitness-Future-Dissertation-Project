@@ -13,7 +13,7 @@ import { useCookies } from "react-cookie";
 
 
 
-//Home page, or rather lander page
+//Home page, or rather lander page 
 
 const HomePage = () => {
   return (
@@ -34,6 +34,7 @@ const HomePage = () => {
         command of their fitness future, hence the name. Why not give us a shot?
 
         </p>
+        {/* User goes to registration from here */}
         <Link to ="/register">
         <Button variant="primary">Sign up</Button>
         </Link>

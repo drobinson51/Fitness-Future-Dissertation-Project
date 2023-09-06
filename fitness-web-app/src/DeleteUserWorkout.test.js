@@ -14,7 +14,11 @@ describe('DeleteUserWorkouts', () => {
     axios.post.mockClear();
   });
 
+
+// Tests
   it('fetches and displays workout data', async () => {
+
+    // Mock axios for both responses
     mockAxios.get.mockResolvedValueOnce({
         data: {
           status: 'success',
@@ -40,6 +44,7 @@ describe('DeleteUserWorkouts', () => {
         },
       });
       
+      // Waits for both responses due to time needed being longer
       await act(async () => {
     render(
       <MemoryRouter>
@@ -48,6 +53,7 @@ describe('DeleteUserWorkouts', () => {
     );
       });
 
+      // Expected values
     await waitFor(() => {
       expect(screen.getByTestId('workoutselection')).toBeInTheDocument();
     });
@@ -57,6 +63,7 @@ describe('DeleteUserWorkouts', () => {
 
   it('shows a confirmation modal when deleting', async () => {
 
+    
     mockAxios.get.mockResolvedValueOnce({
         data: {
           status: 'success',
@@ -92,6 +99,8 @@ describe('DeleteUserWorkouts', () => {
     );
       });
 
+      // Modal showing up
+
       fireEvent.click(screen.getByText('Delete User Workout'));
 
     await waitFor(() => {
@@ -109,6 +118,7 @@ describe('DeleteUserWorkouts', () => {
       </MemoryRouter>
     );
 
+    // Error is called
     await waitFor(() => {
       expect(screen.getByText('An error occurred')).toBeInTheDocument();
     });

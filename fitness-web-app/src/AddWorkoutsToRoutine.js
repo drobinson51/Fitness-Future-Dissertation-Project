@@ -34,6 +34,7 @@ const NewWorkoutToRoutine = () => {
 
   const successMessage = location.state && location.state.successMessage;
 
+  // Lets it be re-called after handlesubmit. 
   useEffect(() => {
 
     console.log("useEffect triggered");
@@ -61,6 +62,7 @@ const NewWorkoutToRoutine = () => {
         );
 
 
+        // Checks available workouts and available routines, populates the relevant ids. 
 
         if (response.data.status === "success" && secondResponse.data.status === "success") {
         // Simple two responses which maps out and gets ids relevant along with the names to opulated them
@@ -82,10 +84,13 @@ const NewWorkoutToRoutine = () => {
 
   
 
+        // Sets them with outputs of above consts 
         setWorkoutNames(workoutNames);
         setDay(days);
         setUserWorkoutID(userworkoutids);
         setWorkoutRoutineID(workoutroutineids);
+
+        // Errror handling
         } else if ( response.data.status === "error" || secondResponse.data.status === "error") {
           setApiError(response.data.message);
         }
@@ -95,6 +100,7 @@ const NewWorkoutToRoutine = () => {
       }
     };
 
+    // Looks for workouts already in a routine, makes sure the same workout does not go into the same routine twice.
     const fetchAlreadyAssignedWorkouts = async () => {
       console.log("fetchAlreadyAssignedWorkouts called");
       if (selectedWorkoutRoutineId) {
@@ -102,17 +108,23 @@ const NewWorkoutToRoutine = () => {
           const response = await axios.get(`http://localhost:4000/routineexercises/${selectedWorkoutRoutineId}`);
           
           console.log("Response from fetchAlreadyAssignedWorkouts:", response.data);
-    
+
+
+    // Success and error handling
           if (response.data.status === "success") {
+            // Maps theassigned workouts
             const assignedWorkouts = response.data.data.map((item) => item.userworkoutid);
             setAlreadyAssignedWorkouts(assignedWorkouts);
           } else if (response.data.status === "Nothing found") {
+            // Sets it empty to not cause any issues with dropdowns
             setAlreadyAssignedWorkouts([]);
             console.log("Setting alreadyAssignedWorkouts to an empty array");
           }
           
+          // Error handling
         } catch (error) {
           if (error.response && error.response.status === 404) {
+            // sets empty again to avoid errors, arguably should not be done
             setAlreadyAssignedWorkouts([]);
             console.log("Setting alreadyAssignedWorkouts to an empty array because of 404");
           }
@@ -124,9 +136,12 @@ const NewWorkoutToRoutine = () => {
     };
     
 
+    // submission logic
   const handleSubmit = async (event) => {
+    // To ensure that the event must be explicitly handled overwise do not treat it as normal. 
     event.preventDefault();
 
+    // Standard alert 
     if (!orderperformed || !workoutroutineid || !selectedUserWorkoutId) {
       alert("You need to select an option so that you can add a workout to a routine!")
       return;
@@ -136,6 +151,7 @@ const NewWorkoutToRoutine = () => {
     console.log('workoutroutineid:', workoutroutineid);
     console.log('selectedUserWorkoutId:', selectedUserWorkoutId);
   
+    // Classic post
     try {
       const response = await axios.post(
         "http://localhost:4000/addroutineexercises",
@@ -148,6 +164,7 @@ const NewWorkoutToRoutine = () => {
       
       );
   
+      // Calls all relevant functions again to refresh page
       
       fetchWorkoutIds();
       fetchAlreadyAssignedWorkouts();
@@ -156,15 +173,22 @@ const NewWorkoutToRoutine = () => {
       setSelectedWorkoutRoutineId("");
       setSelectedUserWorkoutId("");
       
+
+      // For redirection
       setShowExerciseCompletionButton(true);
 
+
+      //refreshes page, also gives success message for user communication
       navigate('/addexercisestoroutine', { state: { successMessage: response.data.successMessage } });
       console.log("Response:", response.data);
     } catch (error) {
+      // Again error handling
       console.error("Error:", error);
       setApiError(error)
     }
   };
+
+
   return (
     <div className="RoutineAdditions">
  
@@ -188,6 +212,7 @@ const NewWorkoutToRoutine = () => {
                     id="selectedWorkoutRoutineId"
                     className="form-control"
                     value={selectedWorkoutRoutineId}
+                    // Classic onChange, grabs relevant id from mao and sets it as workoutroutine id
                     onChange={(e) => setSelectedWorkoutRoutineId(e.target.value)}
                     >
                     <option value="">Select Day</option>
@@ -208,6 +233,7 @@ const NewWorkoutToRoutine = () => {
                     id="userworkoutid"
                     className="form-control"
                     value={selectedUserWorkoutId}
+                    // Same general idea as above
                     onChange={(e) => setSelectedUserWorkoutId(e.target.value)}
                   >
                     
@@ -224,6 +250,7 @@ const NewWorkoutToRoutine = () => {
                   </select>
                 </div>
                 <div className="mb-4">
+                  {/* Order performed, mostly superflous */}
                   <label htmlFor="orderperformed">Set the order this should be performed in your routine:</label>
                   <input
                     type="String"
@@ -237,12 +264,14 @@ const NewWorkoutToRoutine = () => {
               </form>
 
 
+              {/*Success message */}
               {successMessage && (
               <div className="mt-3 alert alert-success">
               {successMessage}
               </div>
               )}
 
+                {/*Button for navigation  */}
               {showExerciseCompletionButton && (
               <Button variant="outline-primary" className = "mt-3"
               onClick={() => navigate('/exercisecompletion')}
@@ -253,7 +282,7 @@ const NewWorkoutToRoutine = () => {
               
             </Col>
 
-            
+                {/* API error if applicable */}
             {apiError && (
              <div className="mt-3 alert alert-danger">
                 {apiError}

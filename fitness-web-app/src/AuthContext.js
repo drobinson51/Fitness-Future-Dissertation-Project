@@ -7,16 +7,22 @@ const AuthContext = React.createContext();
 
 export function AuthProvider(props) {
   
-  // const [cookies, setCookie, removeCookie] = useCookies('authUser');
+
+  // Sets the three cookie types
 
   const [cookies, setCookie, removeCookie] = useCookies(['authUser', 'isLoggedIn', 'userName']);
 
 
 
+  // The three types of cookies are set to either be null, or the sates they need to be in
   const [authUser, setAuthUser] = useState(cookies.authUser || null);
   const [isLoggedIn, setIsLoggedIn] = useState(cookies.isLoggedIn || false);
   const [userName, setUserName] = useState(cookies.userName || null);
 
+
+
+
+  // Login function, gets it from the API call to the database
   const login = async (email, password) => {
     try {
       const response = await axios.post('http://localhost:4000/login', {
@@ -26,11 +32,16 @@ export function AuthProvider(props) {
 
    
 
+      // A successful login logic
       if (response.data.message === 'Login successful') {
         console.log(response.data)
+
+        // Sets userid, and name
         const userid = response.data.userid
         const usersname = response.data.usersName;
         console.log(userid);
+
+        // Sets these values
         setAuthUser(userid);
         setIsLoggedIn(true);
         setUserName(usersname);
@@ -42,6 +53,7 @@ export function AuthProvider(props) {
         console.log("Here is the userName" + userName);
         console.log("Here is the username in the cookie" + cookies.userName);
       } else {
+        // Else throw an error
         throw new Error(response.data.message);
       }
     } catch (error) {
@@ -50,13 +62,18 @@ export function AuthProvider(props) {
 
   
   };
+
+  // Logout logic
  
   const logout = () => {
+
+    //Sets everything as null
   setAuthUser(null);
     setIsLoggedIn(false);
     setUserName(null); 
 
 
+    // Removes the cookies
     removeCookie('authUser');
     removeCookie ('isLoggedIn');
     removeCookie('userName');
@@ -64,6 +81,7 @@ export function AuthProvider(props) {
 
   console.log('authUser value:', authUser); 
 
+  // The values are set into a datastructure, which is fed as the authContext Provider
 
   const value = {
     authUser,
@@ -72,6 +90,7 @@ export function AuthProvider(props) {
     logout
     };
 
+    // By nesting this around the childrem, this data can be accessed by anything wrapped by the provider
   return (
     <AuthContext.Provider value={value}>
       {props.children}

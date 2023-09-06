@@ -12,6 +12,8 @@ describe('NewUserWorkout', () => {
     });
   
     it('fetches user workout routines and then removes those days from dropdown', async () => {
+
+      // Classic test
         const mockedWorkouts = {
             status: 'success',
             data: [
@@ -20,14 +22,18 @@ describe('NewUserWorkout', () => {
             ],
         };
       
+        // Mocks get
         mockAxios.get.mockResolvedValueOnce({ data: mockedWorkouts });
 
+        // Memory Router to render page correctly
 
         render(
           <MemoryRouter>
             <NewUserWorkoutRoutine />
           </MemoryRouter>
         );
+
+        // Awaits success response
       
         await waitFor(() => {
             const selectElement = screen.getByTestId('daySelection');
@@ -39,33 +45,40 @@ describe('NewUserWorkout', () => {
           
       });
 
+      // Checks posts
       it('posts days and gets successmessage', async () => {
 
+        // mock data
         const serverSuccessResponse = {
             status: 'success',
             successMessage: 'Workout routine created successfully!',
         };
       
+        // Mock response
         mockAxios.post.mockResolvedValueOnce({ data: serverSuccessResponse });
 
+        // Renders page
         render(
             <MemoryRouter>
               <NewUserWorkoutRoutine />
             </MemoryRouter>
           );
 
+          //Uses dropdown
         fireEvent.change(screen.getByLabelText('Select a day:'), {
             target: { value: 'Monday' },
         });
 
+        // Presses button
         fireEvent.click(screen.getByText('Create routine'));
 
+        // Waits for the success message
         await waitFor(() => {
             expect(screen.getByText('Workout routine created successfully!')).toBeInTheDocument();
         });
     });
 
-
+// Error logic
 
   it('handles server errors gracefully', async () => {
     const serverErrorResponse = {
@@ -73,6 +86,7 @@ describe('NewUserWorkout', () => {
       message: "Something went wrong!"
     };
 
+    // Post
     mockAxios.get.mockResolvedValueOnce({ data: serverErrorResponse });
 
     render(
@@ -81,6 +95,8 @@ describe('NewUserWorkout', () => {
       </MemoryRouter>
     );
 
+
+      // Waits for the error to show up in the page
     await waitFor(() => {
       expect(screen.getByText("Something went wrong!")).toBeInTheDocument();
     });

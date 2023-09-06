@@ -12,7 +12,7 @@ import Col from 'react-bootstrap/Col';
 import { Button } from "react-bootstrap";
 
 
-
+// Legacy page, overall function subsumed into userhome page
 
 
 const UserTierList = () => {

@@ -1,3 +1,6 @@
+
+/* Some standard layout options */
+
 body {
   margin: 0;
   padding: 0;
@@ -19,12 +22,13 @@ body {
   font-size: 20px;
 }
 
+/* Sets standard image size */
 .image-size {
   width: 900px;
   height: 400px;
 }
 
-/* Brings back the caret for select options */
+/* Brings back the caret for select options, which were otherwise missing*/
 select {
   -webkit-appearance: listbox !important;
   }

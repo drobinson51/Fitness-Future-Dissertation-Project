@@ -26,7 +26,7 @@ const LoginForm = () => {
   const regMessage = location.state && location.state.regMessage;
 
 
-
+// The password visibility button
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible)
   };
@@ -44,13 +44,17 @@ const LoginForm = () => {
         password,
       });
 
+      // Syccessful login redirects
       if (response.status === 200) {
+        // AuthContext functions in regards to login
         await login(email, password);
         redirect('/userhome');
       } else {
+        // Login error
         setLoginError("Your password or email was incorrect, please try again");
       }
     
+      // Something else wrong
     } catch (error) {
       console.error('Error:', error.message);
       setLoginError("An error has occured during login, please try again later.")

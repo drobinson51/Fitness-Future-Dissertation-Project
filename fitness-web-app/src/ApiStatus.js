@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 
+
+// Placeholder page, has no real use in final design but kept for legacy reasons
 const ApiStatus = () => {
     const [connectionStatus, setConnectionStatus] = useState("");
   
+    // Simple api check, if localhost 4000 is up and running. i.e. the server, then this page will say so. Otherwise it'll throw an error.
     useEffect(() => {
       const fetchConnectionStatus = async () => {
         try {

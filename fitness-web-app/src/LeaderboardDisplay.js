@@ -15,11 +15,13 @@ import { Button } from "react-bootstrap";
 
 
 
-
+// Leaderboard function 
 const LeaderBoardDisplay = () => {
 
     const [leaderboardData, setLeaderBoardData] = useState([]);
     const [cookies] = useCookies(["authUser"]);
+
+
 
 useEffect(() => {
     const getLeaderBoardValues = async () => {
@@ -59,6 +61,7 @@ useEffect(() => {
                   </tr>
                 </thead>
                 <tbody>
+                  {/* Sets a standard layout to response */}
                   {leaderboardData.map((user) => (
                     <tr key={user.userid}>
                       <td>{user.username}</td>

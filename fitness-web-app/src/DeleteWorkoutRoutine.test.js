@@ -12,10 +12,11 @@ const mockLocationState = {
     deletionMessage: "The exercise has been removed from your routine."
 };
 
+// Mocks ReactRouter dom needed for mocking its functions
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => mockNavigate,
-    useLocation: () => ({ state: mockLocationState })  // Add this mock
+    useLocation: () => ({ state: mockLocationState }) 
 }));
 
 describe('Delete Workout Routine', () => {
@@ -54,6 +55,7 @@ describe('Delete Workout Routine', () => {
         });
     });
 
+    // Typical modal check
     it('modal appears', async () => {
   
         const mockedRoutineDays = {
@@ -96,7 +98,7 @@ describe('Delete Workout Routine', () => {
     });
 
 
-
+        // Checking this
     it('deletes an routine and displays deletionMessage', async () => {
         const mockedRoutineDays = {
             status: 'success',

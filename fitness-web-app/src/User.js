@@ -79,10 +79,6 @@ const handleExerciseChange = (e) => {
   setSelectedExercise(exercise);
 };
 
-//filters the userData to only return the exercise data that matches what is found in the option map
-// const filteredData = userChartData.filter(
-//   (dataset) => dataset.workoutname === selectedExercise
-// );
 
 const getWeeklyAverages = () => {
   const weeklyAverages = [];
@@ -163,7 +159,7 @@ useEffect(() => {
         const response = await axios.get(
           `http://localhost:4000/tierlist/${cookieAuth.authUser}`
         );
-        console.log("Response:", response.data); // Log the response data
+        console.log("Response:", response.data);
 
         //gets the first result, which is the user position. 
       setUserPosition(response.data.data[0].title);
@@ -228,6 +224,7 @@ useEffect(() => {
                     onChange={handleExerciseChange}
                   >
                     <option value="">Select an exercise</option>
+                    {/* Maps through the exercises so that it decides what chart is being rendered */}
                     {availableExercises.map((exercise) => (
                       <option key={exercise} value={exercise}>
                         {exercise}
@@ -239,6 +236,7 @@ useEffect(() => {
               </Card>
               <Card>
                 <Card.Body>
+                  {/* Here is where the userPosition goes */}
                 <Card.Title>Your ranking</Card.Title>
                   <h2> {userPosition} </h2>
                   <p>{description}</p>

@@ -1,20 +1,22 @@
-
+// Some imports needed
 const queries = require ("./queries.js")
 const express = require("express"),
   app = express(),
   PORT = 4000,
   cors = require("cors");
 
+
+  // Some requirements of project
 const mysql = require("mysql");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const schedule = require("node-schedule");
 
 
-
+// Allows use of ENV file
 require("dotenv").config();
 
-
+// Creation of DB connection that is used
 let db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -43,10 +45,12 @@ if (require.main === module) {
   connectToDb();
 }
 
+// Lets use of cors plus communicates whether it's live or not
 app.use(cors());
 app.use(express.json());
 app.listen(PORT, () => console.log("Backend server live on " + PORT));
 
+// The API test
 app.get("/", (req, res) => {
   res.send({ message: "Connection established!" });
 });
@@ -72,11 +76,14 @@ const transporter = nodemailer.createTransport({
 const sendWeeklyMail = (err, rows) => {
   if (err) throw err;
 
+  // Calls getUserEmailData
   const userEmailsData = getUserEmailsData(rows);
 
+  // Builds the email
   for (const [userEmail, userData] of userEmailsData) {
       const mailOptions = emailLayoutOptions(userEmail, userData);
       
+      // Sends the email
       transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
               console.error("Error sending email:", error);
@@ -93,6 +100,7 @@ const sendWeeklyMail = (err, rows) => {
 const getUserEmailsData = (rows) => {
   const userEmailsData = new Map();
 
+  // Creation of various vars needed for each row
   rows.forEach((row) => {
       const userEmail = row.user_email;
       const workoutDay = row.day;
@@ -101,8 +109,11 @@ const getUserEmailsData = (rows) => {
       const weight = row.customliftweight;
       const reps = row.customliftreps;
 
+      // If the data has a userEmail, it can assign workouts because it means there is an entry there
       if (userEmailsData.has(userEmail)) {
           const userData = userEmailsData.get(userEmail);
+
+          // If userdata already has that workout day it pushes this info to that particular day
           if (userData[workoutDay]) {
               userData[workoutDay].push({
                   workoutname: workoutName,
@@ -110,6 +121,7 @@ const getUserEmailsData = (rows) => {
                   reps: reps,
               });
           } else {
+            // Otherwise a new one is added
               userData[workoutDay] = [{
                   workoutname: workoutName,
                   weight: weight,
@@ -117,6 +129,7 @@ const getUserEmailsData = (rows) => {
               }];
           }
       } else {
+        // If it doesn't have anything it creates the data structure for that particular user
           userEmailsData.set(userEmail, {
               userName: userName,
               [workoutDay]: [{
@@ -133,20 +146,24 @@ const getUserEmailsData = (rows) => {
 
 // Email construction, how it is layed out 
 const emailLayoutOptions = (userEmail, userData) => {
+  // This function takes the data that has been given to it and builds the email around it
   let text = `Hello ${userData.userName},
    I hope this finds you in fitness and health. I am reminding you that you have some workouts to get done this week. You're going to be hitting the gym this week, your workouts are as follows below:`;
 
+  //  Creates a separate entry of each workout day and its routines
   for (const workoutDay in userData) {
       if (workoutDay !== "userName" && workoutDay !== "workoutdays") {
           text += `\n\n${workoutDay} workouts:\n`;
           userData[workoutDay].forEach((workout) => {
+            // Separation for pure readability
               text += ` - ${workout.workoutname}: ${workout.weight} kg, ${workout.reps} reps\n`;
           });
       }
   }
-
+  // Added on the end in a new line just for some personality
   text += `\n Regards from Fitness Future, you've got this!`;
 
+  // Finally the object is returned to be sent from the email function to that particular email with the text and the subject set.
   return {
       from: process.env.EMAILSENDER,
       to: userEmail,
@@ -156,6 +173,7 @@ const emailLayoutOptions = (userEmail, userData) => {
 };
 
 
+// Asks nodeschedule to perform the query at this time and then undergo the sending of the email
 schedule.scheduleJob("09 14 * * 2", () => {
   const emailCheckQuery = `
       SELECT * FROM users 
@@ -171,7 +189,8 @@ schedule.scheduleJob("09 14 * * 2", () => {
 
 
 
-
+// Login db query, has extra features to deal with bcrypt. This is where the password comparison goes on, if it's successful a message is returned and it lets them login 
+// Otherwise of course the errors are handled.
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -211,7 +230,8 @@ app.post("/login", async (req, res) => {
 
 
 
-
+// Typical post for project, parameterised  for security
+// Due to two inserts a bit more complicated, only after a successful db query can the leaderboard initialise. 
 app.post("/register", async (req, res) => {
   const { firstname, lastname, username, email, password, emailpreference } =
     req.body;
@@ -247,6 +267,7 @@ app.post("/register", async (req, res) => {
 });
 
 
+// Typical app.get of this project common to near all of them in structure, handles error, success and 404 explicitly
 app.get("/workouts", async (req, res) => {
   let getworkouts = queries.WORKOUT
 
@@ -273,6 +294,7 @@ app.get("/workouts", async (req, res) => {
   });
 });
 
+// Route/url parameters. Typical of project
 app.get("/workoutroutines/:userid", async (req, res) => {
   const { userid } = req.params;
 
@@ -455,6 +477,7 @@ app.post("/exerciseprogress", async (req, res) => {
     repscompleted,
   } = req.body;
 
+  // Timestamp is set here as ISOString ensuring it goes into DB correctly
   const timestamp = new Date().toISOString();
 
   let exerciseprogress = queries.EXERCISEPROGRESS
@@ -485,6 +508,7 @@ app.post("/exerciseprogress", async (req, res) => {
   });
 });
 
+// Second post made after successful post updating user points as expected
 app.post("/userpoints", async (req, res) => {
   const { userid } = req.body;
   const earnedat = new Date().toISOString();
@@ -557,6 +581,7 @@ app.post("/addworkoutroutine", async (req, res) => {
     });
   });
   });
+
 
 app.post("/addroutineexercises", async (req, res) => {
   const { workoutroutineid, userworkoutid, orderperformed } = req.body;
@@ -879,6 +904,7 @@ app.post("/removeprogress", async (req, res) => {
 });
 
 
+// For use in test
 module.exports = {
   app, 
   db,

@@ -8,6 +8,7 @@ import Container from "react-bootstrap/Container";
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+// Allows it to deal with the logout part of the auth context
  
 const RegisteredNavbar = () => {
   const { logout } = useAuth();
@@ -20,6 +21,7 @@ const RegisteredNavbar = () => {
 
 
 
+  // This is the registerednavbar
 return (      
 <Navbar
    expand="lg"
@@ -31,6 +33,7 @@ return (
      <Navbar.Toggle aria-controls="basic-navbar-nav" />
      <Navbar.Collapse id="basic-navbar-nav">
        <Nav className="me-auto">
+        {/* Pressing this causes the logout */}
        <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
          <NavDropdown title="Workout Management" id="basic-nav-dropdown">
          <NavDropdown.Item href="/addworkouts">

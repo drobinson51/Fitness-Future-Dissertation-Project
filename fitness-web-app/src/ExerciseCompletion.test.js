@@ -10,7 +10,9 @@ describe('Exercise Completion', () => {
     afterEach(() => {
       mockAxios.reset();
     });
-  
+
+
+  // Typical test
     it('fetches user workout routines and populates day dropdown', async () => {
         const mockedWorkouts = {
             status: 'success',
@@ -46,6 +48,7 @@ describe('Exercise Completion', () => {
           });
           fireEvent.change(screen.getByTestId('daySelection'), { target: { value: 'Monday' } });
 
+          // Ensures table is as expected
 
    await waitFor(() => {
           expect(screen.getByText('Exercise Name')).toBeInTheDocument();
@@ -62,6 +65,9 @@ describe('Exercise Completion', () => {
 
       });
 
+
+
+// Ensures that if an error is thrown they get the error
   it('handles server errors gracefully', async () => {
     const serverErrorResponse = {
       status: "error",

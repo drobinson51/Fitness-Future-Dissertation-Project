@@ -1,4 +1,4 @@
-
+// Test of Register navbar
 jest.mock('./AuthContext', () => ({
   useAuth: () => ({
     logout: jest.fn(),

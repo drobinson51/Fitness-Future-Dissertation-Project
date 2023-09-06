@@ -7,6 +7,7 @@ import Footer from './Footer';
 describe("Footer", () => {
 
 
+  // Tests the footer is actually rendering
     beforeEach(() => {
         render(
           

@@ -6,7 +6,7 @@ import UnregisteredNavbar from './UnregisteredNavbar';
 
 
 
-
+// Quick test of unregistered navbar to know if it renders
 describe("Registed Navbar", () => {
 
 

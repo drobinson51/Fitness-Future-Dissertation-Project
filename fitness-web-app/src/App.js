@@ -23,8 +23,6 @@ import { AuthProvider } from './AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import UserPage from './User';
 import Footer from './Footer';
-
-
 import './styles.css';
 
 
@@ -33,26 +31,18 @@ import './styles.css';
 const App = () => {
 
 
+  // Several things going on, authProvider wraps around Router to allow its behaviour to affect all children of router
+  // ProtectedRoute is itself a function part of the route path, it wraps around the routes actual element and enforces its logic as to whether or not they see the page 
+  // Due to protected route also handling the navbar, this also means the navbar shows up in every page it handles and alters state depending on user authentication
+
   return (
     <AuthProvider>
     <Router>
-      
-
       <main>
-
-  
-
       <Routes>
-
-     
       <Route path="/" element={<ProtectedRoute element={<HomePage />} />} />
          <Route path="/login" element={<ProtectedRoute element={<LoginForm />} />} />
          <Route path="/register" element={<ProtectedRoute element={<RegisterForm />} />} />
-
-
-       
-    
-
           <Route path="/api" element={<ProtectedRoute element={<ApiStatus />} />} />
           <Route path="/addworkouts" element={<ProtectedRoute element={<NewUserWorkout />} />} />
           <Route path="/userhome" element={<ProtectedRoute element={<UserPage />} />} />
@@ -67,17 +57,10 @@ const App = () => {
           <Route path="/removeroutineexercise" element={<ProtectedRoute element={<RemoveRoutineExercise />} />} />
           <Route path="/deleteworkoutroutine" element={<ProtectedRoute element={<DeleteWorkoutRoutine />} />} />
           <Route path="/resetprogress" element={<ProtectedRoute element={<ProgressDeletion />} />} />
-        
-
-        
           </Routes>
           </main>
           <Footer/>
-  
-     
-  
     </Router>
-
     </AuthProvider>
   );
 };

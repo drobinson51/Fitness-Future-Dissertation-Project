@@ -11,7 +11,7 @@ jest.mock('react-chartjs-2', () => ({
   }));
 
 
-
+// Tests all is returning as planned on userHome page
 describe('UserPage', () => {
   
     afterEach(() => {

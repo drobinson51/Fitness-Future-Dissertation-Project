@@ -40,6 +40,8 @@ const ProgressDeletion = () => {
 
         if (response.data.status === "success") {
           setRoutineExercisesInfo(response.data.data);
+
+          // Lets user know if they've nothing to delete
         } else if (response.data.status === "Nothing found") {
 
           setRoutineExercisesInfo([]);
@@ -54,7 +56,7 @@ const ProgressDeletion = () => {
     };
 
 
-
+// Logic for changing the workouts
   const handleUserWorkoutChange = (e) => {
     const selectedValue = e.target.value;
 
@@ -65,6 +67,7 @@ const ProgressDeletion = () => {
     }
   };
 
+  // Typical delete logic, resets everything
   const handleDelete = async (event) => {
     event.preventDefault();
 
@@ -94,6 +97,7 @@ const ProgressDeletion = () => {
 
   // creates a set of userworkout ids and names, makes the keys the two values separated by a hyphen and then adds them
 
+  // Inefficient method, but worked at time
   const userWorkoutSet = new Set();
   routineExercisesInfo.forEach((exercise) => {
     const { userworkoutid, workoutname } = exercise;

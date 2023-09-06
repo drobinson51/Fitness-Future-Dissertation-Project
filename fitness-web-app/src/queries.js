@@ -1,5 +1,5 @@
 
-  
+  // Queries page, store every query here for easy reuse also prwvent issues around formatting that sometimes crop up
   module.exports = {
     GET_WORKOUT_INFO: `SELECT *
     FROM userworkout

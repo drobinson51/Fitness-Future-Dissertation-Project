@@ -1,3 +1,6 @@
+
+
+// Config of Jest
 module.exports = {
     testEnvironment: "jsdom",
     setupFilesAfterEnv: [

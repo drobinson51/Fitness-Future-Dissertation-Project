@@ -1,15 +1,19 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import LoginForm from './LoginForm'; 
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, MemoryRouter } from 'react-router-dom';
 import { AuthContext } from './AuthContext'; 
 import mockAxios from './__mocks__/axios';
 
+
+// Various tests
 
 jest.mock('./AuthContext', () => ({
     useAuth: () => ({ login: jest.fn() })
   }));
 
+
+// test of login form
 describe('LoginForm', () => {
   
     afterEach(() => {
@@ -20,9 +24,9 @@ describe('LoginForm', () => {
     it('renders form elemets', () => {
 
         render(
-            <Router>
+            <MemoryRouter>
               <LoginForm />
-            </Router>
+            </MemoryRouter>
           );
 
         expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
@@ -34,7 +38,7 @@ describe('LoginForm', () => {
 
 
     it('successful post', async () => {
-        render(<Router><LoginForm /></Router>);
+        render(<MemoryRouter><LoginForm /></MemoryRouter>);
         
         fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@test.com' } });
         fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'testpassword' } });
@@ -55,7 +59,7 @@ describe('LoginForm', () => {
         });
     });
     it('displays error on unsuccessful login', async () => {
-        render(<Router><LoginForm /></Router>);
+        render(<MemoryRouter><LoginForm /></MemoryRouter>);
     
         // Mock unsuccessful login API response.
         mockAxios.post.mockRejectedValueOnce({ 

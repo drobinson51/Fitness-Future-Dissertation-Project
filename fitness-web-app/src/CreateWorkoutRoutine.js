@@ -24,6 +24,7 @@ const NewUserWorkoutRoutine = () => {
   const [apiError, setApiError] = useState(null);
   const [availableDays, setAvailableDays] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
 
+  // Place useEffect outside allow it to be called again after redirect
 
   useEffect(() => {
     
@@ -32,6 +33,8 @@ const NewUserWorkoutRoutine = () => {
   }, [cookies.authUser]);
 
 
+
+// Gets the days the user is working out on 
   const fetchUserWorkouts = async () => {
     try {
       const response = await axios.get(
@@ -40,17 +43,21 @@ const NewUserWorkoutRoutine = () => {
       
 
       
-     
+    //  A successful response 
     if (response.data.status === "success") {
+      // gets the workout day and puts them into the data structure
       const fetchedWorkoutDays = response.data.data;
       setUserWorkoutDays(fetchedWorkoutDays);
 
+      // Maps the days taken.
       const daysTaken = fetchedWorkoutDays.map(workoutDay => workoutDay.day);
+      // Available days is filtered by the days the user already has
       const daysNotTaken = availableDays.filter(day => !daysTaken.includes(day));
 
       console.log(daysTaken);
       console.log(daysNotTaken);
 
+      // Sets the new available days.
       setAvailableDays(daysNotTaken);
 
     } else if (response.data.status === "error") {
@@ -83,11 +90,14 @@ const NewUserWorkoutRoutine = () => {
       setShowCreateWorkoutsButton(true);
       // Set the message and trigger navigation
 
+      // Refreshes dropdown functons
       fetchUserWorkouts();
 
+      // Resets users taken day
       setDay(""); 
 
 
+      // Refreshes page with success message
       navigate('/createroutine', { state: { message: response.data.successMessage } });
     } catch (error) {
       console.error('Error:', error);
@@ -133,12 +143,14 @@ const NewUserWorkoutRoutine = () => {
                 </div>
                 <Button type="submit" className="btn btn-primary">Create routine</Button>
 
+                {/* Success Message */}
                 {message && (
              <div className="mt-3 alert alert-success">
                 {message}
               </div>
                 )}
 
+              {/*Button redirect  */}
               {showCreateWorkoutsButton && (
               <Button variant="outline-primary" className = "mt-3"
               onClick={() => navigate('/addexercisestoroutine')}
@@ -149,7 +161,7 @@ const NewUserWorkoutRoutine = () => {
               </form>
             </Col>
 
-
+                {/* Error */}
             {apiError && (
              <div className="mt-3 alert alert-danger">
                 {apiError}

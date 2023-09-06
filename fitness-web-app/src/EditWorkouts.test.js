@@ -9,6 +9,7 @@ import mockAxios from './__mocks__/axios';
 const mockNavigate = jest.fn();
 
 
+// Very quick check of dropdowns
 
 describe('Edit Workout Check', () => {
   

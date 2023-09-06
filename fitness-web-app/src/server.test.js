@@ -895,6 +895,7 @@ describe('POST /login', () => {
     };
   
    
+    // Hashing apart of test
     const mockedHashedPassword = await bcrypt.hash(requestBody.password, 10);
 
     const isValidPassword = await bcrypt.compare(requestBody.password, mockedHashedPassword);

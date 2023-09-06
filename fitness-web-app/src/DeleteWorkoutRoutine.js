@@ -24,6 +24,7 @@ const DeleteWorkoutRoutine = () => {
   const [apiError, setApiError] = useState("");
   const deleteMessage = location.state && location.state.deletionMessage;
 
+  // Fetch routine logic
   const fetchWorkoutRoutines = async () => {
     try {
       const response = await axios.get(
@@ -32,6 +33,7 @@ const DeleteWorkoutRoutine = () => {
 
       if (response.data.status === "success") {
 
+        // Maps the two data structures and gets the relevant data
            const workoutRoutineIds = response.data.data.map(
         (workoutroutinesavailable) => workoutroutinesavailable.workoutroutineid
       );
@@ -44,6 +46,7 @@ const DeleteWorkoutRoutine = () => {
       setDays(days);
 
 
+        // Communcation with user, nothing found 
       } else if (response.data.status === "Nothing found") {
         setApiError("You don't have any routines to delete")
         console.log(response.data.data)
@@ -55,16 +58,19 @@ const DeleteWorkoutRoutine = () => {
     }
   };
 
+  
   useEffect(() => {
     fetchWorkoutRoutines();
   }, [cookies.authUser]);
 
+  // HandleDelete
   const handleDelete = async (event) => {
 
     if (!workoutRoutineId) {
       alert("You need to select a workout to delete!")
       return;
     }
+
 
     try {
       const response = await axios.post('http://localhost:4000/deleteexerciseroutine', {
@@ -91,7 +97,8 @@ const DeleteWorkoutRoutine = () => {
     }
   };
 
-  
+
+  // Modal protection and logic
   const confirmModal = (
     <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
       <Modal.Header closeButton>

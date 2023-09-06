@@ -38,6 +38,7 @@ describe('RegisterForm', () => {
       
     })
 
+    //Typical test of post
     it('successful post', async () => {
         render(<Router><RegisterForm /></Router>);
         
@@ -84,7 +85,7 @@ describe('RegisterForm', () => {
 
           render(<Router><RegisterForm /></Router>);
 
-          fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@test.com' } });
+        fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'test@test.com' } });
         fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'testpassword' } });
         fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'testusername' } });
         fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });

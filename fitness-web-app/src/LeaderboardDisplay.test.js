@@ -3,6 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import LeaderBoardDisplay from './LeaderboardDisplay'; // adjust path if necessary
 import mockAxios from './__mocks__/axios';
 
+
+// Checks the leaderboard rendering correctly
 describe('LeaderBoardDisplay', () => {
   
   afterEach(() => {
@@ -10,6 +12,8 @@ describe('LeaderBoardDisplay', () => {
   });
 
   it('should display leaderboard data when fetched successfully', async () => {
+
+    // Mock data
     const mockData = {
       data: [
         { userid: '1', username: 'JohnDoe', points: 100 },
@@ -21,6 +25,7 @@ describe('LeaderBoardDisplay', () => {
 
     mockAxios.mockResponse({ data: mockData });
 
+    // See if the table is there
     await waitFor(() => {
       expect(screen.getByText('JohnDoe')).toBeInTheDocument();
       expect(screen.getByText('JaneSmith')).toBeInTheDocument();
@@ -29,6 +34,7 @@ describe('LeaderBoardDisplay', () => {
     });
   });
 
+  // Error handling
   it('should handle errors', async () => {
     render(<LeaderBoardDisplay />); 
 

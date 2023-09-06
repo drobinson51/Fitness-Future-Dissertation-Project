@@ -15,6 +15,7 @@ import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 
 
+// Legacy page, was eventually incorporated into 
 const UserBarChart = () => {
   const [userChartData, setUserBarChartData] = useState([]);
   const [cookies] = useCookies(["authUser"]);
@@ -34,7 +35,7 @@ const UserBarChart = () => {
         const userData = response.data.data;
 
 
-          //date time is converted into JS date object
+          //date time is converted into JS date object ensuring it can be used in avgs
         const dataDividedByDate = userData.map((item) => ({
           ...item,
           timestamp: new Date(item.timestamp)
@@ -45,6 +46,7 @@ const UserBarChart = () => {
 
         setUserBarChartData(dataDividedByDate);
 
+        // Addeds them into set, needed for avgs otherwise same exercise could pop up more than once
         const uniqueExercises = [...new Set(userData.map((item) => item.workoutname))];
 
         //for use with option map
@@ -65,10 +67,7 @@ const UserBarChart = () => {
     setSelectedExercise(exercise);
   };
 
-  //filters the userData to only return the exercise data that matches what is found in the option map
-  // const filteredData = userChartData.filter(
-  //   (dataset) => dataset.workoutname === selectedExercise
-  // );
+
 
   const getWeeklyAverages = () => {
     const weeklyAverages = [];
@@ -92,6 +91,7 @@ const UserBarChart = () => {
       if (week !== currentWeek) {
         
 
+        // If its not null it pushes that info, this is for the trailing data left on final iteration of loop
         if (currentWeek !== null) {
           weeklyAverages.push({
             week: currentWeek,
@@ -123,13 +123,14 @@ const UserBarChart = () => {
     return weeklyAverages;
   }
 
-
+// Gets that data
   const weeklyAverages = getWeeklyAverages();
 
   //filtered data used allowing data to swap based on what exercise has been selected.
   const labels = weeklyAverages.map((item) => item.week);
   const values = weeklyAverages.map((item) => item.averageWeight);
 
+  // Sets the bar chart
   const chartData = {
     labels: labels,
     datasets: [
@@ -172,6 +173,7 @@ const UserBarChart = () => {
             <Col sm={7}>
               
             <Bar
+            // Displays barchart
                       data={chartData}
                       options={{
                         scales: {
@@ -195,6 +197,7 @@ const UserBarChart = () => {
                     value={selectedExercise}
                     onChange={handleExerciseChange}
                   >
+                    {/*Selection logic, once selected the barchart reflects that particular exercise */}
                     <option value="">Select an exercise</option>
                     {availableExercises.map((exercise) => (
                       <option key={exercise} value={exercise}>
