@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import {useNavigate, useLocation } from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -18,7 +15,7 @@ import { Button } from "react-bootstrap";
 //use state to handle form setting variables
 const NewUserWorkout = () => {
   const [workoutid, setWorkoutID] = useState("");
-  const [userid, setUserID] = useState("");
+
   const [customliftweight, setCustomLiftWeight] = useState("");
   const [customliftreps, setCustomLiftReps] = useState("");
   const [userWorkouts, setUserWorkouts] = useState([]);

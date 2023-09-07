@@ -11,7 +11,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'; 
 import { BrowserRouter as Router } from 'react-router-dom';
 

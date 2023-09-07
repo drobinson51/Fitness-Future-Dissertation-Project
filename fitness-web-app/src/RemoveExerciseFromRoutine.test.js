@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, act , waitFor} from '@testing-library/react';
+import { render, screen, fireEvent, waitFor} from '@testing-library/react';
 import RemoveRoutineExercise from './RemoveExerciseFromRoutine'; 
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import mockAxios from './__mocks__/axios';
 

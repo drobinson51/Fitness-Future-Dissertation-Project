@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';

@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link, redirect, useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import { Chart, registerables } from 'chart.js';
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
-import { Button } from "react-bootstrap";
+
 
 import { useCookies } from "react-cookie";
 
@@ -29,8 +26,6 @@ const [availableExercises, setAvailableExercises] = useState([]);
 
 const [userPosition, setUserPosition] = useState("");
 const [description, setDescription] = useState("");
-const [cookies] = useCookies(["authUser"]);
-const redirect = useNavigate();
 const location = useLocation();
 const successMessage = location.state && location.state.successMessage;
 

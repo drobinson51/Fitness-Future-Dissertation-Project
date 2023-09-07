@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useCookies } from "react-cookie";
-import { Link, useNavigate, useLocation} from "react-router-dom";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { useNavigate, useLocation} from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
 import Image from "react-bootstrap/Image";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -16,8 +13,6 @@ import Modal from 'react-bootstrap/Modal';
 //use state to handle form setting variables
 const DeleteUserWorkouts = () => {
   const [workoutid, setWorkoutID] = useState("");
-  const [customliftweight, setCustomLiftWeight] = useState("");
-  const [customliftreps, setCustomLiftReps] = useState("");
   const [workoutIds, setWorkoutIds] = useState([]);
   const [workoutNames, setWorkoutNames] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);

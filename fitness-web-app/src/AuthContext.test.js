@@ -4,10 +4,9 @@
 
 
 import React from 'react';
-import { render, screen, renderHook, fireEvent, act } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { AuthProvider, useAuth } from './AuthContext';
 import { useCookies } from 'react-cookie';
-import { BrowserRouter as Router } from 'react-router-dom';
 import mockAxios from './__mocks__/axios';
 
 // Mock useCookies
@@ -67,6 +66,9 @@ describe('AuthContext', () => {
         });
     });
 
+
+
+    
 
     it('sets cookies correctly after successful axios call', async () => {
 

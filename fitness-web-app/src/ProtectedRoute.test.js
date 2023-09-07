@@ -2,9 +2,8 @@
 
 import React from 'react';
 import { render, screen, waitFor} from '@testing-library/react';
-import { MemoryRouter, Route, useNavigate } from 'react-router-dom';
+import { MemoryRouter} from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
-import { AuthContext } from './AuthContext';
 
 
 const mockContext = {

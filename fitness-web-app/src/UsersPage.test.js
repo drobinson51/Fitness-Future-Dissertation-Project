@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act , waitFor} from '@testing-library/react';
+import { render, screen, waitFor} from '@testing-library/react';
 import UserPage from './User'; 
 import { MemoryRouter } from 'react-router-dom';
 import mockAxios from './__mocks__/axios';

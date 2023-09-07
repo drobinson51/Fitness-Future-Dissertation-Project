@@ -1,8 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import LoginForm from './LoginForm'; 
-import { BrowserRouter as Router, MemoryRouter } from 'react-router-dom';
-import { AuthContext } from './AuthContext'; 
+import { MemoryRouter } from 'react-router-dom';
 import mockAxios from './__mocks__/axios';
 
 

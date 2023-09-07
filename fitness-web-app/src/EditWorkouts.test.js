@@ -1,12 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, act , waitFor,} from '@testing-library/react';
+import { render, screen, waitFor,} from '@testing-library/react';
 import EditWorkouts from './EditWorkouts'; 
-import { MemoryRouter, useNavigate } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 
 import mockAxios from './__mocks__/axios';
 
-const mockNavigate = jest.fn();
+
 
 
 // Very quick check of dropdowns
