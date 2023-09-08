@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 07, 2023 at 11:17 PM
+-- Generation Time: Sep 08, 2023 at 04:25 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 7.4.30
 
@@ -66,7 +66,12 @@ INSERT INTO `exerciseprogress` (`progressid`, `userid`, `userworkoutid`, `totalw
 (41, 39, 26, '750', '25', '2023-09-03 13:59:17'),
 (43, 43, 27, '1925', '35', '2023-09-05 12:15:43'),
 (44, 43, 27, '125', '25', '2023-09-05 12:23:34'),
-(45, 43, 27, '125', '25', '2023-09-05 12:25:32');
+(45, 43, 27, '125', '25', '2023-09-05 12:25:32'),
+(64, 54, 41, '1750', '25', '2023-09-08 09:51:59'),
+(65, 54, 43, '1750', '25', '2023-09-08 09:51:59'),
+(66, 54, 44, '1750', '25', '2023-09-08 09:51:59'),
+(67, 6, 19, '1', '1', '2023-09-08 12:14:56'),
+(68, 6, 18, '1', '1', '2023-09-08 12:14:56');
 
 -- --------------------------------------------------------
 
@@ -88,16 +93,13 @@ INSERT INTO `leaderboard` (`leaderboardid`, `userid`, `points`) VALUES
 (1, 12, 0),
 (2, 13, 0),
 (3, 14, 0),
-(4, 6, 12),
+(4, 6, 13),
 (24, 34, 0),
 (26, 36, 1),
 (30, 39, 0),
 (34, 43, 0),
 (41, 50, 1),
-(42, 51, 0),
-(43, 52, 0),
-(44, 53, 0),
-(45, 54, 1);
+(45, 54, 2);
 
 -- --------------------------------------------------------
 
@@ -126,7 +128,14 @@ INSERT INTO `routineexercises` (`routineexerciseid`, `workoutroutineid`, `userwo
 (28, 39, 23, 1),
 (29, 39, 24, 2),
 (43, 45, 27, 1),
-(56, 62, 41, 1);
+(56, 62, 41, 1),
+(57, 62, 43, 2),
+(59, 62, 44, 3),
+(60, 61, 43, 1),
+(61, 61, 44, 3),
+(62, 61, 41, 2),
+(63, 63, 41, 1),
+(64, 63, 43, 1);
 
 -- --------------------------------------------------------
 
@@ -191,7 +200,9 @@ INSERT INTO `userpoints` (`userpoints_id`, `userid`, `earnedat`) VALUES
 (44, 43, '2023-09-05 13:15:43'),
 (45, 43, '2023-09-05 13:23:34'),
 (56, 50, '2023-09-05 16:33:08'),
-(60, 54, '2023-09-07 20:21:47');
+(60, 54, '2023-09-07 20:21:47'),
+(61, 54, '2023-09-08 10:51:59'),
+(62, 6, '2023-09-08 13:14:56');
 
 -- --------------------------------------------------------
 
@@ -218,9 +229,9 @@ INSERT INTO `users` (`userid`, `user_first_name`, `user_last_name`, `username`, 
 (2, 'Ron', 'Burgundy', '', 'bob@123.com', 'pass', 0),
 (3, 'John', 'Doe', '', 'test@example.com', 'test123', 0),
 (4, 'John', 'Samples', '', 'test2@example.com', '$2a$10$bNk7BtheOAN2ecP2hmn7y.2K.JrsDs..nwkNjJsH3przRO237UC2O', 0),
-(5, 'Ryan', 'Robinson', '', 'ryanrob@gmail.com', '$2a$10$bAuLKMpe7jVekn4Zt/38yuTB3Q4V/w6Tj8n6qOnqVqJjob5hBb8gK', 0),
-(6, 'Dylan', 'Robinson', 'drobin', 'dylan.robinson991@outlook.com', '$2a$10$UkI3dhcVsQt9/PpGNMjPU.SDGCj7kJ6D6lciQSQIADTnKs9N2drBG', 1),
-(7, 'Dylan', 'Robinson', 'origin', 'dylan.robinson99@gmail.com', '$2a$10$Bj9rlnggzqUo0Gn6s4KH8u7roX.wIlYkBxAi67W003zKmw7cQEEki', 0),
+(5, 'R.', 'R.', '', 'defaultemail@defaultemail.com', '$2a$10$bAuLKMpe7jVekn4Zt/38yuTB3Q4V/w6Tj8n6qOnqVqJjob5hBb8gK', 0),
+(6, 'D', 'R.', 'DR.', 'defaultemail@defaultemail.com', '$2a$10$UkI3dhcVsQt9/PpGNMjPU.SDGCj7kJ6D6lciQSQIADTnKs9N2drBG', 1),
+(7, 'D.', 'R.', 'origin', 'defaultemail@defaultemail.com', '$2a$10$Bj9rlnggzqUo0Gn6s4KH8u7roX.wIlYkBxAi67W003zKmw7cQEEki', 0),
 (8, 'Joseph', 'Roberts', 'jobert', 'joebob@bobert.com', '$2a$10$25pQ/cTIdowasdNgBIPl8O7FJNoMemWXu2QdPYMqQ4phA.duNf1Ua', 0),
 (9, 'Joseph', 'Roberts', 'jobert', 'joebob@bobert.com', '$2a$10$GDPMK2rRecNzuLAC07fmDeX0PFZWWt.n5E3FJn9NEnA0lKUhke.oK', 0),
 (10, 'Joseph', 'Roberts', 'jobert', 'joebob@bobert.com', '$2a$10$RXJu6jPB.KMCkSTX7TWPtOBhTBE50ksXTLXWFmPhj8L0EcmUlOF4G', 0),
@@ -229,13 +240,10 @@ INSERT INTO `users` (`userid`, `user_first_name`, `user_last_name`, `username`, 
 (13, 'Rob', 'Rob', 'robrob', 'robrob@gkem.com', '$2a$10$F/YlPeCAq5dx5j2SVgqh3ewTAsYG8zst.XPQHmK3sm14Aobz1NeVq', 0),
 (14, 'Rob', 'Rob', 'robrob', 'robrob@gkem.com', '$2a$10$23L9JygXtJOsEpdHY8qOFeP/sWO8EM/dCLT4F75HnNifncHdagOc6', 0),
 (34, 'Robert', 'Frost', 'robbob', 'bobio@bob.com', '$2a$10$rVBRZ9.FzEjd40hSAvu9BOm3AFTlUAb0qcDhIQcLUovNvLSB0OzzK', 0),
-(36, 'Colin', 'Robinson', 'cpr006', 'colin.robinson99@gmail.com', '$2a$10$cQgrOFb4PktBZgxoe.k8keBwo3xGmPTp7aNgv9/3jHDWm.R032EGe', 0),
+(36, 'C.', 'R.', 'CR.', 'exampleEmail@example.com', '$2a$10$cQgrOFb4PktBZgxoe.k8keBwo3xGmPTp7aNgv9/3jHDWm.R032EGe', 0),
 (39, 'Test', 'Account', 'Test', 'example@example.com', '$2a$10$WR4ci4RnDgaqpLZEc4hvMO4VeA6Vg10LxnFFm4nSObfZfOapSYCFC', 0),
 (43, 'Project', 'Test', 'ProjectTest', 'projecttest@example.com', '$2a$10$9Frs9zReXwZ9k/oBULd5oucuwHt8spX5FiuStc8QMJO05nfBIGHAS', 0),
-(50, 'Video', 'Robinson', 'VideoDemonstration', 'VideoDemonstration@example.com', '$2a$10$et..r5GlkusfUt0nab.Hb.dlnNQize8aUEGlVN0aHOP3uqqvYDj/.', 0),
-(51, 'John', 'Doe', 'johndoe', 'johndoe@example.com', 'testpassword', 0),
-(52, 'John', 'Doe', 'johndoe', 'johndoe@example.com', 'testpassword', 0),
-(53, 'John', 'Doe', 'johndoe', 'johndoe@example.com', 'testpassword', 0),
+(50, 'Video', 'R.', 'VideoDemonstration', 'VideoDemonstration@example.com', '$2a$10$et..r5GlkusfUt0nab.Hb.dlnNQize8aUEGlVN0aHOP3uqqvYDj/.', 0),
 (54, 'Final', 'Runthrough', 'finalrunthrough', 'finalrunthrough@example.com', '$2a$10$TXzOrPB1wV76eQmfbsUUee6C3NluL8kZqFauMoLJV9UMVPTtJ81dy', 0);
 
 -- --------------------------------------------------------
@@ -295,8 +303,9 @@ INSERT INTO `userworkout` (`userworkoutid`, `userid`, `workoutid`, `customliftwe
 (25, 39, 2, '51.00', 5),
 (26, 39, 1, '30.00', 5),
 (27, 43, 1, '50.00', 5),
-(41, 54, 1, '65.00', 6),
-(43, 54, 2, '100.00', 5);
+(41, 54, 1, '70.00', 6),
+(43, 54, 2, '100.00', 5),
+(44, 54, 3, '60.00', 5);
 
 -- --------------------------------------------------------
 
@@ -324,7 +333,8 @@ INSERT INTO `workoutroutine` (`workoutroutineid`, `userid`, `day`) VALUES
 (45, 43, 'Tuesday'),
 (56, 50, 'Wednesday'),
 (61, 54, 'Monday'),
-(62, 54, 'Tuesday');
+(62, 54, 'Tuesday'),
+(63, 54, 'Wednesday');
 
 -- --------------------------------------------------------
 
@@ -334,20 +344,19 @@ INSERT INTO `workoutroutine` (`workoutroutineid`, `userid`, `day`) VALUES
 
 CREATE TABLE `workouts` (
   `workoutid` int(11) NOT NULL,
-  `workoutname` varchar(255) NOT NULL,
-  `workoutdesc` text NOT NULL
+  `workoutname` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `workouts`
 --
 
-INSERT INTO `workouts` (`workoutid`, `workoutname`, `workoutdesc`) VALUES
-(1, 'Bench Press', 'The Classic!'),
-(2, 'Deadlift', 'The endurance tester!'),
-(3, 'Overhead press', 'Nothing makes you feel stronger than lifitng a heavy weight over your head and putting it back down again.'),
-(4, 'Lateral Raises', 'The best of the best for building up your overhead press.'),
-(5, 'Lateral Pulldowns', 'Your back will hate you but thank you for this one. ');
+INSERT INTO `workouts` (`workoutid`, `workoutname`) VALUES
+(1, 'Bench Press'),
+(2, 'Deadlift'),
+(3, 'Overhead press'),
+(4, 'Lateral Raises'),
+(5, 'Lateral Pulldowns');
 
 --
 -- Indexes for dumped tables
@@ -424,7 +433,7 @@ ALTER TABLE `workouts`
 -- AUTO_INCREMENT for table `exerciseprogress`
 --
 ALTER TABLE `exerciseprogress`
-  MODIFY `progressid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `progressid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `leaderboard`
@@ -436,13 +445,13 @@ ALTER TABLE `leaderboard`
 -- AUTO_INCREMENT for table `routineexercises`
 --
 ALTER TABLE `routineexercises`
-  MODIFY `routineexerciseid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `routineexerciseid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `userpoints`
 --
 ALTER TABLE `userpoints`
-  MODIFY `userpoints_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `userpoints_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -460,13 +469,13 @@ ALTER TABLE `usertier`
 -- AUTO_INCREMENT for table `userworkout`
 --
 ALTER TABLE `userworkout`
-  MODIFY `userworkoutid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `userworkoutid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `workoutroutine`
 --
 ALTER TABLE `workoutroutine`
-  MODIFY `workoutroutineid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `workoutroutineid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `workouts`
