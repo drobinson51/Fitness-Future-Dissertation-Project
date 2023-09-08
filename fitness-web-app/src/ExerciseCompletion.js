@@ -156,7 +156,7 @@ const Completedworkoutform = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="/image/WorkoutRecord.jpeg" className="image-size" fluid rounded />
+              <Image src="/image/WorkoutRecord.jpeg" className="image-size" alt= "Man looking at clipboard recording data in gym setting" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Select a Workout Routine for the Day</h1>

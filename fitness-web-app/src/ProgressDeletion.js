@@ -139,7 +139,7 @@ const ProgressDeletion = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-            <Image src="/image/ProgressDeletion.jpeg" className="image-size" fluid rounded />
+            <Image src="/image/ProgressDeletion.jpeg" className="image-size"  alt= "Man removing weights from barbell" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Exercise Progression</h1>

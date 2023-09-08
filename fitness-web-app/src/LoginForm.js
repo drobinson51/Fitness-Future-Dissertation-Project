@@ -72,7 +72,7 @@ const LoginForm = () => {
           <Row className="px-4 my-5">
             <Col sm={7}>
             
-              <Image src="/image/loginpage.jpg"  className = "image-size" fluid rounded />
+              <Image src="/image/loginpage.jpg"  className = "image-size"  alt="Man walking down road twards sun rising" fluid rounded />
             
             </Col>
             <Col sm={5}>

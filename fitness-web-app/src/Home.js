@@ -19,7 +19,7 @@ const HomePage = () => {
       <Container>
       <Row className = "px-4 my-5">
         <Col sm={7}>
-        <Image src="/image/LandingPage.jpeg" className="image-size" fluid rounded />
+        <Image src="/image/LandingPage.jpeg" className="image-size" alt="Woman waving hellow holding notebook for recording exercises, man working out in the background" fluid rounded />
         </Col>
      
         <Col sm={5}>  

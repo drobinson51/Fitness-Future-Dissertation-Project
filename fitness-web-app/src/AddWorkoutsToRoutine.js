@@ -192,7 +192,7 @@ const NewWorkoutToRoutine = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-            <Image src="/image/AddWorkoutToRoutine.jpeg" className="image-size" fluid rounded />
+            <Image src="/image/AddWorkoutToRoutine.jpeg" className="image-size" alt = "Grou of individuals exercising in an open space" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Add exercises to your routine</h1>

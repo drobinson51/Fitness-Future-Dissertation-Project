@@ -125,7 +125,7 @@ const DeleteWorkoutRoutine = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-            <Image src="/image/DeleteRoutine.jpeg" className="image-size" fluid rounded />
+            <Image src="/image/DeleteRoutine.jpeg" className="image-size" alt= "Man with gymbag smiling as he leaves the gym." fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Delete a workout Routine</h1>

@@ -187,7 +187,7 @@ useEffect(() => {
       <Container>
       <Row className = "px-4 my-5">
         <Col sm={6}>
-        <Image src="image/userhomepage.jpg"  className = "image-size" fluid rounded/>
+        <Image src="image/userhomepage.jpg"  className = "image-size" alt = "Three people working out with dumbells whilst smiling" fluid rounded/>
         </Col>
      
         <Col sm={6}>  

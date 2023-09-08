@@ -147,7 +147,7 @@ const handleRoutineExerciseChange = (e) => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-            <Image src="/image/RemoveExerciseFromRoutine.jpeg" className="image-size" fluid rounded />
+            <Image src="/image/RemoveExerciseFromRoutine.jpeg" className="image-size" alt= "Pair of hands reracking dumbells" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Remove Exercise from a routine</h1>

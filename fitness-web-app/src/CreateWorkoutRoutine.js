@@ -110,7 +110,7 @@ const NewUserWorkoutRoutine = () => {
         <Container>
           <Row className="px-4 my-5">
             <Col sm={7}>
-              <Image src="image/CreateRoutinePicture.jpeg" className="image-size" fluid rounded />
+              <Image src="image/CreateRoutinePicture.jpeg" className="image-size" alt= "Man entering gym with bag in one hand, and water bottle in other, smiling" fluid rounded />
             </Col>
             <Col sm={5}>
               <h1 className="fw-bold">Create a new Routine</h1>
