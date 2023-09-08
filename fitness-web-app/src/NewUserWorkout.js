@@ -128,7 +128,7 @@ const NewUserWorkout = () => {
                 <div className="mb-4">
                 <label htmlFor="workoutid">Workout:</label>
 
-                {workouts.length === (userWorkouts ? userWorkouts.length : 0) + 1 ? (
+                {workouts.length === (userWorkouts ? userWorkouts.length : 0)? (
                   <p>All available workouts are already being tracked.</p>
                 ) : (
                   <select
